@@ -16,17 +16,21 @@
 
 對戰中打開網頁 → 點選對手 6 隻 → 立即顯示三面板。全在瀏覽器端計算，零使用成本。
 
-- [ ] 1.1 計算核心改成瀏覽器可用（@smogon/calc 打包成 bundle，esbuild）
-- [ ] 1.2 對手輸入 UI：中文名搜尋（支援注音頭字/英文），點 6 隻約 30–60 秒完成
-- [ ] 1.3 威脅資料庫 `data/threats.js` 擴充到 Top 50，含常見配置（推估標註）；
+- [x] 1.1 計算核心改成瀏覽器可用（@smogon/calc 打包成 bundle，esbuild）→ `web/calc-core.js`＋`scripts/build.js`
+- [x] 1.2 對手輸入 UI：中文名搜尋（支援注音頭字/英文），點 6 隻約 30–60 秒完成
+      → 搜尋索引 `src/build-search-index.js`（全圖鑑＋形態，官方繁中名）
+- [x] 1.3 威脅資料庫 `data/threats.js` 擴充到 Top 50，含常見配置（推估標註）；
       未知寶可夢 fallback 用極限值區間（耐久最少~最多）
-- [ ] 1.4 三面板輸出：
+      ※ 37 隻本季搜尋確認＋13 隻常青候補（rank 欄有標記）；新 Mega 特性用 megaAbility 覆寫 calc 佔位值
+- [x] 1.4 三面板輸出：
       - 速度線（含圍巾/順風/天氣加成、同速標記）
       - 傷害矩陣（我方各招 vs 對面各隻，確1/亂1/確2 標記，可切單打/雙打、天氣）
       - 陣容推薦（規則評分：對面確1數、被確1數、速度優勢、特性剋制規則
         如金身擋變化招/不屈之心禁威嚇/沙暴搶天氣）
       ※ 已決定（2026-09-03）：採規則評分自動推薦選 4＋首發（Q1=A）
-- [ ] 1.5 部署 GitHub Pages（手機「加入主畫面」當 app 用），我的隊伍存 localStorage
+- [x] 1.5 部署 GitHub Pages（手機「加入主畫面」當 app 用），我的隊伍存 localStorage
+      ※ 建置產物在 `docs/`＋PWA 離線；剩最後一步人工動作：merge 到 main 後
+      Settings → Pages → Source 選 `main` `/docs`（網址 https://naiyu29.github.io/pokemon-tools/）
 - 驗收：選角 90 秒內完成輸入並看到建議；離線可用
 - 成本：建置一次性；使用零成本
 
