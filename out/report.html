@@ -1,0 +1,285 @@
+<title>Meta 對戰情報室</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+:root{
+  --bg:#f6f4ee; --surface:#fcfcfb; --ink:#151318; --ink2:#54524d; --muted:#898781;
+  --line:#e3e1da; --hair:rgba(11,11,11,.10);
+  --mine:#2a78d6; --mine-soft:rgba(42,120,214,.14);
+  --foe:#eb6834; --foe-soft:rgba(235,104,52,.14);
+  --ohko:#d03b3b; --roll1:#ec835a; --two:#fab219;
+  --ohko-ink:#ffffff; --roll1-ink:#33150a; --two-ink:#332600;
+  --good:#006300;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d0d0d; --surface:#1a1a19; --ink:#f4f3ef; --ink2:#c3c2b7; --muted:#898781;
+    --line:#2c2c2a; --hair:rgba(255,255,255,.10);
+    --mine:#3987e5; --mine-soft:rgba(57,135,229,.20);
+    --foe:#d95926; --foe-soft:rgba(217,89,38,.20);
+    --good:#0ca30c;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d0d0d; --surface:#1a1a19; --ink:#f4f3ef; --ink2:#c3c2b7; --muted:#898781;
+  --line:#2c2c2a; --hair:rgba(255,255,255,.10);
+  --mine:#3987e5; --mine-soft:rgba(57,135,229,.20);
+  --foe:#d95926; --foe-soft:rgba(217,89,38,.20);
+  --good:#0ca30c;
+  color-scheme:dark;
+}
+body{
+  background:var(--bg); color:var(--ink); margin:0;
+  font-family:"Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+  font-size:15px; line-height:1.65;
+}
+.num{ font-family:"Chakra Petch","Noto Sans TC",monospace; font-variant-numeric:tabular-nums; }
+.wrap{ max-width:680px; margin:0 auto; padding:20px 16px 56px; }
+header{ padding:8px 0 4px; }
+.kicker{ font-size:12px; letter-spacing:.14em; color:var(--muted); text-transform:uppercase; }
+h1{ font-size:28px; margin:2px 0 4px; line-height:1.25; text-wrap:balance; }
+h1 .vs{ color:var(--muted); font-weight:400; font-size:20px; padding:0 2px; }
+.sub{ color:var(--ink2); font-size:13.5px; margin:0; }
+h2{ font-size:19px; margin:36px 0 4px; }
+h2 + .sub{ margin-bottom:14px; }
+h3{ font-size:15px; margin:18px 0 8px; }
+.legend{ display:flex; gap:14px; flex-wrap:wrap; font-size:12.5px; color:var(--ink2); margin:10px 0 12px; }
+.legend span{ display:inline-flex; align-items:center; gap:6px; }
+.dot{ width:10px; height:10px; border-radius:3px; display:inline-block; }
+.dot.mine{ background:var(--mine); } .dot.foe{ background:var(--foe); }
+
+/* 速度線 */
+.speed{ background:var(--surface); border:1px solid var(--hair); border-radius:12px; padding:14px 14px 10px; }
+.srow{ display:grid; grid-template-columns:96px 1fr 44px; gap:8px; align-items:center; padding:3.5px 0; }
+.srow .name{ font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.srow .name.foe-n{ color:var(--ink2); }
+.strack{ position:relative; height:12px; border-radius:6px; background:transparent; }
+.sbar{ position:absolute; inset:0 auto 0 0; border-radius:6px 4px 4px 6px; }
+.sbar.mine{ background:var(--mine); } .sbar.foe{ background:var(--foe); }
+.smod{ position:absolute; top:2px; bottom:2px; border-radius:4px; opacity:.38; }
+.smod.mine{ background:var(--mine); } .smod.foe{ background:var(--foe); }
+.sval{ font-size:12.5px; text-align:right; color:var(--ink2); }
+.snote{ font-size:12px; color:var(--muted); margin:8px 2px 2px; }
+.tiegap{ border-top:1px dashed var(--line); margin:6px 0; }
+
+/* 威脅卡 */
+details.threat{ background:var(--surface); border:1px solid var(--hair); border-radius:12px; margin:10px 0; overflow:hidden; }
+details.threat summary{
+  list-style:none; cursor:pointer; padding:12px 14px; display:flex; align-items:center; gap:10px;
+}
+details.threat summary::-webkit-details-marker{ display:none; }
+details.threat summary::after{ content:"›"; margin-left:auto; color:var(--muted); font-size:18px; transform:rotate(90deg); transition:transform .15s; }
+details[open].threat summary::after{ transform:rotate(-90deg); }
+@media (prefers-reduced-motion: reduce){ details.threat summary::after{ transition:none; } }
+.tname{ font-weight:700; font-size:15.5px; }
+.trank{ font-size:11.5px; color:var(--muted); display:block; }
+.verdict{ font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px; white-space:nowrap; }
+.v-win{ background:var(--mine-soft); color:var(--mine); }
+.v-even{ background:var(--line); color:var(--ink2); }
+.v-hard{ background:var(--foe-soft); color:var(--foe); }
+.tbody{ padding:2px 14px 14px; border-top:1px solid var(--line); }
+.setline{ font-size:12.5px; color:var(--ink2); margin:10px 0 2px; }
+.grp{ font-size:12px; letter-spacing:.08em; color:var(--muted); margin:14px 0 6px; }
+.grp b{ color:var(--ink2); }
+.arow{ display:grid; grid-template-columns:1fr auto; gap:2px 10px; padding:5px 0; align-items:baseline; }
+.arow .who{ font-size:13.5px; }
+.arow .who small{ color:var(--muted); }
+.dmg{ display:flex; align-items:center; gap:8px; grid-column:1 / -1; }
+.dtrack{ flex:1; height:8px; border-radius:4px; background:var(--line); position:relative; overflow:hidden; }
+.dfill{ position:absolute; inset:0 auto 0 0; border-radius:4px; }
+.dpct{ font-size:12.5px; color:var(--ink2); min-width:96px; text-align:right; }
+.ko{ font-size:10.5px; font-weight:700; border-radius:5px; padding:1.5px 6px; white-space:nowrap; }
+.ko-1{ background:var(--ohko); color:var(--ohko-ink); }
+.ko-r1{ background:var(--roll1); color:var(--roll1-ink); }
+.ko-2{ background:var(--two); color:var(--two-ink); }
+.ko-x{ border:1px solid var(--line); color:var(--muted); background:transparent; }
+.note{ font-size:13.5px; background:var(--bg); border-left:3px solid var(--mine); border-radius:0 8px 8px 0; padding:8px 12px; margin-top:12px; color:var(--ink); }
+.note.warn{ border-left-color:var(--foe); }
+
+/* 首發 / 體檢 */
+.card{ background:var(--surface); border:1px solid var(--hair); border-radius:12px; padding:4px 14px 12px; margin:10px 0; }
+.card h3{ margin:12px 0 4px; }
+.card p{ margin:4px 0 8px; font-size:14px; color:var(--ink2); }
+.card p b{ color:var(--ink); }
+ul.tight{ margin:6px 0 10px; padding-left:20px; font-size:14px; color:var(--ink2); }
+ul.tight li{ margin:5px 0; }
+ul.tight b{ color:var(--ink); }
+.foot{ font-size:12.5px; color:var(--muted); margin-top:34px; border-top:1px solid var(--line); padding-top:14px; }
+.foot a{ color:var(--mine); text-decoration:none; }
+.foot ul{ padding-left:18px; margin:6px 0; }
+</style>
+
+<div class="wrap">
+<header>
+  <div class="kicker">Pokémon Champions · Season 5 · Reg M-B</div>
+  <h1>隊伍「Meta」<span class="vs">×</span> 天梯十大威脅</h1>
+  <p class="sub">晴天核心（Mega噴火龍Y＋葉綠素妙蛙花）對點分析 · 2026-09-03 產出</p>
+</header>
+
+<h2>速度線</h2>
+<p class="sub">實際數值（Lv50）。淡色延伸＝道具／天氣加成後的速度。</p>
+<div class="legend"><span><i class="dot mine"></i>我方</span><span><i class="dot foe"></i>對方（推估配置）</span></div>
+<div class="speed" id="speedChart"></div>
+<p class="snote">‣ 152 噴火龍鏡像＝同速比拚（各 50% 先動）；169 陸鯊鏡像同理，雙方帶圍巾則 253 同速。<br>‣ 順風（白蓬蓬）期間對方全隊速度 ×2，你的圍巾鯊 253 仍高於多數順風後速度。</p>
+
+<h2>威脅對點</h2>
+<p class="sub">每張卡：我方最佳打點 → 對方對我最痛的招。傷害為雙打規則（範圍招 ×0.75）、晴天下的計算。</p>
+<div class="legend">
+  <span><span class="ko ko-1">確1</span> 保證一擊</span>
+  <span><span class="ko ko-r1">亂1</span> 機率一擊</span>
+  <span><span class="ko ko-2">確2</span> 兩擊內</span>
+</div>
+<div id="threats"></div>
+
+<h2>首發建議</h2>
+<div class="card">
+  <h3>雙打・標準開局</h3>
+  <p><b>熾焰咆哮虎 ＋ 噴火龍</b>：擊掌奇襲拖一隻、威嚇壓物攻，同回合 Mega 開晴天；後手留妙蛙花（晴天速度 246）與仙子伊布收尾。</p>
+  <ul class="tight">
+    <li>對面有<b>仆刀將軍</b> → 虎不要進場（威嚇觸發不屈之心＝白送 +2 攻擊）。改「仙子伊布＋噴火龍」，用熱風直接確1。</li>
+    <li>對面有<b>鋁鋼橋龍</b> → 這是本隊最痛的點。晴天下他的電光射擊要蓄力一回合，抓這一拍集火：妙蛙花大地之力＋仙布破壞光線。</li>
+    <li>對面是<b>噴火龍Y鏡像</b> → 天氣互相覆蓋、152 同速。穩定解是首發帶你的圍巾陸鯊，岩崩對他是確1（101%起）。</li>
+    <li>對面疑似<b>欺騙空間</b>（來悲粗茶）→ 留超壞星（速度 55 反而變優勢）拖完 5 回合。</li>
+  </ul>
+  <h3>單打・首發</h3>
+  <p><b>圍巾陸鯊</b>偵查開局最穩；對方首發常見同為陸鯊——你的仙子伊布巨聲對標準耐久是確1（101.6%起），放後手當答案。</p>
+</div>
+
+<h2>隊伍體檢</h2>
+<div class="card">
+  <ul class="tight">
+    <li><b>岩石 4 倍是最大破口</b>：圍巾鯊的岩崩會在你 Mega 前後直接帶走噴火龍（100.6%起）。噴火龍進場時機要看對面場上有沒有岩石打點。</li>
+    <li><b>鋁鋼橋龍幾乎無解</b>：突擊背心＋強韌讓你最好的打點只剩仙布破壞光線 85.8–101%（亂1），而他的流星群／電光射擊反過來確1你兩隻。選角看到他，優先規劃集火。</li>
+    <li><b>全隊重度依賴晴天</b>：遇到大嘴鷗雨隊（垂滴），妙蛙花掉速、日光束變兩回合、火招砍半——這份計算全部失效。雨隊對局建議另外跑一份。</li>
+    <li><b>破壞光線的取捨</b>：妖精皮膚加持下這是你最大的單體核彈（對陸鯊 223%），但下回合不能動。雙打裡只在「這一擊能終結戰局」時按。</li>
+    <li>仙子伊布的「看穿」＝守住效果，雙打合格；謎擬Ｑ的畫皮與各家氣腰，都靠虎的<b>擊掌奇襲先破一層</b>再收。</li>
+  </ul>
+</div>
+
+<div class="foot">
+  <b>計算假設</b>：Lv50、IV31、雙打規則、晴天常駐；引擎 @smogon/calc（Gen 9 機制，Mega 種族值取自 @pkmn/dex）。對方配置為該寶可夢的常見標準配置<b>推估</b>，實戰請以選角畫面修正。<br>
+  <b>威脅名單來源</b>（2026-09-02 快照）：
+  <ul>
+    <li><a href="https://game8.co/games/Pokemon-Champions/archives/595375">Game8 使用率 Top 20</a>・<a href="https://www.pokemon-zone.com/champions/ranked-seasons/singles/">Pokémon Zone S5 單打統計</a>・<a href="https://www.pikalytics.com/champions">Pikalytics（Char-Y＋陸鯊為最大宗核心）</a></li>
+  </ul>
+</div>
+</div>
+
+<script>
+const SPEEDS = [
+  {zh:"魔幻假面喵", side:"foe", spe:192, mods:[]},
+  {zh:"白蓬蓬", side:"foe", spe:184, mods:[]},
+  {zh:"烈咬陸鯊", side:"mine", spe:169, mods:[{label:"圍巾 253", value:253}]},
+  {zh:"烈咬陸鯊", side:"foe", spe:169, mods:[{label:"圍巾 253", value:253}]},
+  {zh:"噴火龍", side:"mine", spe:152, mods:[]},
+  {zh:"噴火龍Y", side:"foe", spe:152, mods:[]},
+  {zh:"謎擬Ｑ", side:"foe", spe:148, mods:[]},
+  {zh:"妙蛙花", side:"mine", spe:123, mods:[{label:"晴天 246", value:246}]},
+  {zh:"鋁鋼橋龍", side:"foe", spe:105, mods:[]},
+  {zh:"來悲粗茶", side:"foe", spe:90, mods:[]},
+  {zh:"仙子伊布", side:"mine", spe:82, mods:[]},
+  {zh:"西獅海壬", side:"foe", spe:80, mods:[]},
+  {zh:"熾焰咆哮虎", side:"foe", spe:80, mods:[]},
+  {zh:"熾焰咆哮虎", side:"mine", spe:72, mods:[]},
+  {zh:"仆刀將軍", side:"foe", spe:70, mods:[]},
+  {zh:"超壞星", side:"mine", spe:55, mods:[]},
+];
+const MAX_SPE = 260;
+const sc = document.getElementById('speedChart');
+sc.innerHTML = SPEEDS.map(s => {
+  const w = (s.spe / MAX_SPE * 100).toFixed(1);
+  const mods = s.mods.map(m => {
+    const l = (s.spe / MAX_SPE * 100).toFixed(1);
+    const mw = ((m.value - s.spe) / MAX_SPE * 100).toFixed(1);
+    return `<span class="smod ${s.side}" style="left:${l}%;width:${mw}%" title="${m.label}"></span>`;
+  }).join('');
+  const modTxt = s.mods.length ? ` <small style="color:var(--muted)">(${s.mods[0].label})</small>` : '';
+  return `<div class="srow">
+    <span class="name ${s.side === 'foe' ? 'foe-n' : ''}">${s.side === 'mine' ? '●' : '○'} ${s.zh}</span>
+    <span class="strack"><span class="sbar ${s.side}" style="width:${w}%"></span>${mods}</span>
+    <span class="sval num">${s.spe}</span>
+  </div>`;
+}).join('');
+
+// tier: 依傷害%自動標 確1/亂1/確2/亂2
+function tier(min, max){
+  if (min >= 100) return ['ko-1','確1'];
+  if (max >= 100) return ['ko-r1','亂1'];
+  if (min >= 50)  return ['ko-2','確2'];
+  if (max >= 50)  return ['ko-x','亂2'];
+  return ['ko-x','微'];
+}
+const THREATS = [
+  { zh:"烈咬陸鯊", rank:"單打 #1・雙打常見", set:"講究圍巾／粗糙皮膚／爽朗", verdict:["v-win","有確1解"],
+    mine:[["仙子伊布","巨聲",101.6,119.1],["仙子伊布","破壞光線",223.0,263.4],["烈咬陸鯊","龍爪",78.7,92.9],["妙蛙花","日光束",76.5,90.2]],
+    foe:[["岩崩","噴火龍",100.6,121.3],["龍爪","烈咬陸鯊",78.7,92.9],["地震","熾焰咆哮虎",59.3,69.8]],
+    note:"仙子伊布是天克答案：巨聲（範圍打折後）仍然確1。危險在圍巾鯊 253 全場最速，岩崩先手帶走你的噴火龍——噴火龍別在他面前裸站。", warn:false },
+  { zh:"西獅海壬", rank:"單打 #2", set:"突擊背心／濕潤之聲／內斂", verdict:["v-even","互有攻防"],
+    mine:[["妙蛙花","日光束",79.1,93.0],["妙蛙花","污泥炸彈",58.3,71.1],["仙子伊布","破壞光線",56.7,67.4]],
+    foe:[["月亮之力","烈咬陸鯊",108.2,127.9],["月亮之力","熾焰咆哮虎",55.8,66.3],["巨聲(水)","噴火龍",34.8,42.6]],
+    note:"晴天是你的護盾：他的水系巨聲被砍半（對噴火龍只剩 42%）。但月亮之力確1你的陸鯊——鯊別對點他。最佳解是妙蛙花，日光束確2、污泥炸彈補刀。", warn:false },
+  { zh:"魔幻假面喵", rank:"單打 #3", set:"氣勢披帶／變幻自如／爽朗", verdict:["v-win","有確1解"],
+    mine:[["仙子伊布","破壞光線",313.9,370.9],["熾焰咆哮虎","閃焰衝鋒",247.7,294.0],["噴火龍","熱風",202.6,239.7]],
+    foe:[["千變萬花","仙子伊布",56.4,66.8],["拍落","妙蛙花",52.4,62.0],["突襲","噴火龍",42.6,50.3]],
+    note:"紙糊的：你半隊都能確1他，問題只有氣腰。標準流程＝虎的擊掌奇襲破腰，任意火招收。注意千變萬花必定爆擊、突襲有先制。", warn:false },
+  { zh:"鋁鋼橋龍", rank:"單打 #4", set:"突擊背心／強韌／內斂", verdict:["v-hard","最難處理"],
+    mine:[["仙子伊布","破壞光線",85.8,101.0],["妙蛙花","大地之力",59.4,70.1],["熾焰咆哮虎","閃焰衝鋒",57.9,68.5]],
+    foe:[["流星群","烈咬陸鯊",145.4,171.6],["電光射擊","噴火龍",136.8,161.3],["電光射擊","超壞星",110.8,131.2]],
+    note:"全隊沒有穩定確1他的招，他卻確1你三隻。唯一好消息：晴天下電光射擊要蓄力一回合——抓蓄力拍集火（大地之力＋破壞光線合計超過 145%）。選角看到他，優先規劃雙打集火或單打換角周旋。", warn:true },
+  { zh:"謎擬Ｑ", rank:"單打 #5", set:"生命寶珠／畫皮／固執", verdict:["v-win","破皮後確1"],
+    mine:[["仙子伊布","破壞光線",132.3,156.9],["熾焰咆哮虎","閃焰衝鋒",131.5,155.4],["妙蛙花","日光束",90.0,106.2]],
+    foe:[["嬉鬧","烈咬陸鯊",97.8,116.4],["嬉鬧","仙子伊布",59.9,71.3],["影子偷襲","噴火龍",53.5,63.9]],
+    note:"畫皮擋一次＝他實質多一條命。虎的擊掌奇襲破皮零成本，之後閃焰衝鋒／破壞光線都是確1。嬉鬧亂1你的陸鯊，鯊別跟他換招。", warn:false },
+  { zh:"仆刀將軍", rank:"雙打 S 級", set:"黑色眼鏡／不屈之心／固執", verdict:["v-win","火雙壓確1"],
+    mine:[["噴火龍","熱風",128.5,151.7],["熾焰咆哮虎","閃焰衝鋒",116.9,139.1],["仙子伊布","破壞光線",100.0,117.9]],
+    foe:[["鐵頭","仙子伊布",107.9,127.7],["仆刀","噴火龍",77.4,91.6],["突襲","妙蛙花",69.3,81.9]],
+    note:"⚠ 鐵則：對面有他時，熾焰咆哮虎不要進場——威嚇會餵給不屈之心 +2 攻擊。用噴火龍熱風直接確1（範圍打折後仍 128%）。鐵頭確1你的仙布，仙布別站他面前。", warn:true },
+  { zh:"熾焰咆哮虎（鏡像）", rank:"雙打 S 級", set:"文柚果系／威嚇／慎重耐久", verdict:["v-even","比拼場面"],
+    mine:[["烈咬陸鯊","跺腳",69.3,83.2],["仙子伊布","破壞光線",68.8,81.7],["妙蛙花","大地之力",47.5,56.4]],
+    foe:[["閃焰衝鋒","妙蛙花",162.7,191.6],["閃焰衝鋒","仙子伊布",80.7,95.5],["拍落","烈咬陸鯊",36.1,42.6]],
+    note:"互相不痛，勝負在威嚇次數與換場節奏。他的閃焰衝鋒確1你的妙蛙花——妙蛙花進場前先確認他不在、或用你的虎去換威嚇。地面招（跺腳／大地之力）是最有效率的打點。", warn:false },
+  { zh:"白蓬蓬", rank:"雙打 S 級", set:"氣勢披帶/惡作劇之心/膽小", verdict:["v-win","有確1解"],
+    mine:[["妙蛙花","污泥炸彈",280.2,329.9],["噴火龍","熱風",177.2,209.6],["仙子伊布","破壞光線",137.1,161.7]],
+    foe:[["月亮之力","烈咬陸鯊",55.7,65.6],["月亮之力","熾焰咆哮虎",28.5,33.7]],
+    note:"傷害上完封（污泥炸彈 280%），威脅全在先制輔助：順風翻速度線、再來一次鎖你的守住／日光束。開局若對到，第一拍就用擊掌奇襲點他或直接集火，別給他安全回合。", warn:false },
+  { zh:"來悲粗茶", rank:"雙打 A 級", set:"文柚果系／款待／大膽", verdict:["v-win","有確1解"],
+    mine:[["噴火龍","熱風",155.1,183.1],["仙子伊布","破壞光線",120.2,142.1],["熾焰咆哮虎","閃焰衝鋒",111.2,131.5]],
+    foe:[["暗影球","烈咬陸鯊",32.8,39.3],["暗影球","妙蛙花",32.5,38.6]],
+    note:"火系剋星卡：熱風確1、他打你不痛。真正要防的是他常帶欺騙空間——空間開了你的速度優勢全反轉，這時超壞星（速55）反而是你最快的棋，拖完 5 回合再打。", warn:false },
+  { zh:"噴火龍 Mega Y（鏡像）", rank:"雙打最大宗核心", set:"進化石Y／日照／內斂", verdict:["v-even","同速博弈"],
+    mine:[["烈咬陸鯊","岩崩",101.3,122.1],["噴火龍","原始之力",101.3,122.1],["熾焰咆哮虎","閃焰衝鋒",55.8,66.2]],
+    foe:[["過熱","妙蛙花",256.6,303.6],["過熱","仙子伊布",84.7,100.0],["過熱","烈咬陸鯊",65.6,77.0]],
+    note:"和你同核心＝天氣互相蓋、152 同速五五開。別賭同速：你的圍巾鯊岩崩是穩定確1（先手且 101% 起）。他的過熱會蒸發你的妙蛙花，鏡像局妙蛙花價值下降、考慮不選。", warn:false },
+];
+document.getElementById('threats').innerHTML = THREATS.map((t, i) => {
+  const rows = (list, side, isFoe) => list.map(r => {
+    const [a, b, min, max] = r;
+    const [kc, kt] = tier(min, max);
+    const w = Math.min(max, 100).toFixed(1);
+    const fill = kc === 'ko-1' ? 'var(--ohko)' : kc === 'ko-r1' ? 'var(--roll1)' : kc === 'ko-2' ? 'var(--two)' : 'var(--muted)';
+    const who = isFoe
+      ? `${a} <small>→ 我方 ${b}</small>`
+      : `${a} <small>的</small> ${b}`;
+    return `<div class="arow">
+      <span class="who">${who}</span>
+      <span class="ko ${kc}">${kt}</span>
+      <span class="dmg"><span class="dtrack"><span class="dfill" style="width:${w}%;background:${fill};opacity:.75"></span></span>
+      <span class="dpct num">${min}–${max}%</span></span>
+    </div>`;
+  }).join('');
+  return `<details class="threat"${i === 0 ? ' open' : ''}>
+    <summary>
+      <span><span class="tname">${t.zh}</span><span class="trank">${t.rank} · ${t.set}</span></span>
+      <span class="verdict ${t.verdict[0]}">${t.verdict[1]}</span>
+    </summary>
+    <div class="tbody">
+      <div class="grp"><b>我方最佳打點</b>（傷害％）</div>
+      ${rows(t.mine, 'mine', false)}
+      <div class="grp"><b>對方最痛的招</b></div>
+      ${rows(t.foe, 'foe', true)}
+      <div class="note${t.warn ? ' warn' : ''}">${t.note}</div>
+    </div>
+  </details>`;
+}).join('');
+</script>

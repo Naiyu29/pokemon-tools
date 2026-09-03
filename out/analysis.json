@@ -1,0 +1,3556 @@
+{
+  "generatedAt": "2026-09-03T12:34:40.155Z",
+  "season": "Season 5（Regulation M-B）",
+  "assumptions": "Lv50、IV31、晴天、雙打規則（範圍招×0.75）；對手配置為常見標準配置推估",
+  "speeds": [
+    {
+      "zh": "魔幻假面喵",
+      "name": "Meowscarada",
+      "side": "theirs",
+      "spe": 192,
+      "mods": []
+    },
+    {
+      "zh": "白蓬蓬",
+      "name": "Whimsicott",
+      "side": "theirs",
+      "spe": 184,
+      "mods": []
+    },
+    {
+      "zh": "烈咬陸鯊",
+      "name": "Garchomp",
+      "side": "mine",
+      "spe": 169,
+      "mods": [
+        {
+          "label": "圍巾×1.5",
+          "value": 253
+        }
+      ]
+    },
+    {
+      "zh": "烈咬陸鯊",
+      "name": "Garchomp",
+      "side": "theirs",
+      "spe": 169,
+      "mods": [
+        {
+          "label": "圍巾×1.5",
+          "value": 253
+        }
+      ]
+    },
+    {
+      "zh": "噴火龍",
+      "name": "Charizard",
+      "side": "mine",
+      "spe": 152,
+      "mods": []
+    },
+    {
+      "zh": "噴火龍(Mega Y)",
+      "name": "Charizard",
+      "side": "theirs",
+      "spe": 152,
+      "mods": []
+    },
+    {
+      "zh": "謎擬Ｑ",
+      "name": "Mimikyu",
+      "side": "theirs",
+      "spe": 148,
+      "mods": []
+    },
+    {
+      "zh": "妙蛙花",
+      "name": "Venusaur",
+      "side": "mine",
+      "spe": 123,
+      "mods": [
+        {
+          "label": "晴天葉綠素×2",
+          "value": 246
+        }
+      ]
+    },
+    {
+      "zh": "鋁鋼橋龍",
+      "name": "Archaludon",
+      "side": "theirs",
+      "spe": 105,
+      "mods": []
+    },
+    {
+      "zh": "來悲粗茶",
+      "name": "Sinistcha",
+      "side": "theirs",
+      "spe": 90,
+      "mods": []
+    },
+    {
+      "zh": "仙子伊布",
+      "name": "Sylveon",
+      "side": "mine",
+      "spe": 82,
+      "mods": []
+    },
+    {
+      "zh": "西獅海壬",
+      "name": "Primarina",
+      "side": "theirs",
+      "spe": 80,
+      "mods": []
+    },
+    {
+      "zh": "熾焰咆哮虎",
+      "name": "Incineroar",
+      "side": "theirs",
+      "spe": 80,
+      "mods": []
+    },
+    {
+      "zh": "熾焰咆哮虎",
+      "name": "Incineroar",
+      "side": "mine",
+      "spe": 72,
+      "mods": []
+    },
+    {
+      "zh": "仆刀將軍",
+      "name": "Kingambit",
+      "side": "theirs",
+      "spe": 70,
+      "mods": []
+    },
+    {
+      "zh": "超壞星",
+      "name": "Toxapex",
+      "side": "mine",
+      "spe": 55,
+      "mods": []
+    }
+  ],
+  "matchups": [
+    {
+      "zh": "烈咬陸鯊",
+      "name": "Garchomp",
+      "rank": "單打#1／雙打常見",
+      "item": "Choice Scarf",
+      "ability": "Rough Skin",
+      "nature": "Jolly",
+      "evs": {
+        "atk": 252,
+        "spd": 4,
+        "spe": 252
+      },
+      "moves": [
+        "Earthquake",
+        "Rock Slide",
+        "Dragon Claw",
+        "Stomping Tantrum"
+      ],
+      "mega": null,
+      "myAttacks": [
+        {
+          "attacker": "仙子伊布",
+          "attackerEn": "Sylveon",
+          "move": "Hyper Beam",
+          "min": 408,
+          "max": 482,
+          "minPct": 223,
+          "maxPct": 263.4,
+          "ko": "",
+          "desc": "222.9 - 263.3%"
+        },
+        {
+          "attacker": "仙子伊布",
+          "attackerEn": "Sylveon",
+          "move": "Hyper Voice",
+          "min": 186,
+          "max": 218,
+          "minPct": 101.6,
+          "maxPct": 119.1,
+          "ko": "",
+          "desc": "101.6 - 119.1%"
+        },
+        {
+          "attacker": "烈咬陸鯊",
+          "attackerEn": "Garchomp",
+          "move": "Dragon Claw",
+          "min": 144,
+          "max": 170,
+          "minPct": 78.7,
+          "maxPct": 92.9,
+          "ko": "",
+          "desc": "78.6 - 92.8%"
+        },
+        {
+          "attacker": "妙蛙花",
+          "attackerEn": "Venusaur",
+          "move": "Solar Beam",
+          "min": 140,
+          "max": 165,
+          "minPct": 76.5,
+          "maxPct": 90.2,
+          "ko": "",
+          "desc": "76.5 - 90.1%"
+        },
+        {
+          "attacker": "噴火龍",
+          "attackerEn": "Charizard",
+          "move": "Solar Beam",
+          "min": 99,
+          "max": 117,
+          "minPct": 54.1,
+          "maxPct": 63.9,
+          "ko": "",
+          "desc": "54 - 63.9%"
+        },
+        {
+          "attacker": "熾焰咆哮虎",
+          "attackerEn": "Incineroar",
+          "move": "Flare Blitz",
+          "min": 74,
+          "max": 87,
+          "minPct": 40.4,
+          "maxPct": 47.5,
+          "ko": "",
+          "desc": "40.4 - 47.5% (14.1 - 16.6% recoil damage)"
+        }
+      ],
+      "theirAttacks": [
+        {
+          "defender": "噴火龍",
+          "defenderEn": "Charizard",
+          "best": {
+            "move": "Rock Slide",
+            "min": 156,
+            "max": 188,
+            "minPct": 100.6,
+            "maxPct": 121.3,
+            "ko": "",
+            "desc": "100.6 - 121.2%"
+          },
+          "all": [
+            {
+              "move": "Rock Slide",
+              "min": 156,
+              "max": 188,
+              "minPct": 100.6,
+              "maxPct": 121.3,
+              "ko": "",
+              "desc": "100.6 - 121.2%"
+            },
+            {
+              "move": "Dragon Claw",
+              "min": 84,
+              "max": 100,
+              "minPct": 54.2,
+              "maxPct": 64.5,
+              "ko": "",
+              "desc": "54.1 - 64.5%"
+            },
+            {
+              "move": "Earthquake",
+              "min": 0,
+              "max": 0,
+              "minPct": 0,
+              "maxPct": 0,
+              "ko": "",
+              "desc": "0 - 0%"
+            },
+            {
+              "move": "Stomping Tantrum",
+              "min": 0,
+              "max": 0,
+              "minPct": 0,
+              "maxPct": 0,
+              "ko": "",
+              "desc": "0 - 0%"
+            }
+          ]
+        },
+        {
+          "defender": "烈咬陸鯊",
+          "defenderEn": "Garchomp",
+          "best": {
+            "move": "Dragon Claw",
+            "min": 144,
+            "max": 170,
+            "minPct": 78.7,
+            "maxPct": 92.9,
+            "ko": "",
+            "desc": "78.6 - 92.8%"
+          },
+          "all": [
+            {
+              "move": "Dragon Claw",
+              "min": 144,
+              "max": 170,
+              "minPct": 78.7,
+              "maxPct": 92.9,
+              "ko": "",
+              "desc": "78.6 - 92.8%"
+            },
+            {
+              "move": "Stomping Tantrum",
+              "min": 67,
+              "max": 81,
+              "minPct": 36.6,
+              "maxPct": 44.3,
+              "ko": "",
+              "desc": "36.6 - 44.2%"
+            },
+            {
+              "move": "Earthquake",
+              "min": 67,
+              "max": 79,
+              "minPct": 36.6,
+              "maxPct": 43.2,
+              "ko": "",
+              "desc": "36.6 - 43.1%"
+            },
+            {
+              "move": "Rock Slide",
+              "min": 17,
+              "max": 20,
+              "minPct": 9.3,
+              "maxPct": 10.9,
+              "ko": "",
+              "desc": "9.2 - 10.9%"
+            }
+          ]
+        },
+        {
+          "defender": "熾焰咆哮虎",
+          "defenderEn": "Incineroar",
+          "best": {
+            "move": "Earthquake",
+            "min": 102,
+            "max": 120,
+            "minPct": 59.3,
+            "maxPct": 69.8,
+            "ko": "",
+            "desc": "59.3 - 69.7%"
+          },
+          "all": [
+            {
+              "move": "Earthquake",
+              "min": 102,
+              "max": 120,
+              "minPct": 59.3,
+              "maxPct": 69.8,
+              "ko": "",
+              "desc": "59.3 - 69.7%"
+            },
+            {
+              "move": "Stomping Tantrum",
+              "min": 102,
+              "max": 120,
+              "minPct": 59.3,
+              "maxPct": 69.8,
+              "ko": "",
+              "desc": "59.3 - 69.7%"
+            },
+            {
+              "move": "Dragon Claw",
+              "min": 54,
+              "max": 64,
+              "minPct": 31.4,
+              "maxPct": 37.2,
+              "ko": "",
+              "desc": "31.3 - 37.2%"
+            },
+            {
+              "move": "Rock Slide",
+              "min": 50,
+              "max": 60,
+              "minPct": 29.1,
+              "maxPct": 34.9,
+              "ko": "",
+              "desc": "29 - 34.8%"
+            }
+          ]
+        },
+        {
+          "defender": "妙蛙花",
+          "defenderEn": "Venusaur",
+          "best": {
+            "move": "Dragon Claw",
+            "min": 81,
+            "max": 96,
+            "minPct": 48.8,
+            "maxPct": 57.8,
+            "ko": "",
+            "desc": "48.7 - 57.8%"
+          },
+          "all": [
+            {
+              "move": "Dragon Claw",
+              "min": 81,
+              "max": 96,
+              "minPct": 48.8,
+              "maxPct": 57.8,
+              "ko": "",
+              "desc": "48.7 - 57.8%"
+            },
+            {
+              "move": "Stomping Tantrum",
+              "min": 76,
+              "max": 90,
+              "minPct": 45.8,
+              "maxPct": 54.2,
+              "ko": "",
+              "desc": "45.7 - 54.2%"
+            },
+            {
+              "move": "Earthquake",
+              "min": 75,
+              "max": 88,
+              "minPct": 45.2,
+              "maxPct": 53,
+              "ko": "",
+              "desc": "45.1 - 53%"
+            },
+            {
+              "move": "Rock Slide",
+              "min": 38,
+              "max": 45,
+              "minPct": 22.9,
+              "maxPct": 27.1,
+              "ko": "",
+              "desc": "22.8 - 27.1%"
+            }
+          ]
+        },
+        {
+          "defender": "仙子伊布",
+          "defenderEn": "Sylveon",
+          "best": {
+            "move": "Earthquake",
+            "min": 91,
+            "max": 108,
+            "minPct": 45,
+            "maxPct": 53.5,
+            "ko": "",
+            "desc": "45 - 53.4%"
+          },
+          "all": [
+            {
+              "move": "Earthquake",
+              "min": 91,
+              "max": 108,
+              "minPct": 45,
+              "maxPct": 53.5,
+              "ko": "",
+              "desc": "45 - 53.4%"
+            },
+            {
+              "move": "Stomping Tantrum",
+              "min": 91,
+              "max": 108,
+              "minPct": 45,
+              "maxPct": 53.5,
+              "ko": "",
+              "desc": "45 - 53.4%"
+            },
+            {
+              "move": "Rock Slide",
+              "min": 45,
+              "max": 54,
+              "minPct": 22.3,
+              "maxPct": 26.7,
+              "ko": "",
+              "desc": "22.2 - 26.7%"
+            },
+            {
+              "move": "Dragon Claw",
+              "min": 0,
+              "max": 0,
+              "minPct": 0,
+              "maxPct": 0,
+              "ko": "",
+              "desc": "0 - 0%"
+            }
+          ]
+        },
+        {
+          "defender": "超壞星",
+          "defenderEn": "Toxapex",
+          "best": {
+            "move": "Earthquake",
+            "min": 68,
+            "max": 84,
+            "minPct": 43.3,
+            "maxPct": 53.5,
+            "ko": "",
+            "desc": "43.3 - 53.5%"
+          },
+          "all": [
+            {
+              "move": "Earthquake",
+              "min": 68,
+              "max": 84,
+              "minPct": 43.3,
+              "maxPct": 53.5,
+              "ko": "",
+              "desc": "43.3 - 53.5%"
+            },
+            {
+              "move": "Stomping Tantrum",
+              "min": 68,
+              "max": 84,
+              "minPct": 43.3,
+              "maxPct": 53.5,
+              "ko": "",
+              "desc": "43.3 - 53.5%"
+            },
+            {
+              "move": "Dragon Claw",
+              "min": 37,
+              "max": 45,
+              "minPct": 23.6,
+              "maxPct": 28.7,
+              "ko": "",
+              "desc": "23.5 - 28.6%"
+            },
+            {
+              "move": "Rock Slide",
+              "min": 17,
+              "max": 21,
+              "minPct": 10.8,
+              "maxPct": 13.4,
+              "ko": "",
+              "desc": "10.8 - 13.3%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "zh": "西獅海壬",
+      "name": "Primarina",
+      "rank": "單打#2",
+      "item": "Assault Vest",
+      "ability": "Liquid Voice",
+      "nature": "Modest",
+      "evs": {
+        "hp": 252,
+        "spa": 252,
+        "spd": 4
+      },
+      "moves": [
+        "Moonblast",
+        "Hyper Voice",
+        "Energy Ball",
+        "Haze"
+      ],
+      "mega": null,
+      "myAttacks": [
+        {
+          "attacker": "妙蛙花",
+          "attackerEn": "Venusaur",
+          "move": "Solar Beam",
+          "min": 148,
+          "max": 174,
+          "minPct": 79.1,
+          "maxPct": 93,
+          "ko": "",
+          "desc": "79.1 - 93%"
+        },
+        {
+          "attacker": "妙蛙花",
+          "attackerEn": "Venusaur",
+          "move": "Sludge Bomb",
+          "min": 109,
+          "max": 133,
+          "minPct": 58.3,
+          "maxPct": 71.1,
+          "ko": "",
+          "desc": "58.2 - 71.1%"
+        },
+        {
+          "attacker": "仙子伊布",
+          "attackerEn": "Sylveon",
+          "move": "Hyper Beam",
+          "min": 106,
+          "max": 126,
+          "minPct": 56.7,
+          "maxPct": 67.4,
+          "ko": "",
+          "desc": "56.6 - 67.3%"
+        },
+        {
+          "attacker": "噴火龍",
+          "attackerEn": "Charizard",
+          "move": "Solar Beam",
+          "min": 102,
+          "max": 122,
+          "minPct": 54.5,
+          "maxPct": 65.2,
+          "ko": "",
+          "desc": "54.5 - 65.2%"
+        },
+        {
+          "attacker": "熾焰咆哮虎",
+          "attackerEn": "Incineroar",
+          "move": "Flare Blitz",
+          "min": 90,
+          "max": 106,
+          "minPct": 48.1,
+          "maxPct": 56.7,
+          "ko": "",
+          "desc": "48.1 - 56.6% (17.2 - 20.3% recoil damage)"
+        },
+        {
+          "attacker": "烈咬陸鯊",
+          "attackerEn": "Garchomp",
+          "move": "Earthquake",
+          "min": 82,
+          "max": 97,
+          "minPct": 43.9,
+          "maxPct": 51.9,
+          "ko": "",
+          "desc": "43.8 - 51.8%"
+        }
+      ],
+      "theirAttacks": [
+        {
+          "defender": "烈咬陸鯊",
+          "defenderEn": "Garchomp",
+          "best": {
+            "move": "Moonblast",
+            "min": 198,
+            "max": 234,
+            "minPct": 108.2,
+            "maxPct": 127.9,
+            "ko": "",
+            "desc": "108.1 - 127.8%"
+          },
+          "all": [
+            {
+              "move": "Moonblast",
+              "min": 198,
+              "max": 234,
+              "minPct": 108.2,
+              "maxPct": 127.9,
+              "ko": "",
+              "desc": "108.1 - 127.8%"
+            },
+            {
+              "move": "Energy Ball",
+              "min": 62,
+              "max": 74,
+              "minPct": 33.9,
+              "maxPct": 40.4,
+              "ko": "",
+              "desc": "33.8 - 40.4%"
+            },
+            {
+              "move": "Hyper Voice",
+              "min": 33,
+              "max": 40,
+              "minPct": 18,
+              "maxPct": 21.9,
+              "ko": "",
+              "desc": "18 - 21.8%"
+            }
+          ]
+        },
+        {
+          "defender": "熾焰咆哮虎",
+          "defenderEn": "Incineroar",
+          "best": {
+            "move": "Moonblast",
+            "min": 96,
+            "max": 114,
+            "minPct": 55.8,
+            "maxPct": 66.3,
+            "ko": "",
+            "desc": "55.8 - 66.2%"
+          },
+          "all": [
+            {
+              "move": "Moonblast",
+              "min": 96,
+              "max": 114,
+              "minPct": 55.8,
+              "maxPct": 66.3,
+              "ko": "",
+              "desc": "55.8 - 66.2%"
+            },
+            {
+              "move": "Hyper Voice",
+              "min": 66,
+              "max": 80,
+              "minPct": 38.4,
+              "maxPct": 46.5,
+              "ko": "",
+              "desc": "38.3 - 46.5%"
+            },
+            {
+              "move": "Energy Ball",
+              "min": 30,
+              "max": 36,
+              "minPct": 17.4,
+              "maxPct": 20.9,
+              "ko": "",
+              "desc": "17.4 - 20.9%"
+            }
+          ]
+        },
+        {
+          "defender": "噴火龍",
+          "defenderEn": "Charizard",
+          "best": {
+            "move": "Hyper Voice",
+            "min": 54,
+            "max": 66,
+            "minPct": 34.8,
+            "maxPct": 42.6,
+            "ko": "",
+            "desc": "34.8 - 42.5%"
+          },
+          "all": [
+            {
+              "move": "Hyper Voice",
+              "min": 54,
+              "max": 66,
+              "minPct": 34.8,
+              "maxPct": 42.6,
+              "ko": "",
+              "desc": "34.8 - 42.5%"
+            },
+            {
+              "move": "Moonblast",
+              "min": 39,
+              "max": 46,
+              "minPct": 25.2,
+              "maxPct": 29.7,
+              "ko": "",
+              "desc": "25.1 - 29.6%"
+            },
+            {
+              "move": "Energy Ball",
+              "min": 12,
+              "max": 14,
+              "minPct": 7.7,
+              "maxPct": 9,
+              "ko": "",
+              "desc": "7.7 - 9%"
+            }
+          ]
+        },
+        {
+          "defender": "仙子伊布",
+          "defenderEn": "Sylveon",
+          "best": {
+            "move": "Moonblast",
+            "min": 70,
+            "max": 84,
+            "minPct": 34.7,
+            "maxPct": 41.6,
+            "ko": "",
+            "desc": "34.6 - 41.5%"
+          },
+          "all": [
+            {
+              "move": "Moonblast",
+              "min": 70,
+              "max": 84,
+              "minPct": 34.7,
+              "maxPct": 41.6,
+              "ko": "",
+              "desc": "34.6 - 41.5%"
+            },
+            {
+              "move": "Energy Ball",
+              "min": 45,
+              "max": 53,
+              "minPct": 22.3,
+              "maxPct": 26.2,
+              "ko": "",
+              "desc": "22.2 - 26.2%"
+            },
+            {
+              "move": "Hyper Voice",
+              "min": 25,
+              "max": 30,
+              "minPct": 12.4,
+              "maxPct": 14.9,
+              "ko": "",
+              "desc": "12.3 - 14.8%"
+            }
+          ]
+        },
+        {
+          "defender": "超壞星",
+          "defenderEn": "Toxapex",
+          "best": {
+            "move": "Energy Ball",
+            "min": 41,
+            "max": 49,
+            "minPct": 26.1,
+            "maxPct": 31.2,
+            "ko": "",
+            "desc": "26.1 - 31.2%"
+          },
+          "all": [
+            {
+              "move": "Energy Ball",
+              "min": 41,
+              "max": 49,
+              "minPct": 26.1,
+              "maxPct": 31.2,
+              "ko": "",
+              "desc": "26.1 - 31.2%"
+            },
+            {
+              "move": "Moonblast",
+              "min": 32,
+              "max": 38,
+              "minPct": 20.4,
+              "maxPct": 24.2,
+              "ko": "",
+              "desc": "20.3 - 24.2%"
+            },
+            {
+              "move": "Hyper Voice",
+              "min": 11,
+              "max": 13,
+              "minPct": 7,
+              "maxPct": 8.3,
+              "ko": "",
+              "desc": "7 - 8.2%"
+            }
+          ]
+        },
+        {
+          "defender": "妙蛙花",
+          "defenderEn": "Venusaur",
+          "best": {
+            "move": "Moonblast",
+            "min": 43,
+            "max": 51,
+            "minPct": 25.9,
+            "maxPct": 30.7,
+            "ko": "",
+            "desc": "25.9 - 30.7%"
+          },
+          "all": [
+            {
+              "move": "Moonblast",
+              "min": 43,
+              "max": 51,
+              "minPct": 25.9,
+              "maxPct": 30.7,
+              "ko": "",
+              "desc": "25.9 - 30.7%"
+            },
+            {
+              "move": "Hyper Voice",
+              "min": 15,
+              "max": 18,
+              "minPct": 9,
+              "maxPct": 10.8,
+              "ko": "",
+              "desc": "9 - 10.8%"
+            },
+            {
+              "move": "Energy Ball",
+              "min": 14,
+              "max": 16,
+              "minPct": 8.4,
+              "maxPct": 9.6,
+              "ko": "",
+              "desc": "8.4 - 9.6%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "zh": "魔幻假面喵",
+      "name": "Meowscarada",
+      "rank": "單打#3",
+      "item": "Focus Sash",
+      "ability": "Protean",
+      "nature": "Jolly",
+      "evs": {
+        "atk": 252,
+        "spd": 4,
+        "spe": 252
+      },
+      "moves": [
+        "Flower Trick",
+        "Knock Off",
+        "Sucker Punch",
+        "U-turn"
+      ],
+      "mega": null,
+      "myAttacks": [
+        {
+          "attacker": "仙子伊布",
+          "attackerEn": "Sylveon",
+          "move": "Hyper Beam",
+          "min": 474,
+          "max": 560,
+          "minPct": 313.9,
+          "maxPct": 370.9,
+          "ko": "",
+          "desc": "313.9 - 370.8%"
+        },
+        {
+          "attacker": "熾焰咆哮虎",
+          "attackerEn": "Incineroar",
+          "move": "Flare Blitz",
+          "min": 374,
+          "max": 444,
+          "minPct": 247.7,
+          "maxPct": 294,
+          "ko": "",
+          "desc": "247.6 - 294% (28.9 - 28.9% recoil damage)"
+        },
+        {
+          "attacker": "噴火龍",
+          "attackerEn": "Charizard",
+          "move": "Heat Wave",
+          "min": 306,
+          "max": 362,
+          "minPct": 202.6,
+          "maxPct": 239.7,
+          "ko": "",
+          "desc": "202.6 - 239.7%"
+        },
+        {
+          "attacker": "妙蛙花",
+          "attackerEn": "Venusaur",
+          "move": "Sludge Bomb",
+          "min": 242,
+          "max": 289,
+          "minPct": 160.3,
+          "maxPct": 191.4,
+          "ko": "",
+          "desc": "160.2 - 191.3%"
+        },
+        {
+          "attacker": "仙子伊布",
+          "attackerEn": "Sylveon",
+          "move": "Hyper Voice",
+          "min": 216,
+          "max": 254,
+          "minPct": 143,
+          "maxPct": 168.2,
+          "ko": "",
+          "desc": "143 - 168.2%"
+        },
+        {
+          "attacker": "烈咬陸鯊",
+          "attackerEn": "Garchomp",
+          "move": "Dragon Claw",
+          "min": 93,
+          "max": 109,
+          "minPct": 61.6,
+          "maxPct": 72.2,
+          "ko": "",
+          "desc": "61.5 - 72.1%"
+        }
+      ],
+      "theirAttacks": [
+        {
+          "defender": "仙子伊布",
+          "defenderEn": "Sylveon",
+          "best": {
+            "move": "Flower Trick",
+            "min": 114,
+            "max": 135,
+            "minPct": 56.4,
+            "maxPct": 66.8,
+            "ko": "",
+            "desc": "56.4 - 66.8%"
+          },
+          "all": [
+            {
+              "move": "Flower Trick",
+              "min": 114,
+              "max": 135,
+              "minPct": 56.4,
+              "maxPct": 66.8,
+              "ko": "",
+              "desc": "56.4 - 66.8%"
+            },
+            {
+              "move": "Knock Off",
+              "min": 52,
+              "max": 62,
+              "minPct": 25.7,
+              "maxPct": 30.7,
+              "ko": "",
+              "desc": "25.7 - 30.6%"
+            },
+            {
+              "move": "Sucker Punch",
+              "min": 38,
+              "max": 45,
+              "minPct": 18.8,
+              "maxPct": 22.3,
+              "ko": "",
+              "desc": "18.8 - 22.2%"
+            },
+            {
+              "move": "U-turn",
+              "min": 38,
+              "max": 45,
+              "minPct": 18.8,
+              "maxPct": 22.3,
+              "ko": "",
+              "desc": "18.8 - 22.2%"
+            }
+          ]
+        },
+        {
+          "defender": "妙蛙花",
+          "defenderEn": "Venusaur",
+          "best": {
+            "move": "Knock Off",
+            "min": 87,
+            "max": 103,
+            "minPct": 52.4,
+            "maxPct": 62,
+            "ko": "",
+            "desc": "52.4 - 62%"
+          },
+          "all": [
+            {
+              "move": "Knock Off",
+              "min": 87,
+              "max": 103,
+              "minPct": 52.4,
+              "maxPct": 62,
+              "ko": "",
+              "desc": "52.4 - 62%"
+            },
+            {
+              "move": "Sucker Punch",
+              "min": 63,
+              "max": 75,
+              "minPct": 38,
+              "maxPct": 45.2,
+              "ko": "",
+              "desc": "37.9 - 45.1%"
+            },
+            {
+              "move": "U-turn",
+              "min": 63,
+              "max": 75,
+              "minPct": 38,
+              "maxPct": 45.2,
+              "ko": "",
+              "desc": "37.9 - 45.1%"
+            },
+            {
+              "move": "Flower Trick",
+              "min": 23,
+              "max": 28,
+              "minPct": 13.9,
+              "maxPct": 16.9,
+              "ko": "",
+              "desc": "13.8 - 16.8%"
+            }
+          ]
+        },
+        {
+          "defender": "烈咬陸鯊",
+          "defenderEn": "Garchomp",
+          "best": {
+            "move": "Flower Trick",
+            "min": 84,
+            "max": 100,
+            "minPct": 45.9,
+            "maxPct": 54.6,
+            "ko": "",
+            "desc": "45.9 - 54.6%"
+          },
+          "all": [
+            {
+              "move": "Flower Trick",
+              "min": 84,
+              "max": 100,
+              "minPct": 45.9,
+              "maxPct": 54.6,
+              "ko": "",
+              "desc": "45.9 - 54.6%"
+            },
+            {
+              "move": "Knock Off",
+              "min": 78,
+              "max": 93,
+              "minPct": 42.6,
+              "maxPct": 50.8,
+              "ko": "",
+              "desc": "42.6 - 50.8%"
+            },
+            {
+              "move": "Sucker Punch",
+              "min": 57,
+              "max": 67,
+              "minPct": 31.1,
+              "maxPct": 36.6,
+              "ko": "",
+              "desc": "31.1 - 36.6%"
+            },
+            {
+              "move": "U-turn",
+              "min": 57,
+              "max": 67,
+              "minPct": 31.1,
+              "maxPct": 36.6,
+              "ko": "",
+              "desc": "31.1 - 36.6%"
+            }
+          ]
+        },
+        {
+          "defender": "噴火龍",
+          "defenderEn": "Charizard",
+          "best": {
+            "move": "Sucker Punch",
+            "min": 66,
+            "max": 78,
+            "minPct": 42.6,
+            "maxPct": 50.3,
+            "ko": "",
+            "desc": "42.5 - 50.3%"
+          },
+          "all": [
+            {
+              "move": "Sucker Punch",
+              "min": 66,
+              "max": 78,
+              "minPct": 42.6,
+              "maxPct": 50.3,
+              "ko": "",
+              "desc": "42.5 - 50.3%"
+            },
+            {
+              "move": "Knock Off",
+              "min": 61,
+              "max": 73,
+              "minPct": 39.4,
+              "maxPct": 47.1,
+              "ko": "",
+              "desc": "39.3 - 47%"
+            },
+            {
+              "move": "Flower Trick",
+              "min": 24,
+              "max": 29,
+              "minPct": 15.5,
+              "maxPct": 18.7,
+              "ko": "",
+              "desc": "15.4 - 18.7%"
+            },
+            {
+              "move": "U-turn",
+              "min": 16,
+              "max": 19,
+              "minPct": 10.3,
+              "maxPct": 12.3,
+              "ko": "",
+              "desc": "10.3 - 12.2%"
+            }
+          ]
+        },
+        {
+          "defender": "超壞星",
+          "defenderEn": "Toxapex",
+          "best": {
+            "move": "Flower Trick",
+            "min": 45,
+            "max": 54,
+            "minPct": 28.7,
+            "maxPct": 34.4,
+            "ko": "",
+            "desc": "28.6 - 34.3%"
+          },
+          "all": [
+            {
+              "move": "Flower Trick",
+              "min": 45,
+              "max": 54,
+              "minPct": 28.7,
+              "maxPct": 34.4,
+              "ko": "",
+              "desc": "28.6 - 34.3%"
+            },
+            {
+              "move": "Knock Off",
+              "min": 40,
+              "max": 48,
+              "minPct": 25.5,
+              "maxPct": 30.6,
+              "ko": "",
+              "desc": "25.4 - 30.5%"
+            },
+            {
+              "move": "Sucker Punch",
+              "min": 30,
+              "max": 36,
+              "minPct": 19.1,
+              "maxPct": 22.9,
+              "ko": "",
+              "desc": "19.1 - 22.9%"
+            },
+            {
+              "move": "U-turn",
+              "min": 15,
+              "max": 18,
+              "minPct": 9.6,
+              "maxPct": 11.5,
+              "ko": "",
+              "desc": "9.5 - 11.4%"
+            }
+          ]
+        },
+        {
+          "defender": "熾焰咆哮虎",
+          "defenderEn": "Incineroar",
+          "best": {
+            "move": "U-turn",
+            "min": 42,
+            "max": 49,
+            "minPct": 24.4,
+            "maxPct": 28.5,
+            "ko": "",
+            "desc": "24.4 - 28.4%"
+          },
+          "all": [
+            {
+              "move": "U-turn",
+              "min": 42,
+              "max": 49,
+              "minPct": 24.4,
+              "maxPct": 28.5,
+              "ko": "",
+              "desc": "24.4 - 28.4%"
+            },
+            {
+              "move": "Flower Trick",
+              "min": 30,
+              "max": 36,
+              "minPct": 17.4,
+              "maxPct": 20.9,
+              "ko": "",
+              "desc": "17.4 - 20.9%"
+            },
+            {
+              "move": "Knock Off",
+              "min": 29,
+              "max": 34,
+              "minPct": 16.9,
+              "maxPct": 19.8,
+              "ko": "",
+              "desc": "16.8 - 19.7%"
+            },
+            {
+              "move": "Sucker Punch",
+              "min": 21,
+              "max": 24,
+              "minPct": 12.2,
+              "maxPct": 14,
+              "ko": "",
+              "desc": "12.2 - 13.9%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "zh": "鋁鋼橋龍",
+      "name": "Archaludon",
+      "rank": "單打#4",
+      "item": "Assault Vest",
+      "ability": "Stamina",
+      "nature": "Modest",
+      "evs": {
+        "hp": 252,
+        "spa": 252,
+        "spd": 4
+      },
+      "moves": [
+        "Electro Shot",
+        "Draco Meteor",
+        "Flash Cannon",
+        "Body Press"
+      ],
+      "mega": null,
+      "myAttacks": [
+        {
+          "attacker": "仙子伊布",
+          "attackerEn": "Sylveon",
+          "move": "Hyper Beam",
+          "min": 169,
+          "max": 199,
+          "minPct": 85.8,
+          "maxPct": 101,
+          "ko": "",
+          "desc": "85.7 - 101%"
+        },
+        {
+          "attacker": "妙蛙花",
+          "attackerEn": "Venusaur",
+          "move": "Earth Power",
+          "min": 117,
+          "max": 138,
+          "minPct": 59.4,
+          "maxPct": 70.1,
+          "ko": "",
+          "desc": "59.3 - 70%"
+        },
+        {
+          "attacker": "熾焰咆哮虎",
+          "attackerEn": "Incineroar",
+          "move": "Flare Blitz",
+          "min": 114,
+          "max": 135,
+          "minPct": 57.9,
+          "maxPct": 68.5,
+          "ko": "",
+          "desc": "57.8 - 68.5% (21.8 - 25.9% recoil damage)"
+        },
+        {
+          "attacker": "噴火龍",
+          "attackerEn": "Charizard",
+          "move": "Heat Wave",
+          "min": 109,
+          "max": 130,
+          "minPct": 55.3,
+          "maxPct": 66,
+          "ko": "",
+          "desc": "55.3 - 65.9%"
+        },
+        {
+          "attacker": "烈咬陸鯊",
+          "attackerEn": "Garchomp",
+          "move": "Stomping Tantrum",
+          "min": 104,
+          "max": 126,
+          "minPct": 52.8,
+          "maxPct": 64,
+          "ko": "",
+          "desc": "52.7 - 63.9%"
+        },
+        {
+          "attacker": "烈咬陸鯊",
+          "attackerEn": "Garchomp",
+          "move": "Earthquake",
+          "min": 102,
+          "max": 122,
+          "minPct": 51.8,
+          "maxPct": 61.9,
+          "ko": "",
+          "desc": "51.7 - 61.9%"
+        }
+      ],
+      "theirAttacks": [
+        {
+          "defender": "烈咬陸鯊",
+          "defenderEn": "Garchomp",
+          "best": {
+            "move": "Draco Meteor",
+            "min": 266,
+            "max": 314,
+            "minPct": 145.4,
+            "maxPct": 171.6,
+            "ko": "",
+            "desc": "145.3 - 171.5%"
+          },
+          "all": [
+            {
+              "move": "Draco Meteor",
+              "min": 266,
+              "max": 314,
+              "minPct": 145.4,
+              "maxPct": 171.6,
+              "ko": "",
+              "desc": "145.3 - 171.5%"
+            },
+            {
+              "move": "Flash Cannon",
+              "min": 82,
+              "max": 97,
+              "minPct": 44.8,
+              "maxPct": 53,
+              "ko": "",
+              "desc": "44.8 - 53%"
+            },
+            {
+              "move": "Body Press",
+              "min": 39,
+              "max": 47,
+              "minPct": 21.3,
+              "maxPct": 25.7,
+              "ko": "",
+              "desc": "21.3 - 25.6%"
+            },
+            {
+              "move": "Electro Shot",
+              "min": 0,
+              "max": 0,
+              "minPct": 0,
+              "maxPct": 0,
+              "ko": "",
+              "desc": "0 - 0%"
+            }
+          ]
+        },
+        {
+          "defender": "噴火龍",
+          "defenderEn": "Charizard",
+          "best": {
+            "move": "Electro Shot",
+            "min": 212,
+            "max": 250,
+            "minPct": 136.8,
+            "maxPct": 161.3,
+            "ko": "",
+            "desc": "136.7 - 161.2%"
+          },
+          "all": [
+            {
+              "move": "Electro Shot",
+              "min": 212,
+              "max": 250,
+              "minPct": 136.8,
+              "maxPct": 161.3,
+              "ko": "",
+              "desc": "136.7 - 161.2%"
+            },
+            {
+              "move": "Draco Meteor",
+              "min": 106,
+              "max": 126,
+              "minPct": 68.4,
+              "maxPct": 81.3,
+              "ko": "",
+              "desc": "68.3 - 81.2%"
+            },
+            {
+              "move": "Flash Cannon",
+              "min": 33,
+              "max": 39,
+              "minPct": 21.3,
+              "maxPct": 25.2,
+              "ko": "",
+              "desc": "21.2 - 25.1%"
+            },
+            {
+              "move": "Body Press",
+              "min": 23,
+              "max": 27,
+              "minPct": 14.8,
+              "maxPct": 17.4,
+              "ko": "",
+              "desc": "14.8 - 17.4%"
+            }
+          ]
+        },
+        {
+          "defender": "超壞星",
+          "defenderEn": "Toxapex",
+          "best": {
+            "move": "Electro Shot",
+            "min": 174,
+            "max": 206,
+            "minPct": 110.8,
+            "maxPct": 131.2,
+            "ko": "",
+            "desc": "110.8 - 131.2%"
+          },
+          "all": [
+            {
+              "move": "Electro Shot",
+              "min": 174,
+              "max": 206,
+              "minPct": 110.8,
+              "maxPct": 131.2,
+              "ko": "",
+              "desc": "110.8 - 131.2%"
+            },
+            {
+              "move": "Draco Meteor",
+              "min": 87,
+              "max": 103,
+              "minPct": 55.4,
+              "maxPct": 65.6,
+              "ko": "",
+              "desc": "55.4 - 65.6%"
+            },
+            {
+              "move": "Flash Cannon",
+              "min": 27,
+              "max": 32,
+              "minPct": 17.2,
+              "maxPct": 20.4,
+              "ko": "",
+              "desc": "17.1 - 20.3%"
+            },
+            {
+              "move": "Body Press",
+              "min": 10,
+              "max": 12,
+              "minPct": 6.4,
+              "maxPct": 7.6,
+              "ko": "",
+              "desc": "6.3 - 7.6%"
+            }
+          ]
+        },
+        {
+          "defender": "熾焰咆哮虎",
+          "defenderEn": "Incineroar",
+          "best": {
+            "move": "Electro Shot",
+            "min": 130,
+            "max": 153,
+            "minPct": 75.6,
+            "maxPct": 89,
+            "ko": "",
+            "desc": "75.5 - 88.9%"
+          },
+          "all": [
+            {
+              "move": "Electro Shot",
+              "min": 130,
+              "max": 153,
+              "minPct": 75.6,
+              "maxPct": 89,
+              "ko": "",
+              "desc": "75.5 - 88.9%"
+            },
+            {
+              "move": "Draco Meteor",
+              "min": 129,
+              "max": 153,
+              "minPct": 75,
+              "maxPct": 89,
+              "ko": "",
+              "desc": "75 - 88.9%"
+            },
+            {
+              "move": "Body Press",
+              "min": 58,
+              "max": 70,
+              "minPct": 33.7,
+              "maxPct": 40.7,
+              "ko": "",
+              "desc": "33.7 - 40.6%"
+            },
+            {
+              "move": "Flash Cannon",
+              "min": 40,
+              "max": 48,
+              "minPct": 23.3,
+              "maxPct": 27.9,
+              "ko": "",
+              "desc": "23.2 - 27.9%"
+            }
+          ]
+        },
+        {
+          "defender": "妙蛙花",
+          "defenderEn": "Venusaur",
+          "best": {
+            "move": "Draco Meteor",
+            "min": 118,
+            "max": 141,
+            "minPct": 71.1,
+            "maxPct": 84.9,
+            "ko": "",
+            "desc": "71 - 84.9%"
+          },
+          "all": [
+            {
+              "move": "Draco Meteor",
+              "min": 118,
+              "max": 141,
+              "minPct": 71.1,
+              "maxPct": 84.9,
+              "ko": "",
+              "desc": "71 - 84.9%"
+            },
+            {
+              "move": "Flash Cannon",
+              "min": 73,
+              "max": 87,
+              "minPct": 44,
+              "maxPct": 52.4,
+              "ko": "",
+              "desc": "43.9 - 52.4%"
+            },
+            {
+              "move": "Electro Shot",
+              "min": 59,
+              "max": 70,
+              "minPct": 35.5,
+              "maxPct": 42.2,
+              "ko": "",
+              "desc": "35.5 - 42.1%"
+            },
+            {
+              "move": "Body Press",
+              "min": 22,
+              "max": 26,
+              "minPct": 13.3,
+              "maxPct": 15.7,
+              "ko": "",
+              "desc": "13.2 - 15.6%"
+            }
+          ]
+        },
+        {
+          "defender": "仙子伊布",
+          "defenderEn": "Sylveon",
+          "best": {
+            "move": "Flash Cannon",
+            "min": 116,
+            "max": 140,
+            "minPct": 57.4,
+            "maxPct": 69.3,
+            "ko": "",
+            "desc": "57.4 - 69.3%"
+          },
+          "all": [
+            {
+              "move": "Flash Cannon",
+              "min": 116,
+              "max": 140,
+              "minPct": 57.4,
+              "maxPct": 69.3,
+              "ko": "",
+              "desc": "57.4 - 69.3%"
+            },
+            {
+              "move": "Electro Shot",
+              "min": 95,
+              "max": 112,
+              "minPct": 47,
+              "maxPct": 55.4,
+              "ko": "",
+              "desc": "47 - 55.4%"
+            },
+            {
+              "move": "Body Press",
+              "min": 27,
+              "max": 32,
+              "minPct": 13.4,
+              "maxPct": 15.8,
+              "ko": "",
+              "desc": "13.3 - 15.8%"
+            },
+            {
+              "move": "Draco Meteor",
+              "min": 0,
+              "max": 0,
+              "minPct": 0,
+              "maxPct": 0,
+              "ko": "",
+              "desc": "0 - 0%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "zh": "謎擬Ｑ",
+      "name": "Mimikyu",
+      "rank": "單打#5",
+      "item": "Life Orb",
+      "ability": "Disguise",
+      "nature": "Adamant",
+      "evs": {
+        "atk": 252,
+        "spd": 4,
+        "spe": 252
+      },
+      "moves": [
+        "Play Rough",
+        "Shadow Sneak",
+        "Shadow Claw",
+        "Swords Dance"
+      ],
+      "mega": null,
+      "myAttacks": [
+        {
+          "attacker": "仙子伊布",
+          "attackerEn": "Sylveon",
+          "move": "Hyper Beam",
+          "min": 172,
+          "max": 204,
+          "minPct": 132.3,
+          "maxPct": 156.9,
+          "ko": "",
+          "desc": "132.3 - 156.9%"
+        },
+        {
+          "attacker": "熾焰咆哮虎",
+          "attackerEn": "Incineroar",
+          "move": "Flare Blitz",
+          "min": 171,
+          "max": 202,
+          "minPct": 131.5,
+          "maxPct": 155.4,
+          "ko": "",
+          "desc": "131.5 - 155.3% (24.9 - 24.9% recoil damage)"
+        },
+        {
+          "attacker": "妙蛙花",
+          "attackerEn": "Venusaur",
+          "move": "Solar Beam",
+          "min": 117,
+          "max": 138,
+          "minPct": 90,
+          "maxPct": 106.2,
+          "ko": "",
+          "desc": "90 - 106.1%"
+        },
+        {
+          "attacker": "噴火龍",
+          "attackerEn": "Charizard",
+          "move": "Heat Wave",
+          "min": 109,
+          "max": 130,
+          "minPct": 83.8,
+          "maxPct": 100,
+          "ko": "",
+          "desc": "83.8 - 100%"
+        },
+        {
+          "attacker": "妙蛙花",
+          "attackerEn": "Venusaur",
+          "move": "Sludge Bomb",
+          "min": 87,
+          "max": 105,
+          "minPct": 66.9,
+          "maxPct": 80.8,
+          "ko": "",
+          "desc": "66.9 - 80.7%"
+        },
+        {
+          "attacker": "噴火龍",
+          "attackerEn": "Charizard",
+          "move": "Solar Beam",
+          "min": 84,
+          "max": 99,
+          "minPct": 64.6,
+          "maxPct": 76.2,
+          "ko": "",
+          "desc": "64.6 - 76.1%"
+        }
+      ],
+      "theirAttacks": [
+        {
+          "defender": "烈咬陸鯊",
+          "defenderEn": "Garchomp",
+          "best": {
+            "move": "Play Rough",
+            "min": 179,
+            "max": 213,
+            "minPct": 97.8,
+            "maxPct": 116.4,
+            "ko": "",
+            "desc": "97.8 - 116.3%"
+          },
+          "all": [
+            {
+              "move": "Play Rough",
+              "min": 179,
+              "max": 213,
+              "minPct": 97.8,
+              "maxPct": 116.4,
+              "ko": "",
+              "desc": "97.8 - 116.3%"
+            },
+            {
+              "move": "Shadow Claw",
+              "min": 70,
+              "max": 83,
+              "minPct": 38.3,
+              "maxPct": 45.4,
+              "ko": "",
+              "desc": "38.2 - 45.3%"
+            },
+            {
+              "move": "Shadow Sneak",
+              "min": 40,
+              "max": 48,
+              "minPct": 21.9,
+              "maxPct": 26.2,
+              "ko": "",
+              "desc": "21.8 - 26.2%"
+            }
+          ]
+        },
+        {
+          "defender": "仙子伊布",
+          "defenderEn": "Sylveon",
+          "best": {
+            "move": "Play Rough",
+            "min": 121,
+            "max": 144,
+            "minPct": 59.9,
+            "maxPct": 71.3,
+            "ko": "",
+            "desc": "59.9 - 71.2%"
+          },
+          "all": [
+            {
+              "move": "Play Rough",
+              "min": 121,
+              "max": 144,
+              "minPct": 59.9,
+              "maxPct": 71.3,
+              "ko": "",
+              "desc": "59.9 - 71.2%"
+            },
+            {
+              "move": "Shadow Claw",
+              "min": 95,
+              "max": 113,
+              "minPct": 47,
+              "maxPct": 55.9,
+              "ko": "",
+              "desc": "47 - 55.9%"
+            },
+            {
+              "move": "Shadow Sneak",
+              "min": 55,
+              "max": 66,
+              "minPct": 27.2,
+              "maxPct": 32.7,
+              "ko": "",
+              "desc": "27.2 - 32.6%"
+            }
+          ]
+        },
+        {
+          "defender": "噴火龍",
+          "defenderEn": "Charizard",
+          "best": {
+            "move": "Shadow Claw",
+            "min": 83,
+            "max": 99,
+            "minPct": 53.5,
+            "maxPct": 63.9,
+            "ko": "",
+            "desc": "53.5 - 63.8%"
+          },
+          "all": [
+            {
+              "move": "Shadow Claw",
+              "min": 83,
+              "max": 99,
+              "minPct": 53.5,
+              "maxPct": 63.9,
+              "ko": "",
+              "desc": "53.5 - 63.8%"
+            },
+            {
+              "move": "Play Rough",
+              "min": 53,
+              "max": 62,
+              "minPct": 34.2,
+              "maxPct": 40,
+              "ko": "",
+              "desc": "34.1 - 40%"
+            },
+            {
+              "move": "Shadow Sneak",
+              "min": 48,
+              "max": 58,
+              "minPct": 31,
+              "maxPct": 37.4,
+              "ko": "",
+              "desc": "30.9 - 37.4%"
+            }
+          ]
+        },
+        {
+          "defender": "妙蛙花",
+          "defenderEn": "Venusaur",
+          "best": {
+            "move": "Shadow Claw",
+            "min": 78,
+            "max": 94,
+            "minPct": 47,
+            "maxPct": 56.6,
+            "ko": "",
+            "desc": "46.9 - 56.6%"
+          },
+          "all": [
+            {
+              "move": "Shadow Claw",
+              "min": 78,
+              "max": 94,
+              "minPct": 47,
+              "maxPct": 56.6,
+              "ko": "",
+              "desc": "46.9 - 56.6%"
+            },
+            {
+              "move": "Play Rough",
+              "min": 49,
+              "max": 58,
+              "minPct": 29.5,
+              "maxPct": 34.9,
+              "ko": "",
+              "desc": "29.5 - 34.9%"
+            },
+            {
+              "move": "Shadow Sneak",
+              "min": 44,
+              "max": 55,
+              "minPct": 26.5,
+              "maxPct": 33.1,
+              "ko": "",
+              "desc": "26.5 - 33.1%"
+            }
+          ]
+        },
+        {
+          "defender": "熾焰咆哮虎",
+          "defenderEn": "Incineroar",
+          "best": {
+            "move": "Play Rough",
+            "min": 66,
+            "max": 79,
+            "minPct": 38.4,
+            "maxPct": 45.9,
+            "ko": "",
+            "desc": "38.3 - 45.9%"
+          },
+          "all": [
+            {
+              "move": "Play Rough",
+              "min": 66,
+              "max": 79,
+              "minPct": 38.4,
+              "maxPct": 45.9,
+              "ko": "",
+              "desc": "38.3 - 45.9%"
+            },
+            {
+              "move": "Shadow Claw",
+              "min": 26,
+              "max": 31,
+              "minPct": 15.1,
+              "maxPct": 18,
+              "ko": "",
+              "desc": "15.1 - 18%"
+            },
+            {
+              "move": "Shadow Sneak",
+              "min": 16,
+              "max": 18,
+              "minPct": 9.3,
+              "maxPct": 10.5,
+              "ko": "",
+              "desc": "9.3 - 10.4%"
+            }
+          ]
+        },
+        {
+          "defender": "超壞星",
+          "defenderEn": "Toxapex",
+          "best": {
+            "move": "Shadow Claw",
+            "min": 36,
+            "max": 44,
+            "minPct": 22.9,
+            "maxPct": 28,
+            "ko": "",
+            "desc": "22.9 - 28%"
+          },
+          "all": [
+            {
+              "move": "Shadow Claw",
+              "min": 36,
+              "max": 44,
+              "minPct": 22.9,
+              "maxPct": 28,
+              "ko": "",
+              "desc": "22.9 - 28%"
+            },
+            {
+              "move": "Play Rough",
+              "min": 23,
+              "max": 27,
+              "minPct": 14.6,
+              "maxPct": 17.2,
+              "ko": "",
+              "desc": "14.6 - 17.1%"
+            },
+            {
+              "move": "Shadow Sneak",
+              "min": 21,
+              "max": 27,
+              "minPct": 13.4,
+              "maxPct": 17.2,
+              "ko": "",
+              "desc": "13.3 - 17.1%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "zh": "仆刀將軍",
+      "name": "Kingambit",
+      "rank": "雙打S級",
+      "item": "Black Glasses",
+      "ability": "Defiant",
+      "nature": "Adamant",
+      "evs": {
+        "hp": 252,
+        "atk": 252,
+        "def": 4
+      },
+      "moves": [
+        "Kowtow Cleave",
+        "Sucker Punch",
+        "Iron Head",
+        "Protect"
+      ],
+      "mega": null,
+      "myAttacks": [
+        {
+          "attacker": "噴火龍",
+          "attackerEn": "Charizard",
+          "move": "Heat Wave",
+          "min": 266,
+          "max": 314,
+          "minPct": 128.5,
+          "maxPct": 151.7,
+          "ko": "",
+          "desc": "128.5 - 151.6%"
+        },
+        {
+          "attacker": "熾焰咆哮虎",
+          "attackerEn": "Incineroar",
+          "move": "Flare Blitz",
+          "min": 242,
+          "max": 288,
+          "minPct": 116.9,
+          "maxPct": 139.1,
+          "ko": "",
+          "desc": "116.9 - 139.1% (39.7 - 39.7% recoil damage)"
+        },
+        {
+          "attacker": "仙子伊布",
+          "attackerEn": "Sylveon",
+          "move": "Hyper Beam",
+          "min": 207,
+          "max": 244,
+          "minPct": 100,
+          "maxPct": 117.9,
+          "ko": "",
+          "desc": "100 - 117.8%"
+        },
+        {
+          "attacker": "妙蛙花",
+          "attackerEn": "Venusaur",
+          "move": "Earth Power",
+          "min": 140,
+          "max": 166,
+          "minPct": 67.6,
+          "maxPct": 80.2,
+          "ko": "",
+          "desc": "67.6 - 80.1%"
+        },
+        {
+          "attacker": "烈咬陸鯊",
+          "attackerEn": "Garchomp",
+          "move": "Stomping Tantrum",
+          "min": 110,
+          "max": 132,
+          "minPct": 53.1,
+          "maxPct": 63.8,
+          "ko": "",
+          "desc": "53.1 - 63.7%"
+        },
+        {
+          "attacker": "烈咬陸鯊",
+          "attackerEn": "Garchomp",
+          "move": "Earthquake",
+          "min": 108,
+          "max": 128,
+          "minPct": 52.2,
+          "maxPct": 61.8,
+          "ko": "",
+          "desc": "52.1 - 61.8%"
+        }
+      ],
+      "theirAttacks": [
+        {
+          "defender": "仙子伊布",
+          "defenderEn": "Sylveon",
+          "best": {
+            "move": "Iron Head",
+            "min": 218,
+            "max": 258,
+            "minPct": 107.9,
+            "maxPct": 127.7,
+            "ko": "",
+            "desc": "107.9 - 127.7%"
+          },
+          "all": [
+            {
+              "move": "Iron Head",
+              "min": 218,
+              "max": 258,
+              "minPct": 107.9,
+              "maxPct": 127.7,
+              "ko": "",
+              "desc": "107.9 - 127.7%"
+            },
+            {
+              "move": "Kowtow Cleave",
+              "min": 69,
+              "max": 82,
+              "minPct": 34.2,
+              "maxPct": 40.6,
+              "ko": "",
+              "desc": "34.1 - 40.5%"
+            },
+            {
+              "move": "Sucker Punch",
+              "min": 57,
+              "max": 68,
+              "minPct": 28.2,
+              "maxPct": 33.7,
+              "ko": "",
+              "desc": "28.2 - 33.6%"
+            }
+          ]
+        },
+        {
+          "defender": "噴火龍",
+          "defenderEn": "Charizard",
+          "best": {
+            "move": "Kowtow Cleave",
+            "min": 120,
+            "max": 142,
+            "minPct": 77.4,
+            "maxPct": 91.6,
+            "ko": "",
+            "desc": "77.4 - 91.6%"
+          },
+          "all": [
+            {
+              "move": "Kowtow Cleave",
+              "min": 120,
+              "max": 142,
+              "minPct": 77.4,
+              "maxPct": 91.6,
+              "ko": "",
+              "desc": "77.4 - 91.6%"
+            },
+            {
+              "move": "Sucker Punch",
+              "min": 100,
+              "max": 118,
+              "minPct": 64.5,
+              "maxPct": 76.1,
+              "ko": "",
+              "desc": "64.5 - 76.1%"
+            },
+            {
+              "move": "Iron Head",
+              "min": 47,
+              "max": 56,
+              "minPct": 30.3,
+              "maxPct": 36.1,
+              "ko": "",
+              "desc": "30.3 - 36.1%"
+            }
+          ]
+        },
+        {
+          "defender": "妙蛙花",
+          "defenderEn": "Venusaur",
+          "best": {
+            "move": "Kowtow Cleave",
+            "min": 115,
+            "max": 136,
+            "minPct": 69.3,
+            "maxPct": 81.9,
+            "ko": "",
+            "desc": "69.2 - 81.9%"
+          },
+          "all": [
+            {
+              "move": "Kowtow Cleave",
+              "min": 115,
+              "max": 136,
+              "minPct": 69.3,
+              "maxPct": 81.9,
+              "ko": "",
+              "desc": "69.2 - 81.9%"
+            },
+            {
+              "move": "Sucker Punch",
+              "min": 94,
+              "max": 112,
+              "minPct": 56.6,
+              "maxPct": 67.5,
+              "ko": "",
+              "desc": "56.6 - 67.4%"
+            },
+            {
+              "move": "Iron Head",
+              "min": 91,
+              "max": 108,
+              "minPct": 54.8,
+              "maxPct": 65.1,
+              "ko": "",
+              "desc": "54.8 - 65%"
+            }
+          ]
+        },
+        {
+          "defender": "烈咬陸鯊",
+          "defenderEn": "Garchomp",
+          "best": {
+            "move": "Kowtow Cleave",
+            "min": 103,
+            "max": 123,
+            "minPct": 56.3,
+            "maxPct": 67.2,
+            "ko": "",
+            "desc": "56.2 - 67.2%"
+          },
+          "all": [
+            {
+              "move": "Kowtow Cleave",
+              "min": 103,
+              "max": 123,
+              "minPct": 56.3,
+              "maxPct": 67.2,
+              "ko": "",
+              "desc": "56.2 - 67.2%"
+            },
+            {
+              "move": "Sucker Punch",
+              "min": 84,
+              "max": 100,
+              "minPct": 45.9,
+              "maxPct": 54.6,
+              "ko": "",
+              "desc": "45.9 - 54.6%"
+            },
+            {
+              "move": "Iron Head",
+              "min": 81,
+              "max": 96,
+              "minPct": 44.3,
+              "maxPct": 52.5,
+              "ko": "",
+              "desc": "44.2 - 52.4%"
+            }
+          ]
+        },
+        {
+          "defender": "超壞星",
+          "defenderEn": "Toxapex",
+          "best": {
+            "move": "Kowtow Cleave",
+            "min": 54,
+            "max": 64,
+            "minPct": 34.4,
+            "maxPct": 40.8,
+            "ko": "",
+            "desc": "34.3 - 40.7%"
+          },
+          "all": [
+            {
+              "move": "Kowtow Cleave",
+              "min": 54,
+              "max": 64,
+              "minPct": 34.4,
+              "maxPct": 40.8,
+              "ko": "",
+              "desc": "34.3 - 40.7%"
+            },
+            {
+              "move": "Sucker Punch",
+              "min": 43,
+              "max": 52,
+              "minPct": 27.4,
+              "maxPct": 33.1,
+              "ko": "",
+              "desc": "27.3 - 33.1%"
+            },
+            {
+              "move": "Iron Head",
+              "min": 21,
+              "max": 25,
+              "minPct": 13.4,
+              "maxPct": 15.9,
+              "ko": "",
+              "desc": "13.3 - 15.9%"
+            }
+          ]
+        },
+        {
+          "defender": "熾焰咆哮虎",
+          "defenderEn": "Incineroar",
+          "best": {
+            "move": "Kowtow Cleave",
+            "min": 38,
+            "max": 45,
+            "minPct": 22.1,
+            "maxPct": 26.2,
+            "ko": "",
+            "desc": "22 - 26.1%"
+          },
+          "all": [
+            {
+              "move": "Kowtow Cleave",
+              "min": 38,
+              "max": 45,
+              "minPct": 22.1,
+              "maxPct": 26.2,
+              "ko": "",
+              "desc": "22 - 26.1%"
+            },
+            {
+              "move": "Sucker Punch",
+              "min": 31,
+              "max": 37,
+              "minPct": 18,
+              "maxPct": 21.5,
+              "ko": "",
+              "desc": "18 - 21.5%"
+            },
+            {
+              "move": "Iron Head",
+              "min": 30,
+              "max": 36,
+              "minPct": 17.4,
+              "maxPct": 20.9,
+              "ko": "",
+              "desc": "17.4 - 20.9%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "zh": "熾焰咆哮虎",
+      "name": "Incineroar",
+      "rank": "雙打S級",
+      "item": "Sitrus Berry",
+      "ability": "Intimidate",
+      "nature": "Careful",
+      "evs": {
+        "hp": 252,
+        "atk": 4,
+        "spd": 252
+      },
+      "moves": [
+        "Fake Out",
+        "Flare Blitz",
+        "Knock Off",
+        "Parting Shot"
+      ],
+      "mega": null,
+      "myAttacks": [
+        {
+          "attacker": "烈咬陸鯊",
+          "attackerEn": "Garchomp",
+          "move": "Stomping Tantrum",
+          "min": 140,
+          "max": 168,
+          "minPct": 69.3,
+          "maxPct": 83.2,
+          "ko": "",
+          "desc": "69.3 - 83.1%"
+        },
+        {
+          "attacker": "仙子伊布",
+          "attackerEn": "Sylveon",
+          "move": "Hyper Beam",
+          "min": 139,
+          "max": 165,
+          "minPct": 68.8,
+          "maxPct": 81.7,
+          "ko": "",
+          "desc": "68.8 - 81.6%"
+        },
+        {
+          "attacker": "烈咬陸鯊",
+          "attackerEn": "Garchomp",
+          "move": "Earthquake",
+          "min": 138,
+          "max": 164,
+          "minPct": 68.3,
+          "maxPct": 81.2,
+          "ko": "",
+          "desc": "68.3 - 81.1%"
+        },
+        {
+          "attacker": "妙蛙花",
+          "attackerEn": "Venusaur",
+          "move": "Earth Power",
+          "min": 96,
+          "max": 114,
+          "minPct": 47.5,
+          "maxPct": 56.4,
+          "ko": "",
+          "desc": "47.5 - 56.4%"
+        },
+        {
+          "attacker": "熾焰咆哮虎",
+          "attackerEn": "Incineroar",
+          "move": "Flare Blitz",
+          "min": 78,
+          "max": 92,
+          "minPct": 38.6,
+          "maxPct": 45.5,
+          "ko": "",
+          "desc": "38.6 - 45.5% (14.9 - 17.6% recoil damage)"
+        },
+        {
+          "attacker": "烈咬陸鯊",
+          "attackerEn": "Garchomp",
+          "move": "Dragon Claw",
+          "min": 76,
+          "max": 90,
+          "minPct": 37.6,
+          "maxPct": 44.6,
+          "ko": "",
+          "desc": "37.6 - 44.5%"
+        }
+      ],
+      "theirAttacks": [
+        {
+          "defender": "妙蛙花",
+          "defenderEn": "Venusaur",
+          "best": {
+            "move": "Flare Blitz",
+            "min": 270,
+            "max": 318,
+            "minPct": 162.7,
+            "maxPct": 191.6,
+            "ko": "",
+            "desc": "162.6 - 191.5% (27.1 - 27.1% recoil damage)"
+          },
+          "all": [
+            {
+              "move": "Flare Blitz",
+              "min": 270,
+              "max": 318,
+              "minPct": 162.7,
+              "maxPct": 191.6,
+              "ko": "",
+              "desc": "162.6 - 191.5% (27.1 - 27.1% recoil damage)"
+            },
+            {
+              "move": "Knock Off",
+              "min": 73,
+              "max": 87,
+              "minPct": 44,
+              "maxPct": 52.4,
+              "ko": "",
+              "desc": "43.9 - 52.4%"
+            },
+            {
+              "move": "Fake Out",
+              "min": 21,
+              "max": 25,
+              "minPct": 12.7,
+              "maxPct": 15.1,
+              "ko": "",
+              "desc": "12.6 - 15%"
+            }
+          ]
+        },
+        {
+          "defender": "仙子伊布",
+          "defenderEn": "Sylveon",
+          "best": {
+            "move": "Flare Blitz",
+            "min": 163,
+            "max": 193,
+            "minPct": 80.7,
+            "maxPct": 95.5,
+            "ko": "",
+            "desc": "80.6 - 95.5% (26.6 - 31.5% recoil damage)"
+          },
+          "all": [
+            {
+              "move": "Flare Blitz",
+              "min": 163,
+              "max": 193,
+              "minPct": 80.7,
+              "maxPct": 95.5,
+              "ko": "",
+              "desc": "80.6 - 95.5% (26.6 - 31.5% recoil damage)"
+            },
+            {
+              "move": "Knock Off",
+              "min": 44,
+              "max": 52,
+              "minPct": 21.8,
+              "maxPct": 25.7,
+              "ko": "",
+              "desc": "21.7 - 25.7%"
+            },
+            {
+              "move": "Fake Out",
+              "min": 25,
+              "max": 30,
+              "minPct": 12.4,
+              "maxPct": 14.9,
+              "ko": "",
+              "desc": "12.3 - 14.8%"
+            }
+          ]
+        },
+        {
+          "defender": "噴火龍",
+          "defenderEn": "Charizard",
+          "best": {
+            "move": "Flare Blitz",
+            "min": 71,
+            "max": 84,
+            "minPct": 45.8,
+            "maxPct": 54.2,
+            "ko": "",
+            "desc": "45.8 - 54.1% (11.5 - 13.7% recoil damage)"
+          },
+          "all": [
+            {
+              "move": "Flare Blitz",
+              "min": 71,
+              "max": 84,
+              "minPct": 45.8,
+              "maxPct": 54.2,
+              "ko": "",
+              "desc": "45.8 - 54.1% (11.5 - 13.7% recoil damage)"
+            },
+            {
+              "move": "Knock Off",
+              "min": 51,
+              "max": 61,
+              "minPct": 32.9,
+              "maxPct": 39.4,
+              "ko": "",
+              "desc": "32.9 - 39.3%"
+            },
+            {
+              "move": "Fake Out",
+              "min": 22,
+              "max": 26,
+              "minPct": 14.2,
+              "maxPct": 16.8,
+              "ko": "",
+              "desc": "14.1 - 16.7%"
+            }
+          ]
+        },
+        {
+          "defender": "烈咬陸鯊",
+          "defenderEn": "Garchomp",
+          "best": {
+            "move": "Knock Off",
+            "min": 66,
+            "max": 78,
+            "minPct": 36.1,
+            "maxPct": 42.6,
+            "ko": "",
+            "desc": "36 - 42.6%"
+          },
+          "all": [
+            {
+              "move": "Knock Off",
+              "min": 66,
+              "max": 78,
+              "minPct": 36.1,
+              "maxPct": 42.6,
+              "ko": "",
+              "desc": "36 - 42.6%"
+            },
+            {
+              "move": "Flare Blitz",
+              "min": 60,
+              "max": 72,
+              "minPct": 32.8,
+              "maxPct": 39.3,
+              "ko": "",
+              "desc": "32.7 - 39.3% (9.8 - 11.7% recoil damage)"
+            },
+            {
+              "move": "Fake Out",
+              "min": 18,
+              "max": 22,
+              "minPct": 9.8,
+              "maxPct": 12,
+              "ko": "",
+              "desc": "9.8 - 12%"
+            }
+          ]
+        },
+        {
+          "defender": "熾焰咆哮虎",
+          "defenderEn": "Incineroar",
+          "best": {
+            "move": "Flare Blitz",
+            "min": 45,
+            "max": 54,
+            "minPct": 26.2,
+            "maxPct": 31.4,
+            "ko": "",
+            "desc": "26.1 - 31.3% (7.3 - 8.8% recoil damage)"
+          },
+          "all": [
+            {
+              "move": "Flare Blitz",
+              "min": 45,
+              "max": 54,
+              "minPct": 26.2,
+              "maxPct": 31.4,
+              "ko": "",
+              "desc": "26.1 - 31.3% (7.3 - 8.8% recoil damage)"
+            },
+            {
+              "move": "Knock Off",
+              "min": 24,
+              "max": 29,
+              "minPct": 14,
+              "maxPct": 16.9,
+              "ko": "",
+              "desc": "13.9 - 16.8%"
+            },
+            {
+              "move": "Fake Out",
+              "min": 14,
+              "max": 17,
+              "minPct": 8.1,
+              "maxPct": 9.9,
+              "ko": "",
+              "desc": "8.1 - 9.8%"
+            }
+          ]
+        },
+        {
+          "defender": "超壞星",
+          "defenderEn": "Toxapex",
+          "best": {
+            "move": "Knock Off",
+            "min": 33,
+            "max": 40,
+            "minPct": 21,
+            "maxPct": 25.5,
+            "ko": "",
+            "desc": "21 - 25.4%"
+          },
+          "all": [
+            {
+              "move": "Knock Off",
+              "min": 33,
+              "max": 40,
+              "minPct": 21,
+              "maxPct": 25.5,
+              "ko": "",
+              "desc": "21 - 25.4%"
+            },
+            {
+              "move": "Flare Blitz",
+              "min": 32,
+              "max": 38,
+              "minPct": 20.4,
+              "maxPct": 24.2,
+              "ko": "",
+              "desc": "20.3 - 24.2% (5.2 - 6.2% recoil damage)"
+            },
+            {
+              "move": "Fake Out",
+              "min": 10,
+              "max": 12,
+              "minPct": 6.4,
+              "maxPct": 7.6,
+              "ko": "",
+              "desc": "6.3 - 7.6%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "zh": "白蓬蓬",
+      "name": "Whimsicott",
+      "rank": "雙打S級",
+      "item": "Focus Sash",
+      "ability": "Prankster",
+      "nature": "Timid",
+      "evs": {
+        "hp": 252,
+        "spa": 4,
+        "spe": 252
+      },
+      "moves": [
+        "Moonblast",
+        "Tailwind",
+        "Encore",
+        "Light Screen"
+      ],
+      "mega": null,
+      "myAttacks": [
+        {
+          "attacker": "妙蛙花",
+          "attackerEn": "Venusaur",
+          "move": "Sludge Bomb",
+          "min": 468,
+          "max": 551,
+          "minPct": 280.2,
+          "maxPct": 329.9,
+          "ko": "",
+          "desc": "280.2 - 329.9%"
+        },
+        {
+          "attacker": "熾焰咆哮虎",
+          "attackerEn": "Incineroar",
+          "move": "Flare Blitz",
+          "min": 320,
+          "max": 380,
+          "minPct": 191.6,
+          "maxPct": 227.5,
+          "ko": "",
+          "desc": "191.6 - 227.5% (32 - 32% recoil damage)"
+        },
+        {
+          "attacker": "噴火龍",
+          "attackerEn": "Charizard",
+          "move": "Heat Wave",
+          "min": 296,
+          "max": 350,
+          "minPct": 177.2,
+          "maxPct": 209.6,
+          "ko": "",
+          "desc": "177.2 - 209.5%"
+        },
+        {
+          "attacker": "仙子伊布",
+          "attackerEn": "Sylveon",
+          "move": "Hyper Beam",
+          "min": 229,
+          "max": 270,
+          "minPct": 137.1,
+          "maxPct": 161.7,
+          "ko": "",
+          "desc": "137.1 - 161.6%"
+        },
+        {
+          "attacker": "仙子伊布",
+          "attackerEn": "Sylveon",
+          "move": "Hyper Voice",
+          "min": 103,
+          "max": 123,
+          "minPct": 61.7,
+          "maxPct": 73.7,
+          "ko": "",
+          "desc": "61.6 - 73.6%"
+        },
+        {
+          "attacker": "妙蛙花",
+          "attackerEn": "Venusaur",
+          "move": "Solar Beam",
+          "min": 77,
+          "max": 91,
+          "minPct": 46.1,
+          "maxPct": 54.5,
+          "ko": "",
+          "desc": "46.1 - 54.4%"
+        }
+      ],
+      "theirAttacks": [
+        {
+          "defender": "烈咬陸鯊",
+          "defenderEn": "Garchomp",
+          "best": {
+            "move": "Moonblast",
+            "min": 102,
+            "max": 120,
+            "minPct": 55.7,
+            "maxPct": 65.6,
+            "ko": "",
+            "desc": "55.7 - 65.5%"
+          },
+          "all": [
+            {
+              "move": "Moonblast",
+              "min": 102,
+              "max": 120,
+              "minPct": 55.7,
+              "maxPct": 65.6,
+              "ko": "",
+              "desc": "55.7 - 65.5%"
+            }
+          ]
+        },
+        {
+          "defender": "熾焰咆哮虎",
+          "defenderEn": "Incineroar",
+          "best": {
+            "move": "Moonblast",
+            "min": 49,
+            "max": 58,
+            "minPct": 28.5,
+            "maxPct": 33.7,
+            "ko": "",
+            "desc": "28.4 - 33.7%"
+          },
+          "all": [
+            {
+              "move": "Moonblast",
+              "min": 49,
+              "max": 58,
+              "minPct": 28.5,
+              "maxPct": 33.7,
+              "ko": "",
+              "desc": "28.4 - 33.7%"
+            }
+          ]
+        },
+        {
+          "defender": "仙子伊布",
+          "defenderEn": "Sylveon",
+          "best": {
+            "move": "Moonblast",
+            "min": 36,
+            "max": 43,
+            "minPct": 17.8,
+            "maxPct": 21.3,
+            "ko": "",
+            "desc": "17.8 - 21.2%"
+          },
+          "all": [
+            {
+              "move": "Moonblast",
+              "min": 36,
+              "max": 43,
+              "minPct": 17.8,
+              "maxPct": 21.3,
+              "ko": "",
+              "desc": "17.8 - 21.2%"
+            }
+          ]
+        },
+        {
+          "defender": "妙蛙花",
+          "defenderEn": "Venusaur",
+          "best": {
+            "move": "Moonblast",
+            "min": 22,
+            "max": 27,
+            "minPct": 13.3,
+            "maxPct": 16.3,
+            "ko": "",
+            "desc": "13.2 - 16.2%"
+          },
+          "all": [
+            {
+              "move": "Moonblast",
+              "min": 22,
+              "max": 27,
+              "minPct": 13.3,
+              "maxPct": 16.3,
+              "ko": "",
+              "desc": "13.2 - 16.2%"
+            }
+          ]
+        },
+        {
+          "defender": "噴火龍",
+          "defenderEn": "Charizard",
+          "best": {
+            "move": "Moonblast",
+            "min": 20,
+            "max": 24,
+            "minPct": 12.9,
+            "maxPct": 15.5,
+            "ko": "",
+            "desc": "12.9 - 15.4%"
+          },
+          "all": [
+            {
+              "move": "Moonblast",
+              "min": 20,
+              "max": 24,
+              "minPct": 12.9,
+              "maxPct": 15.5,
+              "ko": "",
+              "desc": "12.9 - 15.4%"
+            }
+          ]
+        },
+        {
+          "defender": "超壞星",
+          "defenderEn": "Toxapex",
+          "best": {
+            "move": "Moonblast",
+            "min": 16,
+            "max": 19,
+            "minPct": 10.2,
+            "maxPct": 12.1,
+            "ko": "",
+            "desc": "10.1 - 12.1%"
+          },
+          "all": [
+            {
+              "move": "Moonblast",
+              "min": 16,
+              "max": 19,
+              "minPct": 10.2,
+              "maxPct": 12.1,
+              "ko": "",
+              "desc": "10.1 - 12.1%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "zh": "來悲粗茶",
+      "name": "Sinistcha",
+      "rank": "雙打A級",
+      "item": "Sitrus Berry",
+      "ability": "Hospitality",
+      "nature": "Bold",
+      "evs": {
+        "hp": 252,
+        "def": 252,
+        "spd": 4
+      },
+      "moves": [
+        "Matcha Gotcha",
+        "Shadow Ball",
+        "Trick Room",
+        "Life Dew"
+      ],
+      "mega": null,
+      "myAttacks": [
+        {
+          "attacker": "噴火龍",
+          "attackerEn": "Charizard",
+          "move": "Heat Wave",
+          "min": 276,
+          "max": 326,
+          "minPct": 155.1,
+          "maxPct": 183.1,
+          "ko": "",
+          "desc": "155 - 183.1%"
+        },
+        {
+          "attacker": "仙子伊布",
+          "attackerEn": "Sylveon",
+          "move": "Hyper Beam",
+          "min": 214,
+          "max": 253,
+          "minPct": 120.2,
+          "maxPct": 142.1,
+          "ko": "",
+          "desc": "120.2 - 142.1%"
+        },
+        {
+          "attacker": "熾焰咆哮虎",
+          "attackerEn": "Incineroar",
+          "move": "Flare Blitz",
+          "min": 198,
+          "max": 234,
+          "minPct": 111.2,
+          "maxPct": 131.5,
+          "ko": "",
+          "desc": "111.2 - 131.4% (34.1 - 34.1% recoil damage)"
+        },
+        {
+          "attacker": "妙蛙花",
+          "attackerEn": "Venusaur",
+          "move": "Sludge Bomb",
+          "min": 109,
+          "max": 130,
+          "minPct": 61.2,
+          "maxPct": 73,
+          "ko": "",
+          "desc": "61.2 - 73%"
+        },
+        {
+          "attacker": "仙子伊布",
+          "attackerEn": "Sylveon",
+          "move": "Hyper Voice",
+          "min": 96,
+          "max": 114,
+          "minPct": 53.9,
+          "maxPct": 64,
+          "ko": "",
+          "desc": "53.9 - 64%"
+        },
+        {
+          "attacker": "熾焰咆哮虎",
+          "attackerEn": "Incineroar",
+          "move": "Darkest Lariat",
+          "min": 96,
+          "max": 114,
+          "minPct": 53.9,
+          "maxPct": 64,
+          "ko": "",
+          "desc": "53.9 - 64%"
+        }
+      ],
+      "theirAttacks": [
+        {
+          "defender": "烈咬陸鯊",
+          "defenderEn": "Garchomp",
+          "best": {
+            "move": "Shadow Ball",
+            "min": 60,
+            "max": 72,
+            "minPct": 32.8,
+            "maxPct": 39.3,
+            "ko": "",
+            "desc": "32.7 - 39.3%"
+          },
+          "all": [
+            {
+              "move": "Shadow Ball",
+              "min": 60,
+              "max": 72,
+              "minPct": 32.8,
+              "maxPct": 39.3,
+              "ko": "",
+              "desc": "32.7 - 39.3%"
+            },
+            {
+              "move": "Matcha Gotcha",
+              "min": 45,
+              "max": 54,
+              "minPct": 24.6,
+              "maxPct": 29.5,
+              "ko": "",
+              "desc": "24.5 - 29.5% (12.9 - 15.1% recovered)"
+            }
+          ]
+        },
+        {
+          "defender": "妙蛙花",
+          "defenderEn": "Venusaur",
+          "best": {
+            "move": "Shadow Ball",
+            "min": 54,
+            "max": 64,
+            "minPct": 32.5,
+            "maxPct": 38.6,
+            "ko": "",
+            "desc": "32.5 - 38.5%"
+          },
+          "all": [
+            {
+              "move": "Shadow Ball",
+              "min": 54,
+              "max": 64,
+              "minPct": 32.5,
+              "maxPct": 38.6,
+              "ko": "",
+              "desc": "32.5 - 38.5%"
+            },
+            {
+              "move": "Matcha Gotcha",
+              "min": 10,
+              "max": 12,
+              "minPct": 6,
+              "maxPct": 7.2,
+              "ko": "",
+              "desc": "6 - 7.2% (2.8 - 3.3% recovered)"
+            }
+          ]
+        },
+        {
+          "defender": "噴火龍",
+          "defenderEn": "Charizard",
+          "best": {
+            "move": "Shadow Ball",
+            "min": 48,
+            "max": 57,
+            "minPct": 31,
+            "maxPct": 36.8,
+            "ko": "",
+            "desc": "30.9 - 36.7%"
+          },
+          "all": [
+            {
+              "move": "Shadow Ball",
+              "min": 48,
+              "max": 57,
+              "minPct": 31,
+              "maxPct": 36.8,
+              "ko": "",
+              "desc": "30.9 - 36.7%"
+            },
+            {
+              "move": "Matcha Gotcha",
+              "min": 8,
+              "max": 10,
+              "minPct": 5.2,
+              "maxPct": 6.5,
+              "ko": "",
+              "desc": "5.1 - 6.4% (2.2 - 2.8% recovered)"
+            }
+          ]
+        },
+        {
+          "defender": "超壞星",
+          "defenderEn": "Toxapex",
+          "best": {
+            "move": "Shadow Ball",
+            "min": 40,
+            "max": 48,
+            "minPct": 25.5,
+            "maxPct": 30.6,
+            "ko": "",
+            "desc": "25.4 - 30.5%"
+          },
+          "all": [
+            {
+              "move": "Shadow Ball",
+              "min": 40,
+              "max": 48,
+              "minPct": 25.5,
+              "maxPct": 30.6,
+              "ko": "",
+              "desc": "25.4 - 30.5%"
+            },
+            {
+              "move": "Matcha Gotcha",
+              "min": 30,
+              "max": 36,
+              "minPct": 19.1,
+              "maxPct": 22.9,
+              "ko": "",
+              "desc": "19.1 - 22.9% (8.4 - 10.1% recovered)"
+            }
+          ]
+        },
+        {
+          "defender": "仙子伊布",
+          "defenderEn": "Sylveon",
+          "best": {
+            "move": "Shadow Ball",
+            "min": 43,
+            "max": 52,
+            "minPct": 21.3,
+            "maxPct": 25.7,
+            "ko": "",
+            "desc": "21.2 - 25.7%"
+          },
+          "all": [
+            {
+              "move": "Shadow Ball",
+              "min": 43,
+              "max": 52,
+              "minPct": 21.3,
+              "maxPct": 25.7,
+              "ko": "",
+              "desc": "21.2 - 25.7%"
+            },
+            {
+              "move": "Matcha Gotcha",
+              "min": 33,
+              "max": 39,
+              "minPct": 16.3,
+              "maxPct": 19.3,
+              "ko": "",
+              "desc": "16.3 - 19.3% (9.5 - 11.2% recovered)"
+            }
+          ]
+        },
+        {
+          "defender": "熾焰咆哮虎",
+          "defenderEn": "Incineroar",
+          "best": {
+            "move": "Shadow Ball",
+            "min": 29,
+            "max": 35,
+            "minPct": 16.9,
+            "maxPct": 20.3,
+            "ko": "",
+            "desc": "16.8 - 20.3%"
+          },
+          "all": [
+            {
+              "move": "Shadow Ball",
+              "min": 29,
+              "max": 35,
+              "minPct": 16.9,
+              "maxPct": 20.3,
+              "ko": "",
+              "desc": "16.8 - 20.3%"
+            },
+            {
+              "move": "Matcha Gotcha",
+              "min": 21,
+              "max": 26,
+              "minPct": 12.2,
+              "maxPct": 15.1,
+              "ko": "",
+              "desc": "12.2 - 15.1% (6.1 - 7.3% recovered)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "zh": "噴火龍(Mega Y)",
+      "name": "Charizard",
+      "rank": "雙打最大宗核心(鏡像)",
+      "item": "Charizardite Y",
+      "ability": "Drought",
+      "nature": "Modest",
+      "evs": {
+        "hp": 4,
+        "spa": 252,
+        "spe": 252
+      },
+      "moves": [
+        "Heat Wave",
+        "Solar Beam",
+        "Overheat",
+        "Protect"
+      ],
+      "mega": "Charizard-Mega-Y",
+      "myAttacks": [
+        {
+          "attacker": "烈咬陸鯊",
+          "attackerEn": "Garchomp",
+          "move": "Rock Slide",
+          "min": 156,
+          "max": 188,
+          "minPct": 101.3,
+          "maxPct": 122.1,
+          "ko": "",
+          "desc": "101.2 - 122%"
+        },
+        {
+          "attacker": "噴火龍",
+          "attackerEn": "Charizard",
+          "move": "Ancient Power",
+          "min": 156,
+          "max": 188,
+          "minPct": 101.3,
+          "maxPct": 122.1,
+          "ko": "",
+          "desc": "101.2 - 122%"
+        },
+        {
+          "attacker": "熾焰咆哮虎",
+          "attackerEn": "Incineroar",
+          "move": "Flare Blitz",
+          "min": 86,
+          "max": 102,
+          "minPct": 55.8,
+          "maxPct": 66.2,
+          "ko": "",
+          "desc": "55.8 - 66.2% (16.5 - 19.5% recoil damage)"
+        },
+        {
+          "attacker": "烈咬陸鯊",
+          "attackerEn": "Garchomp",
+          "move": "Dragon Claw",
+          "min": 84,
+          "max": 100,
+          "minPct": 54.5,
+          "maxPct": 64.9,
+          "ko": "",
+          "desc": "54.5 - 64.9%"
+        },
+        {
+          "attacker": "熾焰咆哮虎",
+          "attackerEn": "Incineroar",
+          "move": "Darkest Lariat",
+          "min": 82,
+          "max": 97,
+          "minPct": 53.2,
+          "maxPct": 63,
+          "ko": "",
+          "desc": "53.2 - 62.9%"
+        },
+        {
+          "attacker": "妙蛙花",
+          "attackerEn": "Venusaur",
+          "move": "Sludge Bomb",
+          "min": 82,
+          "max": 97,
+          "minPct": 53.2,
+          "maxPct": 63,
+          "ko": "",
+          "desc": "53.2 - 62.9%"
+        }
+      ],
+      "theirAttacks": [
+        {
+          "defender": "妙蛙花",
+          "defenderEn": "Venusaur",
+          "best": {
+            "move": "Overheat",
+            "min": 426,
+            "max": 504,
+            "minPct": 256.6,
+            "maxPct": 303.6,
+            "ko": "",
+            "desc": "256.6 - 303.6%"
+          },
+          "all": [
+            {
+              "move": "Overheat",
+              "min": 426,
+              "max": 504,
+              "minPct": 256.6,
+              "maxPct": 303.6,
+              "ko": "",
+              "desc": "256.6 - 303.6%"
+            },
+            {
+              "move": "Heat Wave",
+              "min": 230,
+              "max": 272,
+              "minPct": 138.6,
+              "maxPct": 163.9,
+              "ko": "",
+              "desc": "138.5 - 163.8%"
+            },
+            {
+              "move": "Solar Beam",
+              "min": 22,
+              "max": 26,
+              "minPct": 13.3,
+              "maxPct": 15.7,
+              "ko": "",
+              "desc": "13.2 - 15.6%"
+            }
+          ]
+        },
+        {
+          "defender": "仙子伊布",
+          "defenderEn": "Sylveon",
+          "best": {
+            "move": "Overheat",
+            "min": 171,
+            "max": 202,
+            "minPct": 84.7,
+            "maxPct": 100,
+            "ko": "",
+            "desc": "84.6 - 100%"
+          },
+          "all": [
+            {
+              "move": "Overheat",
+              "min": 171,
+              "max": 202,
+              "minPct": 84.7,
+              "maxPct": 100,
+              "ko": "",
+              "desc": "84.6 - 100%"
+            },
+            {
+              "move": "Heat Wave",
+              "min": 93,
+              "max": 109,
+              "minPct": 46,
+              "maxPct": 54,
+              "ko": "",
+              "desc": "46 - 53.9%"
+            },
+            {
+              "move": "Solar Beam",
+              "min": 70,
+              "max": 83,
+              "minPct": 34.7,
+              "maxPct": 41.1,
+              "ko": "",
+              "desc": "34.6 - 41%"
+            }
+          ]
+        },
+        {
+          "defender": "熾焰咆哮虎",
+          "defenderEn": "Incineroar",
+          "best": {
+            "move": "Overheat",
+            "min": 116,
+            "max": 137,
+            "minPct": 67.4,
+            "maxPct": 79.7,
+            "ko": "",
+            "desc": "67.4 - 79.6%"
+          },
+          "all": [
+            {
+              "move": "Overheat",
+              "min": 116,
+              "max": 137,
+              "minPct": 67.4,
+              "maxPct": 79.7,
+              "ko": "",
+              "desc": "67.4 - 79.6%"
+            },
+            {
+              "move": "Heat Wave",
+              "min": 63,
+              "max": 75,
+              "minPct": 36.6,
+              "maxPct": 43.6,
+              "ko": "",
+              "desc": "36.6 - 43.6%"
+            },
+            {
+              "move": "Solar Beam",
+              "min": 48,
+              "max": 56,
+              "minPct": 27.9,
+              "maxPct": 32.6,
+              "ko": "",
+              "desc": "27.9 - 32.5%"
+            }
+          ]
+        },
+        {
+          "defender": "烈咬陸鯊",
+          "defenderEn": "Garchomp",
+          "best": {
+            "move": "Overheat",
+            "min": 120,
+            "max": 141,
+            "minPct": 65.6,
+            "maxPct": 77,
+            "ko": "",
+            "desc": "65.5 - 77%"
+          },
+          "all": [
+            {
+              "move": "Overheat",
+              "min": 120,
+              "max": 141,
+              "minPct": 65.6,
+              "maxPct": 77,
+              "ko": "",
+              "desc": "65.5 - 77%"
+            },
+            {
+              "move": "Solar Beam",
+              "min": 98,
+              "max": 116,
+              "minPct": 53.6,
+              "maxPct": 63.4,
+              "ko": "",
+              "desc": "53.5 - 63.3%"
+            },
+            {
+              "move": "Heat Wave",
+              "min": 65,
+              "max": 77,
+              "minPct": 35.5,
+              "maxPct": 42.1,
+              "ko": "",
+              "desc": "35.5 - 42%"
+            }
+          ]
+        },
+        {
+          "defender": "噴火龍",
+          "defenderEn": "Charizard",
+          "best": {
+            "move": "Overheat",
+            "min": 95,
+            "max": 112,
+            "minPct": 61.3,
+            "maxPct": 72.3,
+            "ko": "",
+            "desc": "61.2 - 72.2%"
+          },
+          "all": [
+            {
+              "move": "Overheat",
+              "min": 95,
+              "max": 112,
+              "minPct": 61.3,
+              "maxPct": 72.3,
+              "ko": "",
+              "desc": "61.2 - 72.2%"
+            },
+            {
+              "move": "Heat Wave",
+              "min": 51,
+              "max": 61,
+              "minPct": 32.9,
+              "maxPct": 39.4,
+              "ko": "",
+              "desc": "32.9 - 39.3%"
+            },
+            {
+              "move": "Solar Beam",
+              "min": 19,
+              "max": 23,
+              "minPct": 12.3,
+              "maxPct": 14.8,
+              "ko": "",
+              "desc": "12.2 - 14.8%"
+            }
+          ]
+        },
+        {
+          "defender": "超壞星",
+          "defenderEn": "Toxapex",
+          "best": {
+            "move": "Overheat",
+            "min": 78,
+            "max": 92,
+            "minPct": 49.7,
+            "maxPct": 58.6,
+            "ko": "",
+            "desc": "49.6 - 58.5%"
+          },
+          "all": [
+            {
+              "move": "Overheat",
+              "min": 78,
+              "max": 92,
+              "minPct": 49.7,
+              "maxPct": 58.6,
+              "ko": "",
+              "desc": "49.6 - 58.5%"
+            },
+            {
+              "move": "Solar Beam",
+              "min": 64,
+              "max": 76,
+              "minPct": 40.8,
+              "maxPct": 48.4,
+              "ko": "",
+              "desc": "40.7 - 48.4%"
+            },
+            {
+              "move": "Heat Wave",
+              "min": 43,
+              "max": 51,
+              "minPct": 27.4,
+              "maxPct": 32.5,
+              "ko": "",
+              "desc": "27.3 - 32.4%"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

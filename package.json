@@ -1,0 +1,24 @@
+{
+  "name": "pokemon-tools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Naiyu29/pokemon-tools.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Naiyu29/pokemon-tools/issues"
+  },
+  "homepage": "https://github.com/Naiyu29/pokemon-tools#readme",
+  "dependencies": {
+    "@pkmn/dex": "^0.10.11",
+    "@smogon/calc": "^0.11.0"
+  }
+}
