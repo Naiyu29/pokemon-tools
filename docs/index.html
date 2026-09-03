@@ -27,7 +27,7 @@ select,input[type=search],textarea{background:var(--panel2);color:var(--tx);bord
 main{padding:10px 12px;max-width:720px;margin:0 auto}
 .tabbar{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--panel);
   border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-.tabbar button{flex:1;background:none;border:none;color:var(--tx2);padding:10px 0 8px;font-size:13px}
+.tabbar button{flex:1;background:none;border:none;color:var(--tx2);padding:10px 0 8px;font-size:12.5px}
 .tabbar button.on{color:var(--acc);font-weight:700}
 .tabbar button .ic{display:block;font-size:18px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 10px}
@@ -80,6 +80,17 @@ dialog textarea{width:100%;min-height:180px;font:12.5px/1.4 ui-monospace,monospa
 .btn.ghost{background:var(--panel2);color:var(--tx);border:1px solid var(--line)}
 .rowbtns{display:flex;gap:8px;flex-wrap:wrap}
 .empty{color:var(--tx2);text-align:center;padding:30px 0}
+.recrow{padding:8px 4px;border-bottom:1px solid var(--line);font-size:13.5px}
+.recrow .top{display:flex;gap:8px;align-items:center}
+.recrow .time{color:var(--tx2);font-size:12px}
+.recrow .foes{color:var(--tx2);font-size:12.5px;margin-top:2px}
+.recrow .note{color:var(--tx);font-size:12.5px;margin-top:2px}
+.recrow .x{margin-left:auto;color:var(--tx2);font-weight:700;padding:0 4px}
+.wl{font-weight:800;border-radius:6px;padding:1px 8px;font-size:12px}
+.wl.W{background:#12452a;color:var(--mine)}
+.wl.L{background:#4a1d18;color:var(--foe)}
+.statrow{display:flex;gap:14px;font-size:14px;flex-wrap:wrap}
+.statrow b{font-size:17px}
 footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
 </style>
 </head>
@@ -101,6 +112,7 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
   <button data-tab="reco"><span class="ic">🏆</span>推薦</button>
   <button data-tab="speed"><span class="ic">⚡</span>速度</button>
   <button data-tab="dmg"><span class="ic">💥</span>傷害</button>
+  <button data-tab="rec"><span class="ic">📓</span>紀錄</button>
 </nav>
 <dialog id="teamDlg">
   <h2>我的隊伍（存在手機 localStorage）</h2>
@@ -114,6 +126,6 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
   </div>
   <p class="hint" id="teamMsg"></p>
 </dialog>
-<script src="bundle.js?v=202609031448"></script>
+<script src="bundle.js?v=202609031717"></script>
 </body>
 </html>

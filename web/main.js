@@ -7,6 +7,7 @@ import { recommend } from './recommend.js';
 
 const LS_TEAM = 'pct.team.v1';
 const LS_STATE = 'pct.state.v1';
+const LS_REC = 'pct.records.v1';
 
 // 威脅庫：calc 名稱(toID) → spec（同種多套取第一套）
 const threatById = new Map();
@@ -107,7 +108,7 @@ function render() {
     b.classList.toggle('on', (b.dataset.v === 'doubles') === state.doubles));
   $('#weatherSel').value = state.weather;
   main.innerHTML = '';
-  ({ foes: renderFoes, reco: renderReco, speed: renderSpeed, dmg: renderDmg })[state.tab]();
+  ({ foes: renderFoes, reco: renderReco, speed: renderSpeed, dmg: renderDmg, rec: renderRec })[state.tab]();
   save();
 }
 
@@ -266,6 +267,114 @@ function renderDmg() {
   main.querySelector('.foe-tabs').addEventListener('click', ev => {
     const el = ev.target.closest('[data-df]');
     if (el) { state.dmgFoe = +el.dataset.df; render(); }
+  });
+}
+
+// ---- 戰績紀錄（localStorage＋匯出 CSV，不做後端） ----
+let records = [];
+try {
+  const r = JSON.parse(localStorage.getItem(LS_REC) || '[]');
+  if (Array.isArray(r)) records = r;
+} catch (e) { /* ignore */ }
+function saveRec() { localStorage.setItem(LS_REC, JSON.stringify(records)); }
+
+function addRecord(result) {
+  records.unshift({
+    ts: Date.now(),
+    mode: state.doubles ? '雙打' : '單打',
+    weather: state.weather || '',
+    result, // 'W' | 'L'
+    foes: state.foes.map(f => f.zh),
+    note: ($('#recNote') ? $('#recNote').value.trim() : ''),
+  });
+  saveRec();
+  render();
+}
+
+function fmtTime(ts) {
+  const d = new Date(ts);
+  const p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}/${p(d.getMonth() + 1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+function csvCell(s) {
+  s = '' + (s == null ? '' : s);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+function exportCsv() {
+  const head = ['時間', '模式', '天氣', '結果', '對手1', '對手2', '對手3', '對手4', '對手5', '對手6', '備註'];
+  const lines = records.map(r => {
+    const foes = (r.foes || []).slice(0, 6);
+    while (foes.length < 6) foes.push('');
+    return [fmtTime(r.ts), r.mode, r.weather, r.result === 'W' ? '勝' : '敗', ...foes, r.note || ''].map(csvCell).join(',');
+  });
+  // BOM 讓 Excel 正確辨識 UTF-8 中文
+  const blob = new Blob(['\ufeff' + [head.join(','), ...lines].join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `champions-records-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+
+function recStats(list) {
+  const w = list.filter(r => r.result === 'W').length;
+  const l = list.length - w;
+  const rate = list.length ? Math.round(w / list.length * 100) : 0;
+  return { w, l, rate, n: list.length };
+}
+
+function renderRec() {
+  const all = recStats(records);
+  const dbl = recStats(records.filter(r => r.mode === '雙打'));
+  const sgl = recStats(records.filter(r => r.mode === '單打'));
+  const foesTxt = state.foes.length ? state.foes.map(f => f.zh).join('、') : '';
+  const wrap = h(`<div>
+    <div class="card">
+      <h2>登錄這場（${state.doubles ? '雙打' : '單打'}${state.weather ? '・' + ({ Sun: '晴', Rain: '雨', Sand: '沙', Snow: '雪' }[state.weather] || state.weather) : ''}）</h2>
+      <p class="hint">${foesTxt ? '對手：' + esc(foesTxt) : '尚未選對手（也可以直接登錄，不記對手）'}</p>
+      <input type="search" id="recNote" placeholder="備註（選填，例：被戲法空間翻盤）" style="width:100%;margin:6px 0" autocomplete="off">
+      <div class="rowbtns">
+        <button class="btn" id="recW" style="background:var(--mine)">✓ 勝</button>
+        <button class="btn" id="recL" style="background:var(--foe)">✗ 敗</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>統計</h2>
+      <div class="statrow">
+        <span>總計 <b>${all.w}勝${all.l}敗</b>（${all.rate}%）</span>
+        ${dbl.n ? `<span>雙打 <b>${dbl.w}–${dbl.l}</b>（${dbl.rate}%）</span>` : ''}
+        ${sgl.n ? `<span>單打 <b>${sgl.w}–${sgl.l}</b>（${sgl.rate}%）</span>` : ''}
+      </div>
+    </div>
+    <div class="card">
+      <h2>歷史（${records.length} 場）</h2>
+      <div id="recList">${records.map((r, i) => `
+        <div class="recrow">
+          <div class="top">
+            <span class="wl ${r.result}">${r.result === 'W' ? '勝' : '敗'}</span>
+            <span>${esc(r.mode)}${r.weather ? '・' + ({ Sun: '晴', Rain: '雨', Sand: '沙', Snow: '雪' }[r.weather] || esc(r.weather)) : ''}</span>
+            <span class="time">${fmtTime(r.ts)}</span>
+            <span class="x" data-del="${i}">✕</span>
+          </div>
+          ${r.foes && r.foes.length ? `<div class="foes">vs ${esc(r.foes.join('、'))}</div>` : ''}
+          ${r.note ? `<div class="note">${esc(r.note)}</div>` : ''}
+        </div>`).join('') || '<p class="hint">還沒有紀錄，打完一場按上面的勝／敗登錄。</p>'}</div>
+      ${records.length ? `<div class="rowbtns" style="margin-top:10px"><button class="btn ghost" id="recCsv">匯出 CSV</button></div>` : ''}
+    </div>
+    <footer class="note">紀錄存在這支手機的 localStorage；換手機或清瀏覽器資料前先匯出 CSV 備份。</footer>
+  </div>`);
+  main.append(...wrap.children);
+  $('#recW').onclick = () => addRecord('W');
+  $('#recL').onclick = () => addRecord('L');
+  const csvBtn = $('#recCsv');
+  if (csvBtn) csvBtn.onclick = exportCsv;
+  $('#recList').addEventListener('click', ev => {
+    const el = ev.target.closest('[data-del]');
+    if (!el) return;
+    records.splice(+el.dataset.del, 1);
+    saveRec();
+    render();
   });
 }
 

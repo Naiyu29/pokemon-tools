@@ -39,8 +39,12 @@
 - [x] 2.1 建 skill（pokemon-champions）：記錄我的隊伍位置、截圖→paste 轉換規則、
       對點分析流程、威脅庫更新流程 → 新對話不用重講背景
       ※ 已決定（2026-09-03）：提前於 M1 之前建立（Q2=A）
-- [ ] 2.2 賽季更新 SOP：開新對話「更新 Champions 威脅資料庫」→ 搜尋新 meta → 重建 data → 重新部署
-- [ ] 2.3 戰績紀錄：先用網頁工具內建簡單勝負登錄（localStorage + 匯出 CSV），不做後端
+- [x] 2.2 賽季更新 SOP：開新對話「更新 Champions 威脅資料庫」→ 搜尋新 meta → 重建 data → 重新部署
+      ※ 完整 SOP 在 `skills-src/pokemon-champions/references/season-update.md`（含重建 bundle＋Pages 部署）；
+      skill 有更新，記得同步到已安裝的 skill 庫
+- [x] 2.3 戰績紀錄：先用網頁工具內建簡單勝負登錄（localStorage + 匯出 CSV），不做後端
+      ※ 網頁新增「📓紀錄」分頁：勝/敗一鍵登錄（自動帶當前對手/模式/天氣＋備註）、
+      勝率統計（總計/單打/雙打）、歷史列表可刪、匯出 CSV（UTF-8 BOM，Excel 可直開）
 - 成本：每賽季一次短對話
 
 ## M3｜截圖半自動（賽前分析）

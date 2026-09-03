@@ -6,7 +6,7 @@ description: Pokémon Champions（寶可夢冠軍）對戰分析工作流——�
 # Pokémon Champions 對戰分析
 
 使用者「哈哈的爸」的 Champions 對戰助手工作流。所有狀態存在 GitHub repo
-**naiyu29/pokemon-tools**（工作分支 `claude/pokemon-team-analyzer-lid0r5`）；
+**naiyu29/pokemon-tools**（主分支 `main`；開發時另開 `claude/...` 工作分支，完成後 PR merge）；
 對話不承載狀態，需要背景先讀 repo 的 `ROADMAP.md` 與 `data/`。
 
 ## 基本事實
@@ -26,7 +26,7 @@ description: Pokémon Champions（寶可夢冠軍）對戰分析工作流——�
 | 隊伍能力/狀態頁截圖 | 轉成 Showdown paste＋更新 `data/my-team.js` | `references/screenshot-to-paste.md` |
 | 選角畫面截圖（剪影＋屬性圖示） | 辨識對手6隻→跑計算→選4＋首發建議 | `references/battle-analysis.md` |
 | 「分析我的隊伍」「對點」「打得贏嗎」 | 跑 `src/analyze.js` 產對點報告 | `references/battle-analysis.md` |
-| 「更新威脅庫」「新賽季」 | 搜尋當季 meta → 重建 `data/threats.js` → 重跑分析 | 下方〈威脅庫更新〉 |
+| 「更新威脅庫」「新賽季」 | 搜尋當季 meta → 重建 `data/threats.js` → 重建網頁＋部署 | `references/season-update.md` |
 | 「做 M1/M2/M3/M4」 | 讀 `ROADMAP.md` 照清單推進，完成打勾並 commit | ROADMAP.md |
 
 ## 輸出慣例（每個工作流都適用）
@@ -37,15 +37,15 @@ description: Pokémon Champions（寶可夢冠軍）對戰分析工作流——�
 - 結論先行：選4名單、首發、2–3 條戰場紀律（死亡對位、特性剋制）放最前面，數字表其次。
 - 對戰相關回覆求快求短——使用者可能在選角倒數中。
 
-## 威脅庫更新 SOP
+## 威脅庫更新（賽季更新）SOP
 
-1. WebSearch 當季（注意今天日期）Champions usage/tier：關鍵字
-   `Pokemon Champions usage stats top ranked <月份年份>`＋雙打 tier list。
-   來源優先序：Pikalytics、Pokémon Zone、Game8（多數網站在雲端環境被 egress 擋，
-   直接用搜尋結果內文即可，不要浪費回合硬爬）。
-2. 依名單重寫 `data/threats.js`：每隻含 zh/name/rank/item/ability/nature/evs/moves，
-   配置用該寶可夢的常見標準競技配置（訓練知識推估，檔頭註明來源與日期）。
-3. `node src/analyze.js` 重跑 → 更新報告 → commit＋push。
+完整流程見 `references/season-update.md`。摘要：
+
+1. WebSearch 當季 meta（注意今天日期；用搜尋結果內文，不硬爬被擋的網站）。
+2. 重寫 `data/threats.js`（配置為訓練知識推估，檔頭註明來源與日期）。
+3. `node src/analyze.js` 重跑分析＋`node scripts/build.js` 重建網頁
+   （威脅庫打包在 bundle 內，不重建吃不到新資料）。
+4. commit＋push；merge 進 main 後 GitHub Pages（`/docs`）才會上線，PWA 自動換版。
 
 ## 注意事項
 
