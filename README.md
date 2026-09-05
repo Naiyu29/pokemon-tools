@@ -33,6 +33,8 @@ npm run build   # 重建搜尋索引 + 打包到 docs/
 ## 內容
 
 - `web/`：網頁工具原始碼（calc-core／recommend／main／index.html／sw）
+  - `match-core.js`：端上 sprite 樣板比對＋卡片偵測（對手選角畫面／我方隊伍畫面）
+  - `text-core.js`：我方隊伍畫面「認字」（切字→筆畫密度→與裝置字體畫出的候選名比對）
 - `docs/`：建置產物（GitHub Pages 服務目錄）
 - `data/my-team.js`：我的隊伍（內建預設；網頁端可用 paste 匯入覆蓋）
 - `data/threats.js`：當季威脅 Top 50 與常見配置（推估，含來源註記）
