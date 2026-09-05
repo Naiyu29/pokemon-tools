@@ -23,8 +23,30 @@
   妖精之羽=Fairy Feather、講究圍巾=Choice Scarf）。
 - Mega 石記在道具（如 Charizardite Y），對戰計算時特性改用 Mega 後特性（如 Drought）。
 
-## 轉完之後
+## 轉完之後（先給連結，再給 paste）
 
-1. 把 paste 用 code block 給使用者（方便複製到 pokepast.es／各家計算機）。
-2. 若這是使用者「自己的隊伍」且與 `data/my-team.js` 不同 → 詢問是否更新 repo；
+1. **回覆最前面附一條「我方隊伍預填連結」**，點開即存進網頁工具的隊伍庫並切換過去：
+
+   ```
+   https://naiyu29.github.io/pokemon-tools/?team=<隊名>&mons=<每隻以 ; 分隔>
+   ```
+
+   每隻的欄位（逗號分隔，順序固定）：
+
+   ```
+   species,道具,特性,性格,hp/atk/def/spa/spd/spe,招式1,招式2,招式3,招式4
+   ```
+
+   - 全部用**小寫 id**（去掉空格與符號）：`fairyfeather`、`darkestlariat`、
+     `charizarditey`、`banefulbunker`。工具端會還原成引擎用的正式名稱，
+     打錯會在畫面上顯示「看不懂的道具／特性／招式：xxx」而不是默默吃掉。
+   - EV 六格照 HP/攻/防/特攻/特防/速 順序，**沒有的填 0**（SP 點數 ×8＝EV）。
+   - 沒有道具就留空（`sylveon,,pixilate,...`）。招式不足 4 個就少寫幾個。
+   - Mega 石只要寫在道具欄，工具會自動掛上 Mega 型態（查道具資料，不用另外標）。
+   - `<隊名>` 用中文沒問題（URL 編碼），例：`?team=%E9%9B%A8%E5%A4%A9%E9%9A%8A`。
+   - 同名同內容重複點不會重複新增（會直接切換過去），所以連結可以放心重貼。
+   - 一樣可以帶 `&mode=doubles`、`&foes=...` 一次把對手也填好。
+
+2. 再把 paste 用 code block 給使用者（方便複製到 pokepast.es／各家計算機）。
+3. 若這是使用者「自己的隊伍」且與 `data/my-team.js` 不同 → 詢問是否更新 repo；
    更新後重跑 `src/analyze.js`。

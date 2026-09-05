@@ -20,13 +20,15 @@ description: Pokémon Champions（寶可夢冠軍）對戰分析工作流——�
   範例見 `src/analyze.js`。雙打範圍招 ×0.75。
 - 賽季資訊與威脅庫：`data/threats.js`（配置為推估，輸出時必須標註）。
 - 網頁工具（GitHub Pages，PWA）：<https://naiyu29.github.io/pokemon-tools/>，
-  支援 `?foes=id1,id2&mode=doubles&weather=Sun` 預填（見 battle-analysis.md）。
+  支援 `?foes=id1,id2&mode=doubles&weather=Sun`（對手，見 battle-analysis.md）
+  與 `?team=隊名&mons=...`（我方隊伍，見 screenshot-to-paste.md）預填。
+  我方隊伍可存多隊（命名/切換/覆蓋/刪除），戰績紀錄會記下當場用哪一隊。
 
 ## 工作流選擇
 
 | 使用者給的東西 | 做什麼 | 細節 |
 |---|---|---|
-| 隊伍能力/狀態頁截圖 | 轉成 Showdown paste＋更新 `data/my-team.js` | `references/screenshot-to-paste.md` |
+| 隊伍能力/狀態頁截圖 | 辨識→回一條 `?team=&mons=` 預填連結（存進工具隊伍庫）＋Showdown paste＋視情況更新 `data/my-team.js` | `references/screenshot-to-paste.md` |
 | 選角畫面截圖（剪影＋屬性圖示） | 辨識對手6隻→回傳工具預填連結→跑計算→選4＋首發建議 | `references/battle-analysis.md` |
 | 對戰截圖（賽後覆盤/預研） | 辨識對手→回一條 `?foes=...` 預填連結，點開即完成輸入 | `references/battle-analysis.md` |
 | （使用者自己就能做）截圖→工具 | 手機分享截圖給 PWA→「截圖辨識」端上比對，零 token；認不出來再貼給 Claude | M4 功能，見 battle-analysis.md |
@@ -59,4 +61,7 @@ description: Pokémon Champions（寶可夢冠軍）對戰分析工作流——�
   不要重做已完成的項目。
 - 使用者偏好：需要決策時用 Q1/Q2＋A/B/C 選項；多步驟任務結尾加【重點摘要】；
   一次只推進一個小任務。
+- 中文譯名以**遊戲畫面為準**：`pokemon` 套件的 zh-hant 有舊香港譯名
+  （仙子精靈→仙子伊布、太陽精靈→太陽伊布…），覆寫表在
+  `src/build-search-index.js` 的 `ZH_OVERRIDE`；發現不符就加進去再重建索引。
 - 計算數字必須來自引擎實跑，不要憑印象報傷害%；速度值用引擎 rawStats 取得。

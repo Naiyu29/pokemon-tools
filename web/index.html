@@ -96,6 +96,10 @@ dialog textarea{width:100%;min-height:180px;font:12.5px/1.4 ui-monospace,monospa
 .wl.L{background:#4a1d18;color:var(--foe)}
 .statrow{display:flex;gap:14px;font-size:14px;flex-wrap:wrap}
 .statrow b{font-size:17px}
+.banner{max-width:720px;margin:10px auto 0;padding:8px 12px;border-radius:10px;font-size:13.5px;
+  display:flex;gap:8px;align-items:center;background:#123a5e;color:#cfe6ff;border:1px solid var(--acc)}
+.banner.err{background:#4a1d18;color:#ffd9d4;border-color:var(--foe)}
+.banner .x{margin-left:auto;font-weight:700;padding:0 4px}
 .teamrow{display:flex;gap:8px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--line)}
 .teamrow .info{display:flex;flex-direction:column;gap:2px;min-width:0}
 .teamrow .name{font-size:14.5px}
@@ -137,6 +141,7 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
   </select>
   <button class="tgl" id="teamBtn">隊伍</button>
 </header>
+<div id="banner" hidden></div>
 <main id="main"></main>
 <nav class="tabbar" id="tabbar">
   <button data-tab="foes"><span class="ic">🎯</span>對手</button>

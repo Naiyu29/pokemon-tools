@@ -13,7 +13,10 @@ Pokémon Champions 對戰分析工具（隊伍「Meta」）。
 - 單打／雙打、天氣、順風、戲法空間切換
 - 我的隊伍：多隊管理（貼 Showdown paste 存成新隊伍、命名／切換／覆蓋／刪除，存 localStorage）；
   戰績紀錄自動記下當場使用的隊伍，CSV 匯出含「隊伍」欄
-- 網址參數預填（M3 用）：`?foes=garchomp,primarina&mode=singles`
+- 網址參數預填（M3 用）：
+  - 對手：`?foes=garchomp,primarina&mode=singles&weather=Sun`
+  - 我方隊伍（截圖辨識用）：`?team=隊名&mons=species,道具,特性,性格,hp/atk/def/spa/spd/spe,招式…;下一隻…`
+    （全小寫 id；Mega 石寫在道具欄會自動掛型態；同名同內容重複點只切換不重複新增）
 
 ### 部署（GitHub Pages）
 
@@ -33,7 +36,8 @@ npm run build   # 重建搜尋索引 + 打包到 docs/
 - `docs/`：建置產物（GitHub Pages 服務目錄）
 - `data/my-team.js`：我的隊伍（內建預設；網頁端可用 paste 匯入覆蓋）
 - `data/threats.js`：當季威脅 Top 50 與常見配置（推估，含來源註記）
-- `data/search-index.json`：搜尋索引（產生自 `src/build-search-index.js`）
+- `data/search-index.json`：搜尋索引（產生自 `src/build-search-index.js`，
+  含 `ZH_OVERRIDE` 譯名覆寫表：套件的舊香港譯名改回遊戲內官方繁中）
 - `data/zh-names.json`：招式／特性中文名對照（產生自 `src/build-zh-names.js`，來源 PokeAPI CSV；`npm run build:zh-names` 重建，需網路，新招式出現時才需要跑）
 - `src/analyze.js`：Node 端傷害分析（輸出 `out/analysis.json`）
 - `out/report.html`：手機版賽季報告（自包含 HTML）

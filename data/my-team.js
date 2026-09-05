@@ -8,7 +8,7 @@ module.exports = [
   },
   {
     zh: '超壞星', name: 'Toxapex', item: 'Leftovers', ability: 'Regenerator',
-    nature: 'Bold', evs: { hp: 252, def: 252, spd: 16 },
+    nature: 'Bold', evs: { hp: 252, def: 252 },
     moves: ['Toxic', 'Wide Guard', 'Infestation', 'Baneful Bunker'],
   },
   {
