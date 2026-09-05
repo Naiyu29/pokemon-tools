@@ -270,6 +270,140 @@ export function detectFoeCards(img) {
   return boxes;
 }
 
+// ---- 我方隊伍畫面（狀態／能力頁）----
+// 版面：紫色卡 2 欄 × 3 列，sprite 在每張卡左上角、會凸出到卡片上緣之外。
+// 卡底紫實測 rgb≈(120,107,180)；頁面底紋是米黃(r>g>b)。
+const isTeamPurple = (d, i) => {
+  const r = d[i], g = d[i + 1], b = d[i + 2];
+  return b > r + 18 && r > g + 5 && b - g > 45 && r > 70 && r < 205 && b < 235;
+};
+// 頁面米黃底紋（sprite 凸出卡片外的那截背景）
+const isPageBg = (d, i) => {
+  const r = d[i], g = d[i + 1], b = d[i + 2];
+  return r > g && g > b && r > 195;
+};
+// 卡片的淺色描邊圓角、白色名字與 ♥／✱ 圖示：亮且幾乎無彩度。
+// 實測描邊 rgb≈(223,207,208)、高光≈(196,191,247)、文字≈純白；
+// sprite 的彩色部位彩度都遠高於此
+const isUiLight = (d, i) => {
+  const r = d[i], g = d[i + 1], b = d[i + 2];
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+  return mn > 178 && mx - mn < 58;
+};
+
+// 由投影找連續帶（>thr 的列/欄群），回傳 [[起,迄]]
+function bandsOf(counts, thr, minLen, maxGap) {
+  const out = [];
+  let s = -1, gap = 0;
+  for (let i = 0; i < counts.length; i++) {
+    if (counts[i] > thr) { if (s < 0) s = i; gap = 0; }
+    else if (s >= 0 && ++gap > maxGap) { if (i - gap - s >= minLen) out.push([s, i - gap]); s = -1; }
+  }
+  if (s >= 0 && counts.length - s >= minLen) out.push([s, counts.length - 1]);
+  return out;
+}
+
+// 偵測我方隊伍畫面的 6 張卡（2 欄 × 3 列），回傳 [{x,y,w,h}]（依遊戲編號 1..6 排序）
+export function detectTeamCards(img) {
+  const { width: w, height: h, data } = img;
+  const step = Math.max(1, Math.round(w / 600));
+  const rows = new Int32Array(Math.ceil(h / step));
+  for (let y = 0; y < h; y += step) {
+    let n = 0;
+    for (let x = 0; x < w; x += step) if (isTeamPurple(data, (y * w + x) * 4)) n++;
+    rows[y / step | 0] = n;
+  }
+  const rowMax = Math.max(...rows);
+  if (rowMax < 10) return [];
+  let rb = bandsOf(rows, rowMax * 0.3, Math.round((h / step) * 0.04), 1);
+  if (rb.length < 2) return [];
+  // 上方分頁列（Meta／玩家名）也是紫的，但比卡片矮很多——用最高帶的一半當門檻濾掉
+  const tallest = Math.max(...rb.map(b => b[1] - b[0]));
+  rb = rb.filter(b => b[1] - b[0] >= tallest * 0.5);
+  if (rb.length > 3) rb = rb.slice(-3);
+  // 欄帶只在卡列範圍內統計，避免分頁列干擾
+  const cols = new Int32Array(Math.ceil(w / step));
+  for (const [r0, r1] of rb) {
+    for (let yi = r0; yi <= r1; yi++) {
+      const y = yi * step;
+      for (let x = 0; x < w; x += step) if (isTeamPurple(data, (y * w + x) * 4)) cols[x / step | 0]++;
+    }
+  }
+  const colMax = Math.max(...cols);
+  let cb = bandsOf(cols, colMax * 0.35, Math.round((w / step) * 0.06), 1);
+  if (cb.length > 2) cb = cb.sort((a, b) => (b[1] - b[0]) - (a[1] - a[0])).slice(0, 2).sort((a, b) => a[0] - b[0]);
+  if (!cb.length) return [];
+  const boxes = [];
+  for (const [r0, r1] of rb) for (const [c0, c1] of cb) {
+    boxes.push({ x: c0 * step, y: r0 * step, w: (c1 - c0 + 1) * step, h: (r1 - r0 + 1) * step });
+  }
+  return boxes;
+}
+
+// 隊伍卡的 sprite 區塊：跨在「卡片紫」與「頁面米黃」兩種底色上，
+// cropToDescriptor 只認單一背景色，所以先把米黃與陰影塗成卡片紫再送進去。
+export function teamSpritePatch(img, card, fr) {
+  const x0 = Math.max(0, Math.round(card.x + card.w * fr[0]));
+  const y0 = Math.max(0, Math.round(card.y + card.h * fr[1]));
+  const x1 = Math.min(img.width, Math.round(card.x + card.w * fr[2]));
+  const y1 = Math.min(img.height, Math.round(card.y + card.h * fr[3]));
+  const pw = x1 - x0, ph = y1 - y0;
+  if (pw < 16 || ph < 16) return null;
+  // 卡片紫參考色：取卡片中段（避開 sprite 與文字）的中位數
+  const sr = [], sg = [], sb = [];
+  const my = Math.round(card.y + card.h * 0.55);
+  for (let x = card.x + (card.w >> 3); x < card.x + card.w - (card.w >> 3); x += 3) {
+    const i = (my * img.width + x) * 4;
+    if (!isTeamPurple(img.data, i)) continue;
+    sr.push(img.data[i]); sg.push(img.data[i + 1]); sb.push(img.data[i + 2]);
+  }
+  if (sr.length < 10) return null;
+  const med = arr => arr.sort((a, b) => a - b)[arr.length >> 1];
+  const bg = [med(sr), med(sg), med(sb)];
+  const out = new Uint8ClampedArray(pw * ph * 4);
+  for (let y = 0; y < ph; y++) for (let x = 0; x < pw; x++) {
+    const si = ((y0 + y) * img.width + x0 + x) * 4;
+    const di = (y * pw + x) * 4;
+    const r = img.data[si], g = img.data[si + 1], b = img.data[si + 2];
+    // 卡片紫（標題列與卡身深淺不同、圓角高光也算）、頁面米黃、陰影邊：一律壓成同一底色，
+    // 這樣 cropToDescriptor 的「邊框中位數估背景」才成立，剩下的前景就只有 sprite
+    // 注意：不能把深色一起壓成背景——Champions sprite 有粗黑描邊，
+    // 壓掉會沿著描邊把 sprite 切成互不相連的碎片，連通元件過濾只會留下一塊
+    const flat = isTeamPurple(img.data, si) || isPageBg(img.data, si) || isUiLight(img.data, si);
+    out[di] = flat ? bg[0] : r;
+    out[di + 1] = flat ? bg[1] : g;
+    out[di + 2] = flat ? bg[2] : b;
+    out[di + 3] = 255;
+  }
+  return { width: pw, height: ph, data: out };
+}
+
+// 我方隊伍卡：試幾組 sprite 框，取最高分（同 matchCard 的做法）
+export function matchTeamCard(img, card, lib, topN = 5) {
+  // [左, 上, 右, 下]，相對卡片寬高；sprite 凸出卡片上緣故上界為負
+  // 框要避開右邊的名字白字與下方的 ♥／✱ 圖示，只留 sprite
+  const frs = [[-0.015, -0.17, 0.095, 0.26], [-0.03, -0.21, 0.115, 0.31], [0.0, -0.13, 0.085, 0.21]];
+  let best = null;
+  for (const fr of frs) {
+    const patch = teamSpritePatch(img, card, fr);
+    if (!patch) continue;
+    const desc = cropToDescriptor(patch);
+    if (!desc) continue;
+    const results = match(desc, lib, topN);
+    if (!results.length) continue;
+    if (!best || results[0].score > best.results[0].score) {
+      best = {
+        results, desc,
+        box: {
+          x: Math.round(card.x + card.w * fr[0]), y: Math.round(card.y + card.h * fr[1]),
+          w: Math.round(card.w * (fr[2] - fr[0])), h: Math.round(card.h * (fr[3] - fr[1])),
+        },
+      };
+    }
+  }
+  return best;
+}
+
 // 對一張卡試多組 sprite 裁切（大隻佔滿左半；小隻置中、旁邊常有煙霧特效），
 // 取比對最高分的那組。回傳 { results, box } 或 null。
 export function matchCard(img, card, lib, topN = 5) {

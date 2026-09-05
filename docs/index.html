@@ -131,6 +131,9 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
 #rgCands>.cand .pct{margin-left:auto}
 .sizerow{display:flex;align-items:center;gap:10px;margin-top:8px;color:var(--tx2);font-size:13px}
 .sizerow input{flex:1}
+.autorow .cand.zh{width:104px}
+.autorow .cand.zh span:first-of-type{font-size:14px}
+#recogView .bar h2{font-size:15px;margin-right:6px}
 </style>
 </head>
 <body>
@@ -171,7 +174,10 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
 </dialog>
 <div id="recogView" hidden>
   <div class="bar">
-    <h2>📷 截圖辨識</h2>
+    <h2>📷 辨識</h2>
+    <div class="seg" id="rgMode">
+      <button data-m="foe">對手</button><button data-m="team">我方隊伍</button>
+    </div>
     <button class="tgl" id="rgPick">選圖</button>
     <button class="btn" id="rgDone">完成</button>
     <button class="tgl" id="rgClose">✕</button>
@@ -186,6 +192,6 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
   </div>
   <input type="file" id="rgFile" accept="image/*" hidden>
 </div>
-<script src="bundle.js?v=202609050427"></script>
+<script src="bundle.js?v=202609050542"></script>
 </body>
 </html>

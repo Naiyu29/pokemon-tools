@@ -23,6 +23,13 @@ for (const t of threats) {
   if (!threatById.has(baseId)) threatById.set(baseId, t);
 }
 const zhByName = new Map(searchIndex.map(e => [e.n, e.zh]));
+// 認字比對用：中文名字數 → 候選（隊伍畫面辨識靠字數先縮小範圍）
+const namesByLen = new Map();
+for (const e of searchIndex) {
+  const k = e.zh.length;
+  if (!namesByLen.has(k)) namesByLen.set(k, []);
+  namesByLen.get(k).push(e);
+}
 
 // ---- 狀態 ----
 let state = {
@@ -219,13 +226,21 @@ function onRemoveFoe(ev) {
   if (rm) { state.foes.splice(+rm.dataset.rm, 1); render(); }
 }
 
+// 辨識出來的骨架隊伍（沒有 EV／招式）→ 數字不可信，要講明白
+function configWarn() {
+  const n = team.filter(m => m.needsConfig).length;
+  if (!n) return '';
+  return `<p class="hint" style="color:var(--ko1r)">⚠ 目前隊伍有 ${n} 隻只有種類、沒有 EV／招式（截圖辨識的骨架）：`
+    + '傷害與推薦不準。到「隊伍」貼 Showdown paste，或用 Claude 給的 ?mons= 連結補完。</p>';
+}
+
 function renderReco() {
   if (!state.foes.length) { main.innerHTML = '<div class="empty">先到「對手」選擇對面陣容</div>'; return; }
   const { ranked, picks, leads } = recommend(team, state.foes,
     { field: fieldNow(), weather: state.weather || undefined, doubles: state.doubles });
   const pickSet = new Set(picks.map(p => p.spec));
   const leadSet = new Set(leads.map(p => p.spec));
-  main.appendChild(h(`<div class="card"><h2>對面</h2>${foeChips(false)}</div>`).firstElementChild);
+  main.appendChild(h(`<div class="card"><h2>對面</h2>${foeChips(false)}${configWarn()}</div>`).firstElementChild);
   const wrap = h('<div>' + ranked.map(r => `
     <div class="card reco ${pickSet.has(r.spec) ? 'pick' : ''}">
       <div class="head">
@@ -312,7 +327,7 @@ function renderDmg() {
   const foe = state.foes[state.dmgFoe];
   const field = fieldNow();
 
-  let out = `<div class="group-title">我方 → <span class="foename">${esc(foe.zh)}</span>${foe.unknown ? '（極限值區間）' : ''}</div>`;
+  let out = configWarn() + `<div class="group-title">我方 → <span class="foename">${esc(foe.zh)}</span>${foe.unknown ? '（極限值區間）' : ''}</div>`;
   out += `<table><tr><th>我方／招式</th><th class="num">傷害%</th><th></th></tr>`;
   for (const m of team) {
     const rows = attackTable(m, foe, field);
@@ -450,6 +465,28 @@ function renderRec() {
     saveRec();
     render();
   });
+}
+
+// 截圖辨識出的 6 隻 → 設定我方隊伍。
+// 種類完全相同的隊伍已經存過 → 直接切換過去（配置完整保留）；
+// 沒存過 → 只建骨架（只有種類），並標成配置待補，不假裝算得準。
+function setTeamFromNames(names) {
+  const specs = names.map(n => ({ name: n, zh: zhByName.get(n) || n }));
+  // 比基礎種類就好：畫面顯示的是基礎名，Mega 是對戰中靠道具變的
+  const key = arr => arr.map(x => toID(x.name)).sort().join(',');
+  const k = key(specs);
+  const hit = allTeams().find(t => key(t.specs) === k);
+  if (hit) {
+    teamLib.active = hit.id;
+    saveTeams(); team = hit.specs;
+    render();
+    return `✓ 已切換到既有隊伍「${hit.name}」（種類相同，配置沿用原本存的）`;
+  }
+  const d = new Date();
+  const r = importTeam(`辨識隊伍 ${d.getMonth() + 1}/${d.getDate()}`,
+    specs.map(x => ({ ...x, evs: {}, moves: [], needsConfig: true })));
+  render();
+  return `${r.msg}。⚠ 只有種類、沒有 EV／招式，傷害與推薦會不準，請用 paste 或 Claude 的 ?mons= 連結補完。`;
 }
 
 // ---- 隊伍匯入（paste／辨識連結共用） ----
@@ -680,6 +717,8 @@ initRecognize({
   },
   pickedHtml: () => foeChips(false),
   onClose: () => { state.tab = state.foes.length ? 'reco' : 'foes'; render(); },
+  namesByLen,
+  onTeam: setTeamFromNames,
 });
 // PWA Share Target 進來的截圖（sw.js 存進 cache 後重導 ?shared=1）
 if (params.get('shared')) {

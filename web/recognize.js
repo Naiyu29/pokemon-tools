@@ -1,7 +1,8 @@
 // M4 截圖辨識 UI：分享/選圖 → 自動偵測 6 張對手卡 → 端上樣板比對 →
 // 每張卡列 top-5 候選（預選第 1 名）＋🔍搜尋自選，整批「取代」對手清單；也可點圖手動框選。
 // 比對在本機毫秒級完成，零網路、零 token 成本
-import { parseLib, cropToDescriptor, match, matchCard, detectFoeCards, SIZE } from './match-core.js';
+import { parseLib, cropToDescriptor, match, matchCard, matchTeamCard, detectFoeCards, detectTeamCards, SIZE } from './match-core.js';
+import { nameStrip, matchName, cellDescriptor, GRID } from './text-core.js';
 import meta from '../data/sprite-meta.json';
 
 let lib = null;          // 描述子庫（首次開啟時 fetch，之後 SW 快取離線可用）
@@ -11,7 +12,34 @@ let imgData = null;      // 全圖 ImageData（比對用）
 let box = null;          // 手動框 {x,y,w,h} 影像座標
 let boxRel = 0.14;       // 手動框大小（相對影像短邊）
 let cards = [];          // 自動偵測到的卡片框
-let autoRows = [];       // [{cands:[{i,name,score}], sel}] 每張卡的候選與選擇
+let autoRows = [];       // [{cands:[{i,name,score,zh}], sel}] 每張卡的候選與選擇
+let mode = 'foe';        // 'foe'＝對手選角畫面（認圖示）｜'team'＝我方隊伍畫面（認名字）
+
+// ---- 我方隊伍畫面：用裝置字體把候選中文名畫出來，跟截圖上的字比筆畫分布 ----
+// 隊伍畫面的圖示是動畫幀（張手、展翅），輪廓會變；名字是固定字體，認字穩得多。
+const glyphCache = new Map();
+let glyphCanvas = null;
+function glyphDesc(ch) {
+  if (glyphCache.has(ch)) return glyphCache.get(ch);
+  if (!glyphCanvas) {
+    glyphCanvas = document.createElement('canvas');
+    glyphCanvas.width = glyphCanvas.height = 96;
+  }
+  const ctx = glyphCanvas.getContext('2d', { willReadFrequently: true });
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, 96, 96);
+  ctx.fillStyle = '#fff';
+  ctx.font = '64px system-ui, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif';
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'center';
+  ctx.fillText(ch, 48, 50);
+  const im = ctx.getImageData(0, 0, 96, 96);
+  const bin = new Uint8Array(96 * 96);
+  for (let p = 0; p < 96 * 96; p++) bin[p] = im.data[p * 4] > 96 ? 1 : 0;
+  const d = cellDescriptor(bin, 96, 96, 0, 96);
+  glyphCache.set(ch, d);
+  return d;
+}
 let searchRow = -1;      // 目前展開搜尋自選的卡列
 
 const $ = s => document.querySelector(s);
@@ -44,6 +72,18 @@ export function initRecognize(d) {
     runManual();
   });
   $('#rgCands').addEventListener('click', onCandsClick);
+  $('#rgMode').addEventListener('click', ev => {
+    const b = ev.target.closest('button[data-m]');
+    if (!b || b.dataset.m === mode) return;
+    mode = b.dataset.m;
+    syncMode();
+    if (imgData) runAuto();
+  });
+  syncMode();
+}
+
+function syncMode() {
+  document.querySelectorAll('#rgMode button').forEach(b => b.classList.toggle('on', b.dataset.m === mode));
 }
 
 function setBox(cx, cy) {
@@ -90,7 +130,9 @@ export async function openRecognize(blob) {
   document.body.style.overflow = 'hidden';
   ensureLib();
   if (blob) loadImage(blob);
-  else if (!img) $('#rgStatus').textContent = '選一張對戰／選角截圖開始';
+  else if (!img) $('#rgStatus').textContent = mode === 'team'
+    ? '選一張「隊伍」畫面截圖開始'
+    : '選一張對戰／選角截圖開始';
   renderPicked();
 }
 
@@ -125,42 +167,69 @@ async function loadImage(blob) {
   runAuto();
 }
 
-// ---- 一次辨識全部：偵測對手卡（右側紅卡）→ 各卡出 top-3 候選 ----
+// ---- 一次辨識全部：偵測卡片 → 各卡出 top-5 候選 ----
 async function runAuto() {
   if (!imgData || !(await ensureLib())) return;
-  cards = detectFoeCards(imgData);
+  searchRow = -1;
+  autoRows = [];
+  cards = mode === 'team' ? detectTeamCards(imgData) : detectFoeCards(imgData);
   draw();
   if (cards.length < 3) {
-    $('#rgStatus').textContent = '沒偵測到對手卡片（要包含右側紅色卡列的截圖）；也可以直接點圖示位置手動辨識。';
+    $('#rgStatus').textContent = mode === 'team'
+      ? '沒偵測到隊伍卡片（要「隊伍」畫面的截圖，紫色卡 2 欄 × 3 列）。'
+      : '沒偵測到對手卡片（要包含右側紅色卡列的截圖）；也可以直接點圖示位置手動辨識。';
     return;
   }
-  autoRows = [];
-  searchRow = -1;
-  for (const card of cards) {
-    const m = matchCard(imgData, card, lib, 15);
-    if (!m) { autoRows.push({ cands: [], sel: -1 }); continue; }
-    // 同名（色違列）去重取前 5
-    const seen = new Set(); const cands = [];
-    for (const r of m.results) {
-      const name = meta.names[r.i];
-      if (seen.has(name)) continue;
-      seen.add(name);
-      cands.push({ i: r.i, name, score: r.score });
-      if (cands.length >= 5) break;
-    }
-    autoRows.push({ cands, sel: cands.length ? 0 : -1 });
-  }
-  $('#rgStatus').textContent = `偵測到 ${cards.length} 張對手卡。點候選改選、再點取消；都不對按 🔍 搜尋自選。`;
+  for (const card of cards) autoRows.push(mode === 'team' ? teamCandidates(card) : foeCandidates(card));
+  $('#rgStatus').textContent = mode === 'team'
+    ? `偵測到 ${cards.length} 張隊伍卡（認名字為主、圖示輔助）。點候選改選；都不對按 🔍 搜尋自選。`
+    : `偵測到 ${cards.length} 張對手卡。點候選改選、再點取消；都不對按 🔍 搜尋自選。`;
   renderAuto();
+}
+
+function foeCandidates(card) {
+  const m = matchCard(imgData, card, lib, 15);
+  if (!m) return { cands: [], sel: -1 };
+  // 同名（色違列）去重取前 5
+  const seen = new Set(); const cands = [];
+  for (const r of m.results) {
+    const name = meta.names[r.i];
+    if (seen.has(name)) continue;
+    seen.add(name);
+    cands.push({ i: r.i, name, score: r.score });
+    if (cands.length >= 5) break;
+  }
+  return { cands, sel: cands.length ? 0 : -1 };
+}
+
+// 我方隊伍卡：名字比對為主，圖示分數當輔助（實測 12/12 真實截圖全中）
+const SPRITE_ASSIST = 0.3;
+function teamCandidates(card) {
+  const strip = nameStrip(imgData, card);
+  const byName = strip ? matchName(strip, deps.namesByLen, glyphDesc, 8) : [];
+  if (!byName.length) return { cands: [], sel: -1 };
+  const m = matchTeamCard(imgData, card, lib, 60);
+  const sprite = new Map();
+  for (const r of (m ? m.results : [])) {
+    const nm = meta.names[r.i];
+    if (!sprite.has(nm) || sprite.get(nm) < r.score) sprite.set(nm, r.score);
+  }
+  const cands = byName.map(b => ({
+    i: meta.names.indexOf(b.name),
+    name: b.name,
+    zh: b.zh,
+    score: (1 - b.score) + SPRITE_ASSIST * (sprite.get(b.name) || 0),
+  })).sort((a, b) => b.score - a.score).slice(0, 5);
+  return { cands, sel: 0 };
 }
 
 function renderAuto() {
   const wrap = $('#rgCands');
   wrap.innerHTML = autoRows.map((row, ri) => {
     const candsHtml = row.cands.map((c, ci) => `
-      <button class="cand ${row.sel === ci ? 'sel' : ''}" data-row="${ri}" data-ci="${ci}">
-        <canvas width="${SIZE}" height="${SIZE}" data-th="${c.i}"></canvas>
-        <span>${esc(deps.zhOf(c.name))}</span>
+      <button class="cand ${mode === 'team' ? 'zh ' : ''}${row.sel === ci ? 'sel' : ''}" data-row="${ri}" data-ci="${ci}">
+        ${c.i >= 0 ? `<canvas width="${SIZE}" height="${SIZE}" data-th="${c.i}"></canvas>` : ''}
+        <span>${esc(c.zh || deps.zhOf(c.name))}</span>
         <span class="pct">${c.score == null ? '自選' : Math.round(c.score * 100)}</span>
       </button>`).join('');
     const searchBtn = `<button class="cand more" data-search="${ri}">🔍<span>自選</span></button>`;
@@ -172,14 +241,23 @@ function renderAuto() {
     return `<div class="autorow">${row.cands.length ? '' : `<span class="cardno hint">卡${ri + 1} 認不出</span>`}${candsHtml}${searchBtn}</div>${searchBox}`;
   }).join('') +
   (autoRows.some(r => r.sel >= 0)
-    ? `<button class="btn" id="rgAddAll" style="width:100%;margin-top:8px">✓ 用勾選的 ${autoRows.filter(r => r.sel >= 0).length} 隻取代對手</button>`
+    ? `<button class="btn" id="rgAddAll" style="width:100%;margin-top:8px">✓ ${mode === 'team'
+        ? `用這 ${autoRows.filter(r => r.sel >= 0).length} 隻設定我方隊伍`
+        : `用勾選的 ${autoRows.filter(r => r.sel >= 0).length} 隻取代對手`}</button>`
+    : '') +
+  (mode === 'team'
+    ? '<p class="hint">端上辨識只讀得到「是哪隻」，讀不到 EV／招式。已存過的隊伍會直接切換過去；新隊伍會先建骨架，配置再用 paste 或 Claude 連結補。</p>'
     : '');
   for (const c of wrap.querySelectorAll('canvas[data-th]')) drawThumb(c, +c.dataset.th);
   const addAll = $('#rgAddAll');
   if (addAll) addAll.onclick = () => {
     const names = autoRows.filter(r => r.sel >= 0).map(r => r.cands[r.sel].name);
-    const n = deps.onReplace(names);
-    $('#rgStatus').textContent = `✓ 對手已換成這 ${n} 隻；到「紀錄」登錄勝敗時會自動帶這批對手。`;
+    if (mode === 'team') {
+      $('#rgStatus').textContent = deps.onTeam(names);
+    } else {
+      const n = deps.onReplace(names);
+      $('#rgStatus').textContent = `✓ 對手已換成這 ${n} 隻；到「紀錄」登錄勝敗時會自動帶這批對手。`;
+    }
     renderPicked();
   };
   if (searchRow >= 0) wireSearch();
@@ -202,7 +280,7 @@ function wireSearch() {
     const name = el.dataset.pick;
     const i = meta.names.indexOf(name);
     row.cands = row.cands.filter(c => c.name !== name);
-    row.cands.unshift({ i: i >= 0 ? i : 0, name, score: null });
+    row.cands.unshift({ i: i >= 0 ? i : 0, name, zh: deps.zhOf(name), score: null });
     row.sel = 0;
     searchRow = -1;
     renderAuto();
