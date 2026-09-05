@@ -115,9 +115,13 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
 #recogView .inner{padding:10px 12px;max-width:720px;margin:0 auto}
 #rgCanvas{width:100%;height:auto;display:block;border-radius:10px;border:1px solid var(--line);touch-action:manipulation}
 #rgCands{display:flex;flex-direction:column;gap:6px;margin-top:8px}
-.autorow{display:flex;gap:6px}
-.autorow .cand{flex:1;min-width:0;padding:6px 8px;font-size:13.5px;flex-direction:column;gap:2px}
+.autorow{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;align-items:stretch}
+.autorow .cand{flex:0 0 auto;width:86px;padding:6px 6px;font-size:13px;flex-direction:column;gap:2px}
 .autorow .cand span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.autorow .cand.more{width:56px;justify-content:center;color:var(--tx2)}
+.autorow .cardno{flex:none;align-self:center;padding:0 4px}
+.rgsearch{background:var(--panel);border:1px solid var(--acc);border-radius:10px;padding:8px}
+.rgsearch input{width:100%}
 .cand{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);
   border-radius:10px;padding:8px 12px;color:var(--tx);font-size:15px;text-align:left}
 .cand:active{border-color:var(--acc)}
@@ -178,7 +182,7 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
     <div class="sizerow">框大小 <input type="range" id="rgSize" min="6" max="40" value="14"></div>
     <div id="rgCands"></div>
     <div class="card" style="margin-top:10px"><h2>已選對手</h2><div id="rgPicked"></div></div>
-    <footer class="note">端上樣板比對（不連網、零成本）。從遊戲「分享截圖」直接進到這裡，或按「選圖」挑選角/準備畫面截圖：會自動偵測右側 6 張對手卡並列出候選（綠框），點候選改選、再點取消，按「加入勾選」完成；認不出的點圖示位置手動框（藍框）。實測 top1 約 85%，卡上有煙霧特效或圖示太小時容易錯，請對照屬性確認。</footer>
+    <footer class="note">端上樣板比對（不連網、零成本）。從遊戲「分享截圖」直接進到這裡，或按「選圖」挑選角/準備畫面截圖：自動偵測右側 6 張對手卡（綠框）各列 5 個候選，點候選改選、再點取消、按 🔍 搜尋自選；「取代對手」會整批換掉目前對手清單，之後在「紀錄」登錄勝敗會自動帶這批對手。實測 top1 約 93%、top5 100%；也可點圖示位置手動框（藍框）。</footer>
   </div>
   <input type="file" id="rgFile" accept="image/*" hidden>
 </div>

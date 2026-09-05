@@ -217,8 +217,11 @@ function toDescriptor(png) {
   const bin = Buffer.concat(order.map(i => bins[i]));
 
   fs.writeFileSync(path.join(root, 'data/sprite-index.bin'), bin);
+  // champ 旗標：該列圖來自 Champions 遊戲圖示＝在本作登場名單內，比對時加權
+  const champFlags = order.map(i => srcOf[i].startsWith('champ') ? '1' : '0').join('');
   fs.writeFileSync(path.join(root, 'data/sprite-meta.json'), JSON.stringify({
     size: SIZE, bytesPer: BYTES_PER, count: sortedNames.length, names: sortedNames,
+    champ: champFlags,
   }));
   // 測試腳本要對照原始圖：記下每筆用的快取檔名
   fs.writeFileSync(path.join(cacheDir, 'sources.json'),

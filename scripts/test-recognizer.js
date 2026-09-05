@@ -66,7 +66,7 @@ function synth(png, { boxSize, spriteMax, silhouette }) {
 (async () => {
   const { parseLib, cropToDescriptor, match, BYTES_PER } =
     await import('../web/match-core.js');
-  const lib = parseLib(binBuf.buffer.slice(binBuf.byteOffset, binBuf.byteOffset + binBuf.length), meta.count);
+  const lib = parseLib(binBuf.buffer.slice(binBuf.byteOffset, binBuf.byteOffset + binBuf.length), meta.count, meta.champ);
 
   // 同圖群組：fallback 形態共用同一張 sprite，比對到同群任何一筆都算對
   const groupOf = new Map();

@@ -1,17 +1,18 @@
 // M4 截圖辨識 UI：分享/選圖 → 自動偵測 6 張對手卡 → 端上樣板比對 →
-// 每張卡列 top-3 候選（預選第 1 名），一鍵全部加入；也可點圖手動框選。
+// 每張卡列 top-5 候選（預選第 1 名）＋🔍搜尋自選，整批「取代」對手清單；也可點圖手動框選。
 // 比對在本機毫秒級完成，零網路、零 token 成本
 import { parseLib, cropToDescriptor, match, matchCard, detectFoeCards, SIZE } from './match-core.js';
 import meta from '../data/sprite-meta.json';
 
 let lib = null;          // 描述子庫（首次開啟時 fetch，之後 SW 快取離線可用）
-let deps = null;         // { zhOf(name), onAdd(name), pickedHtml(), onClose() }
+let deps = null;         // { zhOf, onAdd, onReplace, search, pickedHtml, onClose }
 let img = null;          // ImageBitmap
 let imgData = null;      // 全圖 ImageData（比對用）
 let box = null;          // 手動框 {x,y,w,h} 影像座標
 let boxRel = 0.14;       // 手動框大小（相對影像短邊）
 let cards = [];          // 自動偵測到的卡片框
 let autoRows = [];       // [{cands:[{i,name,score}], sel}] 每張卡的候選與選擇
+let searchRow = -1;      // 目前展開搜尋自選的卡列
 
 const $ = s => document.querySelector(s);
 function esc(s) { return ('' + s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
@@ -76,7 +77,7 @@ async function ensureLib() {
   try {
     const res = await fetch('sprite-index.bin');
     if (!res.ok) throw new Error(res.status);
-    lib = parseLib(await res.arrayBuffer(), meta.count);
+    lib = parseLib(await res.arrayBuffer(), meta.count, meta.champ);
     return true;
   } catch (e) {
     $('#rgStatus').textContent = '⚠ 圖庫載入失敗（離線且尚未快取？）';
@@ -106,7 +107,7 @@ async function loadImage(blob) {
     return;
   }
   // 太大的圖先縮（比對只需輪廓與色塊；也省記憶體）
-  const MAXW = 1600;
+  const MAXW = 2600; // 手機截圖多為 2400 寬：不縮才不會犧牲小隻 sprite 的辨識率
   if (img.width > MAXW) {
     const c = document.createElement('canvas');
     c.width = MAXW; c.height = Math.round(img.height * MAXW / img.width);
@@ -134,54 +135,89 @@ async function runAuto() {
     return;
   }
   autoRows = [];
+  searchRow = -1;
   for (const card of cards) {
-    const m = matchCard(imgData, card, lib, 10);
+    const m = matchCard(imgData, card, lib, 15);
     if (!m) { autoRows.push({ cands: [], sel: -1 }); continue; }
-    // 同名（色違列）去重取前 3
+    // 同名（色違列）去重取前 5
     const seen = new Set(); const cands = [];
     for (const r of m.results) {
       const name = meta.names[r.i];
       if (seen.has(name)) continue;
       seen.add(name);
       cands.push({ i: r.i, name, score: r.score });
-      if (cands.length >= 3) break;
+      if (cands.length >= 5) break;
     }
     autoRows.push({ cands, sel: cands.length ? 0 : -1 });
   }
-  $('#rgStatus').textContent = `偵測到 ${cards.length} 張對手卡，點候選可改選/取消；也可點圖手動補。`;
+  $('#rgStatus').textContent = `偵測到 ${cards.length} 張對手卡。點候選改選、再點取消；都不對按 🔍 搜尋自選。`;
   renderAuto();
 }
 
 function renderAuto() {
   const wrap = $('#rgCands');
   wrap.innerHTML = autoRows.map((row, ri) => {
-    if (!row.cands.length) return `<div class="autorow"><span class="hint">卡${ri + 1}：認不出來，點圖手動框</span></div>`;
-    return `<div class="autorow">` + row.cands.map((c, ci) => `
+    const candsHtml = row.cands.map((c, ci) => `
       <button class="cand ${row.sel === ci ? 'sel' : ''}" data-row="${ri}" data-ci="${ci}">
         <canvas width="${SIZE}" height="${SIZE}" data-th="${c.i}"></canvas>
-        <span>${esc(deps.zhOf(c.name))}</span><span class="pct">${Math.round(c.score * 100)}</span>
-      </button>`).join('') + `</div>`;
+        <span>${esc(deps.zhOf(c.name))}</span>
+        <span class="pct">${c.score == null ? '自選' : Math.round(c.score * 100)}</span>
+      </button>`).join('');
+    const searchBtn = `<button class="cand more" data-search="${ri}">🔍<span>自選</span></button>`;
+    const searchBox = searchRow === ri ? `
+      <div class="rgsearch">
+        <input type="search" id="rgQ" placeholder="搜尋：中文／注音頭字／英文" autocomplete="off">
+        <div class="results" id="rgQr"></div>
+      </div>` : '';
+    return `<div class="autorow">${row.cands.length ? '' : `<span class="cardno hint">卡${ri + 1} 認不出</span>`}${candsHtml}${searchBtn}</div>${searchBox}`;
   }).join('') +
   (autoRows.some(r => r.sel >= 0)
-    ? `<button class="btn" id="rgAddAll" style="width:100%;margin-top:8px">加入勾選的 ${autoRows.filter(r => r.sel >= 0).length} 隻 →</button>`
+    ? `<button class="btn" id="rgAddAll" style="width:100%;margin-top:8px">✓ 用勾選的 ${autoRows.filter(r => r.sel >= 0).length} 隻取代對手</button>`
     : '');
   for (const c of wrap.querySelectorAll('canvas[data-th]')) drawThumb(c, +c.dataset.th);
   const addAll = $('#rgAddAll');
   if (addAll) addAll.onclick = () => {
-    let ok = 0;
-    for (const row of autoRows) {
-      if (row.sel < 0) continue;
-      if (deps.onAdd(row.cands[row.sel].name)) ok++;
-    }
-    $('#rgStatus').textContent = `已加入 ${ok} 隻（重複/超過 6 隻的會略過）。`;
+    const names = autoRows.filter(r => r.sel >= 0).map(r => r.cands[r.sel].name);
+    const n = deps.onReplace(names);
+    $('#rgStatus').textContent = `✓ 對手已換成這 ${n} 隻；到「紀錄」登錄勝敗時會自動帶這批對手。`;
     renderPicked();
   };
+  if (searchRow >= 0) wireSearch();
+}
+
+// 每卡的搜尋自選：選到的直接插到該卡候選第一位並選取
+function wireSearch() {
+  const q = $('#rgQ'), qr = $('#rgQr');
+  if (!q) return;
+  q.addEventListener('input', () => {
+    const rs = deps.search(q.value).slice(0, 8);
+    qr.innerHTML = rs.map(e => `<div class="result" data-pick="${esc(e.n)}">
+      <span class="zh">${esc(e.zh)}</span><span class="en">${esc(e.n)}</span></div>`).join('') ||
+      (q.value.trim() ? '<p class="hint">找不到</p>' : '');
+  });
+  qr.addEventListener('click', ev => {
+    const el = ev.target.closest('[data-pick]');
+    if (!el) return;
+    const row = autoRows[searchRow];
+    const name = el.dataset.pick;
+    const i = meta.names.indexOf(name);
+    row.cands = row.cands.filter(c => c.name !== name);
+    row.cands.unshift({ i: i >= 0 ? i : 0, name, score: null });
+    row.sel = 0;
+    searchRow = -1;
+    renderAuto();
+  });
+  q.focus();
 }
 
 function onCandsClick(ev) {
   const b = ev.target.closest('button.cand');
   if (!b) return;
-  if (b.dataset.row !== undefined) {
+  if (b.dataset.search !== undefined) {
+    // 開/關該卡的搜尋自選
+    searchRow = searchRow === +b.dataset.search ? -1 : +b.dataset.search;
+    renderAuto();
+  } else if (b.dataset.row !== undefined) {
     // 自動模式：點候選＝改選；再點一次＝取消（該卡不加入）
     const row = autoRows[+b.dataset.row];
     const ci = +b.dataset.ci;
