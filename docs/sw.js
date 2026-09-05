@@ -1,6 +1,6 @@
 // 離線快取：build 時以 BUILD_ID 換版，舊快取自動清除
-const CACHE = 'pct-202609050626';
-const ASSETS = ['./', './index.html', './bundle.js', './manifest.webmanifest', './icon.svg', './sprite-index.bin?v=299ebdb409'];
+const CACHE = 'pct-202609050728';
+const ASSETS = ['./', './index.html', './bundle.js', './manifest.webmanifest', './icon.svg', './sprite-index.bin?v=c0266a5734'];
 
 self.addEventListener('install', e => {
   // no-cache：安裝時向伺服器重新驗證，避免把 HTTP 快取裡的舊檔（尤其 sprite-index.bin）

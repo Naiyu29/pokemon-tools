@@ -46,6 +46,16 @@ const $ = s => document.querySelector(s);
 function esc(s) { return ('' + s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 // 選角/準備畫面不可能出現 Mega 型態（進場後才 Mega），候選直接排除
 const isMega = n => /-Mega(-|$)/.test(n);
+// 對手候選只出「冠軍會出現的」：遊戲圖示名單（champ 旗標）∪ 威脅庫（名單落差保險），
+// 使用者 2026-09-05 指示直接剔除不可能出現的寶可夢；🔍 搜尋自選不受限
+let allowNames = null;
+function inRoster(name) {
+  if (!allowNames) {
+    allowNames = new Set(deps && deps.threatNames ? deps.threatNames : []);
+    for (let i = 0; i < meta.count; i++) if (meta.champ && meta.champ[i] === '1') allowNames.add(meta.names[i]);
+  }
+  return allowNames.has(name);
+}
 
 export function initRecognize(d) {
   deps = d;
@@ -203,7 +213,7 @@ function foeCandidates(card) {
   const seen = new Set(); const cands = [];
   for (const r of m.results) {
     const name = meta.names[r.i];
-    if (seen.has(name) || isMega(name)) continue;
+    if (seen.has(name) || isMega(name) || !inRoster(name)) continue;
     seen.add(name);
     // 縮圖固定用一般色那列（同名第一列；色違只在比對時參與，異色不是常態）
     cands.push({ i: meta.names.indexOf(name), name, score: r.score });
@@ -332,7 +342,7 @@ async function runManual() {
   const seen = new Set(); const cands = [];
   for (const r of match(desc, lib, 40)) {
     const name = meta.names[r.i];
-    if (seen.has(name) || isMega(name)) continue;
+    if (seen.has(name) || isMega(name) || !inRoster(name)) continue;
     seen.add(name);
     cands.push({ i: meta.names.indexOf(name), name, score: r.score });
     if (cands.length >= 5) break;
