@@ -4,7 +4,7 @@
 //   2. src/minisprites/pokemon/home/（HOME 選單圖示，風格相同、全圖鑑）
 //   3. PokeAPI HOME 渲染圖（最後墊底）
 // 命名：s<種名>-o<形態>.png，Mega＝omega（scharizard-omega_y）、多字形態用底線（orapid_strike）
-// 產出：data/sprite-index.bin（每筆 16×16 RGB 768B ＋ alpha 遮罩 32B ＝ 800B）
+// 產出：data/sprite-index.bin（每筆 24×24 RGB＋alpha 遮罩＝1800B，約 2.8MB）
 //       data/sprite-meta.json（順序對齊的名稱表，bundle 直接 import）
 // 原始圖快取在 --cache 指定目錄（預設 .sprite-cache/，已 gitignore），重跑不重抓
 const fs = require('fs');
@@ -12,7 +12,7 @@ const path = require('path');
 const { PNG } = require('pngjs');
 const { Dex } = require('@pkmn/dex');
 
-const SIZE = 16;
+const SIZE = +process.env.SPRITE_SIZE || 24;
 const BYTES_PER = SIZE * SIZE * 3 + SIZE * SIZE / 8; // 800
 const root = path.join(__dirname, '..');
 const cacheDir = process.argv.includes('--cache')
@@ -216,10 +216,11 @@ function toDescriptor(png) {
   const sortedNames = order.map(i => names[i]);
   const bin = Buffer.concat(order.map(i => bins[i]));
 
-  fs.writeFileSync(path.join(root, 'data/sprite-index.bin'), bin);
+  const outDir = process.env.SPRITE_OUT || path.join(root, 'data');
+  fs.writeFileSync(path.join(outDir, 'sprite-index.bin'), bin);
   // champ 旗標：該列圖來自 Champions 遊戲圖示＝在本作登場名單內，比對時加權
   const champFlags = order.map(i => srcOf[i].startsWith('champ') ? '1' : '0').join('');
-  fs.writeFileSync(path.join(root, 'data/sprite-meta.json'), JSON.stringify({
+  fs.writeFileSync(path.join(outDir, 'sprite-meta.json'), JSON.stringify({
     size: SIZE, bytesPer: BYTES_PER, count: sortedNames.length, names: sortedNames,
     champ: champFlags,
   }));

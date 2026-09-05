@@ -1,9 +1,10 @@
-// M4.2 端上辨識核心：截圖框選區 → 16×16 描述子 → 與 sprite 庫比對
+// M4.2 端上辨識核心：截圖框選區 → 24×24 描述子 → 與 sprite 庫比對
+// （原 16×16；2026-09-05 提高解析度後 45 卡調校集 top1 97.8%→100%）
 // 純計算、無 DOM 依賴，瀏覽器與 node 測試腳本共用
-export const SIZE = 16;
-const PX = SIZE * SIZE;            // 256
-const MASK_BYTES = PX / 8;         // 32
-export const BYTES_PER = PX * 3 + MASK_BYTES; // 800
+export const SIZE = 24;
+const PX = SIZE * SIZE;            // 576
+const MASK_BYTES = PX / 8;         // 72
+export const BYTES_PER = PX * 3 + MASK_BYTES; // 1800
 
 const POP = new Uint8Array(256);
 for (let i = 0; i < 256; i++) POP[i] = (i & 1) + POP[i >> 1];
@@ -27,7 +28,7 @@ export function parseLib(arrayBuffer, count, champFlags) {
 const bit = (mask, p) => (mask[p >> 3] >> (p & 7)) & 1;
 
 // 框選區 RGBA → 描述子。流程：邊框估背景色 → 前景遮罩 → 取遮罩外框 →
-// 等比例縮到 16×16（置中）。回傳 null 表示框裡找不到前景。
+// 等比例縮到 SIZE×SIZE（置中）。回傳 null 表示框裡找不到前景。
 // img: {width, height, data(Uint8ClampedArray RGBA)}；box: {x,y,w,h}（可省略＝整張）
 export function cropToDescriptor(img, box) {
   const bx = box ? Math.max(0, box.x | 0) : 0;
@@ -186,15 +187,17 @@ function histSim(a, b) {
 }
 function blocksOf(d) {
   if (d._blk) return d._blk;
+  const B = SIZE / 4; // 4×4 區塊、每塊 B×B 像素
+  const minN = Math.max(3, (B * B) >> 3);
   const out = [];
   for (let by = 0; by < 4; by++) for (let bx = 0; bx < 4; bx++) {
     let r = 0, g = 0, b = 0, n = 0;
-    for (let y = by * 4; y < by * 4 + 4; y++) for (let x = bx * 4; x < bx * 4 + 4; x++) {
+    for (let y = by * B; y < by * B + B; y++) for (let x = bx * B; x < bx * B + B; x++) {
       const p = y * SIZE + x;
       if (!bit(d.mask, p)) continue;
       r += d.rgb[p * 3]; g += d.rgb[p * 3 + 1]; b += d.rgb[p * 3 + 2]; n++;
     }
-    out.push(n >= 3 ? [r / n, g / n, b / n] : null);
+    out.push(n >= minN ? [r / n, g / n, b / n] : null);
   }
   d._blk = out;
   return out;
