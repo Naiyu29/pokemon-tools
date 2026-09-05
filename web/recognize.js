@@ -16,6 +16,8 @@ let searchRow = -1;      // 目前展開搜尋自選的卡列
 
 const $ = s => document.querySelector(s);
 function esc(s) { return ('' + s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+// 選角/準備畫面不可能出現 Mega 型態（進場後才 Mega），候選直接排除
+const isMega = n => /-Mega(-|$)/.test(n);
 
 export function initRecognize(d) {
   deps = d;
@@ -137,13 +139,13 @@ async function runAuto() {
   autoRows = [];
   searchRow = -1;
   for (const card of cards) {
-    const m = matchCard(imgData, card, lib, 15);
+    const m = matchCard(imgData, card, lib, 40);
     if (!m) { autoRows.push({ cands: [], sel: -1 }); continue; }
-    // 同名（色違列）去重取前 5
+    // 同名（色違列）去重、排除 Mega，取前 5
     const seen = new Set(); const cands = [];
     for (const r of m.results) {
       const name = meta.names[r.i];
-      if (seen.has(name)) continue;
+      if (seen.has(name) || isMega(name)) continue;
       seen.add(name);
       cands.push({ i: r.i, name, score: r.score });
       if (cands.length >= 5) break;
@@ -241,9 +243,9 @@ async function runManual() {
     return;
   }
   const seen = new Set(); const cands = [];
-  for (const r of match(desc, lib, 12)) {
+  for (const r of match(desc, lib, 40)) {
     const name = meta.names[r.i];
-    if (seen.has(name)) continue;
+    if (seen.has(name) || isMega(name)) continue;
     seen.add(name);
     cands.push({ i: r.i, name, score: r.score });
     if (cands.length >= 5) break;
