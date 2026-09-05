@@ -29,8 +29,8 @@
         如金身擋變化招/不屈之心禁威嚇/沙暴搶天氣）
       ※ 已決定（2026-09-03）：採規則評分自動推薦選 4＋首發（Q1=A）
 - [x] 1.5 部署 GitHub Pages（手機「加入主畫面」當 app 用），我的隊伍存 localStorage
-      ※ 建置產物在 `docs/`＋PWA 離線；剩最後一步人工動作：merge 到 main 後
-      Settings → Pages → Source 選 `main` `/docs`（網址 https://naiyu29.github.io/pokemon-tools/）
+      ※ 建置產物在 `docs/`＋PWA 離線；Pages 已設定完成（2026-09-05），
+      網址 https://naiyu29.github.io/pokemon-tools/
 - 驗收：選角 90 秒內完成輸入並看到建議；離線可用
 - 成本：建置一次性；使用零成本
 
@@ -49,9 +49,14 @@
 
 ## M3｜截圖半自動（賽前分析）
 
-- [ ] 3.1 流程化：對戰截圖貼給 Claude → 辨識對手 6 隻 → 回覆一條帶參數的工具連結
+- [x] 3.1 流程化：對戰截圖貼給 Claude → 辨識對手 6 隻 → 回覆一條帶參數的工具連結
       （例 `?foes=primarina,tyranitar,...`），點開即完成預填
-- [ ] 3.2 併入 M2 的 skill
+      ※ 網頁端補強：套用參數後清除 query（重載不蓋使用者編輯）、查無此名顯示
+      「帶入失敗」提示、加 `weather` 參數；連結格式規則見
+      `skills-src/pokemon-champions/references/battle-analysis.md`
+- [x] 3.2 併入 M2 的 skill
+      ※ SKILL.md 加工作流列＋工具網址；battle-analysis.md 加預填連結產生規則；
+      skill 有更新，記得同步到已安裝的 skill 庫
 - 定位：賽前 90 秒內來不及（一輪對話約 1–2 分鐘），適合賽後覆盤與遇到重複隊伍的預研
 - 成本：每次一張圖＋短回覆（一輪對話）
 
