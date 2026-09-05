@@ -481,6 +481,7 @@ $('#teamImport').onclick = () => {
 // ---- 截圖辨識（M4）----
 initRecognize({
   zhOf: n => zhByName.get(n) || n,
+  search: q => search(q),
   onAdd: n => {
     if (state.foes.length >= 6) return false;
     const foe = makeFoe(n);
@@ -489,8 +490,20 @@ initRecognize({
     save();
     return true;
   },
+  // 辨識結果整批「取代」目前對手（每次辨識＝一場新對戰）；
+  // 紀錄分頁登錄勝敗時本來就會帶當前對手，等於自動記到這批
+  onReplace: names => {
+    const foes = [];
+    for (const n of names) {
+      const foe = makeFoe(n);
+      if (foe && !foes.some(f => f.name === foe.name && f.mega === foe.mega)) foes.push(foe);
+    }
+    state.foes = foes.slice(0, 6);
+    save();
+    return state.foes.length;
+  },
   pickedHtml: () => foeChips(false),
-  onClose: () => { state.tab = 'foes'; render(); },
+  onClose: () => { state.tab = state.foes.length ? 'reco' : 'foes'; render(); },
 });
 // PWA Share Target 進來的截圖（sw.js 存進 cache 後重導 ?shared=1）
 if (params.get('shared')) {

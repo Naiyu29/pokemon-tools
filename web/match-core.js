@@ -8,8 +8,9 @@ export const BYTES_PER = PX * 3 + MASK_BYTES; // 800
 const POP = new Uint8Array(256);
 for (let i = 0; i < 256; i++) POP[i] = (i & 1) + POP[i >> 1];
 
-// sprite-index.bin → [{rgb:Uint8Array(768), mask:Uint8Array(32)}]
-export function parseLib(arrayBuffer, count) {
+// sprite-index.bin → [{rgb:Uint8Array(768), mask:Uint8Array(32), champ}]
+// champFlags：'0'/'1' 字串，1＝該列圖來自 Champions 遊戲本身（在本作登場名單內）
+export function parseLib(arrayBuffer, count, champFlags) {
   const buf = new Uint8Array(arrayBuffer);
   const lib = [];
   for (let i = 0; i < count; i++) {
@@ -17,6 +18,7 @@ export function parseLib(arrayBuffer, count) {
     lib.push({
       rgb: buf.subarray(off, off + PX * 3),
       mask: buf.subarray(off + PX * 3, off + BYTES_PER),
+      champ: champFlags ? champFlags[i] === '1' : false,
     });
   }
   return lib;
@@ -258,6 +260,13 @@ export function detectFoeCards(img) {
     // 回傳整張卡的範圍，sprite 裁切交給 matchCard 試多組
     boxes.push({ x: x0, y: y0, w: x1 - x0, h: y1 - y0 });
   }
+  // 卡片是同一直列、等寬：以中位數對齊 x 範圍，修掉被舞台燈光/特效拉歪的個別卡框
+  if (boxes.length >= 3) {
+    const medOf = arr => arr.slice().sort((a, b) => a - b)[arr.length >> 1];
+    const mx0 = medOf(boxes.map(b => b.x));
+    const mw = medOf(boxes.map(b => b.w));
+    for (const b of boxes) { b.x = mx0; b.w = mw; }
+  }
   return boxes;
 }
 
@@ -265,7 +274,7 @@ export function detectFoeCards(img) {
 // 取比對最高分的那組。回傳 { results, box } 或 null。
 export function matchCard(img, card, lib, topN = 5) {
   const frs = [[0, 0.58], [0.15, 0.62], [0.05, 0.45]];
-  let best = null;
+  let best = null, bestRaw = -1;
   for (const [f0, f1] of frs) {
     const box = {
       x: card.x + Math.round(card.w * f0), y: card.y,
@@ -275,12 +284,17 @@ export function matchCard(img, card, lib, topN = 5) {
     if (!desc) continue;
     const results = match(desc, lib, topN);
     if (!results.length) continue;
-    if (!best || results[0].score > best.results[0].score) best = { results, box, desc };
+    // 挑裁切用「原始相似度」（去掉名單加權）：避免裁到雜訊卻靠加權勝出
+    const raw = Math.max(...results.map(r => r.score - (lib[r.i].champ ? CHAMP_BOOST : 0)));
+    if (!best || raw > bestRaw) { best = { results, box, desc }; bestRaw = raw; }
   }
   return best;
 }
 
-// 回傳 [{i, score}] 由高到低；剪影模式（極罕見）退回純形狀 IoU
+// 回傳 [{i, score}] 由高到低；剪影模式（極罕見）退回純形狀 IoU。
+// Champions 登場名單加權 +0.08：對手一定出自本作名單，撞色的路人優先度降低
+// （真實截圖評估：top1 88.9%→93.3%、top5→100%）
+const CHAMP_BOOST = 0.08;
 export function match(desc, lib, topN = 5) {
   const scores = [];
   if (desc.silhouette) {
@@ -288,7 +302,11 @@ export function match(desc, lib, topN = 5) {
   } else {
     const hd = histOf(desc), bd = blocksOf(desc);
     for (let i = 0; i < lib.length; i++) {
-      scores.push({ i, score: 0.65 * histSim(hd, histOf(lib[i])) + 0.35 * blockSim(bd, blocksOf(lib[i])) });
+      scores.push({
+        i,
+        score: 0.65 * histSim(hd, histOf(lib[i])) + 0.35 * blockSim(bd, blocksOf(lib[i])) +
+          (lib[i].champ ? CHAMP_BOOST : 0),
+      });
     }
   }
   scores.sort((a, b) => b.score - a.score);
