@@ -38,14 +38,27 @@ try {
   if (Array.isArray(t) && t.length) team = t;
 } catch (e) { /* ignore */ }
 
-// URL 參數（M3 預埋）：?foes=garchomp,primarina&mode=singles
+// URL 參數（M3）：?foes=garchomp,primarina&mode=singles&weather=Sun
+// 截圖貼給 Claude 辨識後回傳的預填連結，點開直接跳推薦頁
 const params = new URLSearchParams(location.search);
+let urlMisses = [];
 if (params.get('foes')) {
-  state.foes = params.get('foes').split(',').map(s => makeFoe(s.trim())).filter(Boolean).slice(0, 6);
-  state.tab = state.foes.length ? 'reco' : 'foes';
+  const names = params.get('foes').split(',').map(s => s.trim()).filter(Boolean);
+  const foes = [];
+  for (const n of names) {
+    const foe = makeFoe(n);
+    if (!foe) { urlMisses.push(n); continue; }
+    if (!foes.some(f => f.name === foe.name && f.mega === foe.mega)) foes.push(foe);
+  }
+  state.foes = foes.slice(0, 6);
+  state.tab = state.foes.length && !urlMisses.length ? 'reco' : 'foes';
 }
 if (params.get('mode') === 'singles') state.doubles = false;
 if (params.get('mode') === 'doubles') state.doubles = true;
+const wParam = params.get('weather');
+if (['Sun', 'Rain', 'Sand', 'Snow', ''].includes(wParam)) state.weather = wParam;
+// 參數只在開啟當下生效一次；清掉 query，之後重新整理不會蓋掉使用者的編輯
+if ([...params.keys()].length) history.replaceState(null, '', location.pathname);
 
 function makeFoe(idOrName) {
   const id = toID(idOrName);
@@ -120,10 +133,14 @@ function foeChips(removable) {
 }
 
 function renderFoes() {
+  const missNote = urlMisses.length
+    ? `<p class="hint" style="color:var(--foe)">⚠ 連結帶入失敗（查無此名）：${esc(urlMisses.join('、'))}，請手動搜尋補上。</p>`
+    : '';
   const card = h(`<div>
     <div class="card">
       <h2>對手 ${state.foes.length}/6</h2>
       ${foeChips(true)}
+      ${missNote}
     </div>
     <div class="card">
       <input type="search" id="q" placeholder="搜尋：中文／注音頭字（ㄌㄧㄌ）／英文" style="width:100%" autocomplete="off">
@@ -430,7 +447,7 @@ function toPaste(specs) {
 // ---- 事件繫結 ----
 $('#tabbar').addEventListener('click', ev => {
   const b = ev.target.closest('button[data-tab]');
-  if (b) { state.tab = b.dataset.tab; render(); }
+  if (b) { state.tab = b.dataset.tab; urlMisses = []; render(); }
 });
 $('#modeSeg').addEventListener('click', ev => {
   const b = ev.target.closest('button[data-v]');
