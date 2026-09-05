@@ -15,8 +15,11 @@
 
 ### 2. 重寫 `data/threats.js`
 
-- 每隻含 `zh / name / rank / item / ability / nature / evs / moves`；
+- 每隻含 `zh / name / rank / modes / item / ability / nature / evs / moves`；
   Mega 型態加 `mega`，新 Mega 特性若 calc 資料庫是佔位值，用 `megaAbility` 覆寫。
+- `modes`：常見場合，`['singles']`／`['doubles']`／兩者並列——速度線分頁的
+  「單打常見/雙打常見」參考線靠它篩選，**每隻都要填**。rank 有明確單/雙字樣照 rank，
+  沒有的（Mega強勢/常青候補/新增）依該寶可夢慣用場合推估。
 - 配置用該寶可夢的常見標準競技配置（訓練知識推估）。
 - 檔頭註解更新：來源、搜尋日期、賽季名。
 - 本季搜尋確認的標 rank 數字；常青候補沿用舊標記慣例（見現有檔案 rank 欄）。
