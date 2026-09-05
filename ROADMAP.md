@@ -65,14 +65,17 @@
 - [x] 4.1 PWA Share Target：遊戲截圖 → 分享 → 直接進工具
       ※ manifest 加 `share_target`（POST multipart）、sw.js 收檔存快取後重導 `?shared=1`，
       自動開「截圖辨識」頁；需已安裝 PWA（加入主畫面）才會出現在分享選單
-- [x] 4.2 端上辨識：sprite 樣板比對（不用 AI、零成本、毫秒級）——POC 完成、已整合進工具
-      ※ 描述子庫：`scripts/build-sprite-index.js` 抓 PokeAPI HOME 渲染圖 →
-      全圖鑑 1288 筆 16×16 色塊＋剪影遮罩（`data/sprite-index.bin`，約 1MB，離線快取）；
-      比對核心 `web/match-core.js`（背景估色→前景遮罩→letterbox 縮放→IoU＋色距評分）；
-      UI：對手頁「📷 截圖辨識」→ 點圖示位置 → top-5 候選一鍵加入。
-      合成測試（`scripts/test-recognizer.js`，n=300）：彩色 top1 98.3%／top5 100%，
-      剪影 top1 90%／top5 94%——**待真實遊戲截圖驗證**（圖示風格若與 HOME 渲染差很多，
-      準確率會掉；屆時把真截圖裁下來的圖示當樣板重建庫即可）
+- [x] 4.2 端上辨識：sprite 樣板比對（不用 AI、零成本、毫秒級）——已用真實截圖驗證＋改版
+      ※ 2026-09-05 用 8 張真實遊戲截圖重新調校：
+      - 描述子庫改用 **smogon/sprites 的 `src/champions/` 遊戲內圖示**（跟截圖同款）優先、
+        HOME 選單圖示補其餘、PokeAPI 渲染圖墊底；含 champions 官方**色違**同名列
+        （實戰踩到色違快龍）。1601 筆 16×16（`data/sprite-index.bin` 約 1.2MB，離線快取）
+      - **自動偵測對手 6 張卡**（右側深紅卡列 rgb≈135,5,50、綠色極低）＋自動全卡辨識：
+        載圖即列每卡 top-3 候選（預選第 1），一鍵全部加入；點圖手動框選當備援
+      - 抗干擾：前景遮罩門檻設上限＋形態學開運算去雷射細線＋連通元件丟煙霧/浮水印
+      - 評分：512-bin 調色盤直方圖交集(0.65)＋4×4 區塊色(0.35)——不受對位/縮放影響
+      - 真實截圖成績：top1 約 85%、top3 約 95%（8 張×6 卡）；失誤集中在小隻 sprite
+        被特效蓋住的卡。`scripts/test-recognizer.js` 合成測試因亮度擾動偏嚴，僅當回歸參考
 - [ ] 4.3 懸浮視窗 overlay——**評估後擱置（2026-09-05）**：PWA 做不到 overlay，需原生
       app（Android SYSTEM_ALERT_WINDOW）＋螢幕擷取權限，工程量大；分享截圖（4.1）＋
       分割畫面已覆蓋大部分需求，等實際使用發現不夠再議

@@ -1,11 +1,16 @@
-// M4.2 端上辨識 POC：建置 sprite 描述子庫
-// 來源：PokeAPI sprites repo（HOME 渲染圖，raw.githubusercontent.com）
+// M4.2 端上辨識：建置 sprite 描述子庫
+// 來源優先序（2026-09-05 用真實遊戲截圖驗證後改版）：
+//   1. smogon/sprites repo 的 src/champions/（Pokémon Champions 遊戲內選單圖示，跟截圖同款）
+//   2. src/minisprites/pokemon/home/（HOME 選單圖示，風格相同、全圖鑑）
+//   3. PokeAPI HOME 渲染圖（最後墊底）
+// 命名：s<種名>-o<形態>.png，Mega＝omega（scharizard-omega_y）、多字形態用底線（orapid_strike）
 // 產出：data/sprite-index.bin（每筆 16×16 RGB 768B ＋ alpha 遮罩 32B ＝ 800B）
 //       data/sprite-meta.json（順序對齊的名稱表，bundle 直接 import）
 // 原始圖快取在 --cache 指定目錄（預設 .sprite-cache/，已 gitignore），重跑不重抓
 const fs = require('fs');
 const path = require('path');
 const { PNG } = require('pngjs');
+const { Dex } = require('@pkmn/dex');
 
 const SIZE = 16;
 const BYTES_PER = SIZE * SIZE * 3 + SIZE * SIZE / 8; // 800
@@ -76,6 +81,44 @@ async function fetchSprite(apiId, tag) {
   return buf;
 }
 
+// ---- smogon/sprites 選單圖示（champions／home minisprites）----
+const SMOGON = 'https://raw.githubusercontent.com/smogon/sprites/master/src';
+
+// PS 名 → smogon sprite 檔名 id（不含開頭的 s 與 .png）
+function smogonId(psName) {
+  if (/^Nidoran-/.test(psName)) return 'nidoran_' + psName.slice(-1).toLowerCase();
+  let base = psName, forme = '';
+  const sp = Dex.species.get(psName);
+  if (sp && sp.exists) { base = sp.baseSpecies || psName; forme = sp.forme || ''; }
+  else {
+    // dex 沒有的（Champions 新 Mega 等）：手動拆 -Mega/-Mega-X/-Mega-Y
+    const m = psName.match(/^(.*?)-(Mega(?:-[XY])?)$/);
+    if (m) { base = m[1]; forme = m[2]; }
+  }
+  const baseId = base.toLowerCase().replace(/[^a-z0-9]+/g, '');
+  if (!forme) return baseId;
+  const f = forme.toLowerCase().replace(/[’'.%]/g, '').replace(/[\s-]+/g, '_');
+  return `${baseId}-o${f}`;
+}
+
+// 依序試 champions → home minisprites；快取檔名帶來源前綴
+async function fetchMenuIcon(psName) {
+  const id = smogonId(psName);
+  for (const [prefix, dir] of [['champ-', 'champions'], ['homeicon-', 'minisprites/pokemon/home']]) {
+    const file = path.join(cacheDir, `${prefix}${id}.png`);
+    if (fs.existsSync(file)) return { buf: fs.readFileSync(file), src: prefix };
+    // 本機有 smogon/sprites checkout 時直接讀（--smogon <path>），否則走網路
+    const local = smogonDir && path.join(smogonDir, 'src', dir, `s${id}.png`);
+    let buf = local && fs.existsSync(local) ? fs.readFileSync(local) : null;
+    if (!buf && !smogonDir) buf = await get(`${SMOGON}/${dir}/s${id}.png`);
+    if (buf) { fs.writeFileSync(file, buf); return { buf, src: prefix }; }
+  }
+  return null;
+}
+const smogonDir = process.argv.includes('--smogon')
+  ? process.argv[process.argv.indexOf('--smogon') + 1]
+  : null;
+
 // 透明邊裁切＋等比例縮到 SIZE×SIZE（置中 letterbox），輸出 RGB＋遮罩
 function toDescriptor(png) {
   const { width: w, height: h, data } = png;
@@ -117,22 +160,52 @@ function toDescriptor(png) {
   const apiIds = new Map(JSON.parse(idxBuf).results.map(r =>
     [r.name, +r.url.match(/\/(\d+)\/$/)[1]]));
 
-  const names = [], bins = [];
-  let fellBack = 0, missed = [];
+  const names = [], bins = [], srcOf = [];
+  const counts = { 'champ-': 0, 'homeicon-': 0, render: 0 };
+  let missed = [];
   let done = 0;
   const queue = [...searchIndex];
   async function worker() {
     while (queue.length) {
       const e = queue.shift();
-      let apiId = apiIds.get(toApiName(e.n));
-      if (!apiId) { apiId = e.no; fellBack++; } // 查無形態 → 用基礎種 dex 編號
-      const buf = await fetchSprite(apiId, toApiName(e.n));
+      let buf = null, src = 'render', cacheTag = toApiName(e.n);
+      const icon = await fetchMenuIcon(e.n);
+      if (icon) { buf = icon.buf; src = icon.src; cacheTag = icon.src + smogonId(e.n); }
+      if (!buf) {
+        const apiId = apiIds.get(toApiName(e.n)) || e.no; // 查無形態 → 基礎種 dex 編號
+        buf = await fetchSprite(apiId, cacheTag);
+      }
       if (!buf) { missed.push(e.n); continue; }
       let d;
       try { d = toDescriptor(PNG.sync.read(buf)); } catch (err) { missed.push(e.n); continue; }
       if (!d) { missed.push(e.n); continue; }
+      counts[src] = (counts[src] || 0) + 1;
       names.push(e.n);
+      srcOf.push(cacheTag);
       bins.push(Buffer.concat([Buffer.from(d.rgb), Buffer.from(d.mask)]));
+      // 對手可能是色違：champions 有官方色違圖的，同名再加一列（實測踩到色違快龍）
+      if (src === 'champ-') {
+        const id = smogonId(e.n);
+        const sFile = path.join(cacheDir, `champS-${id}.png`);
+        let sBuf = fs.existsSync(sFile) ? fs.readFileSync(sFile) : null;
+        if (!sBuf) {
+          const local = smogonDir && path.join(smogonDir, 'src/champions', `s${id}-s.png`);
+          sBuf = local && fs.existsSync(local) ? fs.readFileSync(local) : null;
+          if (!sBuf && !smogonDir) sBuf = await get(`${SMOGON}/champions/s${id}-s.png`);
+          if (sBuf) fs.writeFileSync(sFile, sBuf);
+        }
+        if (sBuf) {
+          try {
+            const sd = toDescriptor(PNG.sync.read(sBuf));
+            if (sd) {
+              counts.shiny = (counts.shiny || 0) + 1;
+              names.push(e.n);
+              srcOf.push(`champS-${id}`);
+              bins.push(Buffer.concat([Buffer.from(sd.rgb), Buffer.from(sd.mask)]));
+            }
+          } catch (err) { /* 色違圖壞掉就略過 */ }
+        }
+      }
       if (++done % 100 === 0) console.log(`  ${done}/${searchIndex.length}`);
     }
   }
@@ -147,7 +220,11 @@ function toDescriptor(png) {
   fs.writeFileSync(path.join(root, 'data/sprite-meta.json'), JSON.stringify({
     size: SIZE, bytesPer: BYTES_PER, count: sortedNames.length, names: sortedNames,
   }));
-  console.log(`sprite-index: ${sortedNames.length} 筆（fallback 基礎種 ${fellBack}、失敗 ${missed.length}）`);
+  // 測試腳本要對照原始圖：記下每筆用的快取檔名
+  fs.writeFileSync(path.join(cacheDir, 'sources.json'),
+    JSON.stringify(Object.fromEntries(order.map(i => [names[i], srcOf[i]]))));
+  console.log(`sprite-index: ${sortedNames.length} 筆` +
+    `（champions ${counts['champ-']}、home圖示 ${counts['homeicon-']}、渲染圖 ${counts.render}、失敗 ${missed.length}）`);
   console.log(`bin ${(bin.length / 1024).toFixed(0)}KB`);
   if (missed.length) console.log('失敗名單:', missed.join(', '));
 })();

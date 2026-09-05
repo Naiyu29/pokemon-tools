@@ -14,16 +14,8 @@ const binBuf = fs.readFileSync(path.join(root, 'data/sprite-index.bin'));
 let seed = 20260905;
 function rnd() { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; }
 
-// PS 名 → 快取檔名（與 build-sprite-index 的 toApiName 對齊：同一張圖）
-const buildSrc = fs.readFileSync(path.join(__dirname, 'build-sprite-index.js'), 'utf8');
-const aliasMatch = buildSrc.match(/const ALIAS = \{([\s\S]*?)\};/);
-const ALIAS = eval('({' + aliasMatch[1] + '})');
-function toApiName(psName) {
-  let s = psName.toLowerCase()
-    .replace(/[’']/g, '').replace(/\./g, '').replace(/[:%]/g, '')
-    .replace(/[\s_]+/g, '-').replace(/-+/g, '-').replace(/-$/, '');
-  return ALIAS[s] || s;
-}
+// PS 名 → 快取檔名：build-sprite-index 會把每筆實際用的來源寫進 sources.json
+const sources = JSON.parse(fs.readFileSync(path.join(cacheDir, 'sources.json'), 'utf8'));
 
 // 合成一張「截圖框選區」：sprite 貼在雜訊/漸層背景上
 function synth(png, { boxSize, spriteMax, silhouette }) {
@@ -98,7 +90,7 @@ function synth(png, { boxSize, spriteMax, silhouette }) {
     let top1 = 0, top5 = 0, fail = 0, n = 0;
     const misses = [];
     for (const idx of picks) {
-      const file = path.join(cacheDir, toApiName(meta.names[idx]) + '.png');
+      const file = path.join(cacheDir, (sources[meta.names[idx]] || '') + '.png');
       if (!fs.existsSync(file)) continue;
       const png = PNG.sync.read(fs.readFileSync(file));
       const spriteMax = [28, 44, 64][Math.floor(rnd() * 3)];
