@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "node src/build-search-index.js && node scripts/build.js",
+    "build:sprites": "node scripts/build-sprite-index.js",
+    "test:recognizer": "node scripts/test-recognizer.js",
     "analyze": "node src/analyze.js"
   },
   "repository": {
@@ -25,6 +27,7 @@
   "devDependencies": {
     "esbuild": "^0.28.2",
     "pinyin-pro": "^3.29.3",
+    "pngjs": "^7.0.0",
     "pokemon": "^3.3.1"
   }
 }

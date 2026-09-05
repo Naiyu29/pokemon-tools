@@ -43,3 +43,9 @@ git add -A && git commit -m "Season update: <賽季/月份> threats DB" && git p
 
 - 回報：新增／移除了哪些威脅、我方隊伍對新 meta 的明顯弱點（1–3 條）。
 - 若隊伍需要調整，另開對話討論，不在更新流程裡展開。
+
+### （選用）sprite 辨識庫
+
+`data/sprite-index.bin`（截圖辨識用）平常**不用**跟賽季更新一起重跑；
+只有圖鑑加入新寶可夢/新形態時才 `npm run build:sprites`（需網路抓 PokeAPI），
+之後照常 `node scripts/build.js` 會把 bin 複製進 docs/。
