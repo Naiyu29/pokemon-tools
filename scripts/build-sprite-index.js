@@ -221,9 +221,10 @@ function toDescriptor(png) {
   fs.writeFileSync(path.join(outDir, 'sprite-index.bin'), bin);
   // champ 旗標：該列圖來自 Champions 遊戲圖示＝在本作登場名單內，比對時加權
   const champFlags = order.map(i => srcOf[i].startsWith('champ') ? '1' : '0').join('');
+  const hash = require('crypto').createHash('sha1').update(bin).digest('hex').slice(0, 10);
   fs.writeFileSync(path.join(outDir, 'sprite-meta.json'), JSON.stringify({
     size: SIZE, bytesPer: BYTES_PER, count: sortedNames.length, names: sortedNames,
-    champ: champFlags,
+    champ: champFlags, hash,
   }));
   // 測試腳本要對照原始圖：記下每筆用的快取檔名
   fs.writeFileSync(path.join(cacheDir, 'sources.json'),

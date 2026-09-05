@@ -1,7 +1,7 @@
 // M4 截圖辨識 UI：分享/選圖 → 自動偵測 6 張對手卡 → 端上樣板比對 →
 // 每張卡列 top-5 候選（預選第 1 名）＋🔍搜尋自選，整批「取代」對手清單；也可點圖手動框選。
 // 比對在本機毫秒級完成，零網路、零 token 成本
-import { parseLib, cropToDescriptor, match, matchCard, matchTeamCard, detectFoeCards, detectTeamCards, SIZE } from './match-core.js';
+import { parseLib, cropToDescriptor, match, matchCard, matchTeamCard, detectFoeCards, detectTeamCards, SIZE, BYTES_PER } from './match-core.js';
 import { nameStrip, matchName, cellDescriptor, GRID } from './text-core.js';
 import meta from '../data/sprite-meta.json';
 
@@ -116,13 +116,20 @@ function draw() {
 
 async function ensureLib() {
   if (lib) return true;
+  // 網址帶內容版本＋長度驗證：圖庫與名稱表必須同版，否則列序錯位、名字會整批對錯
+  const url = 'sprite-index.bin?v=' + (meta.hash || meta.count);
+  const expect = meta.count * BYTES_PER;
   try {
-    const res = await fetch('sprite-index.bin');
-    if (!res.ok) throw new Error(res.status);
-    lib = parseLib(await res.arrayBuffer(), meta.count, meta.champ);
+    let buf = await (await fetch(url)).arrayBuffer();
+    if (buf.byteLength !== expect) {
+      // 快取到舊版 → 強制走網路重抓一次
+      buf = await (await fetch(url, { cache: 'reload' })).arrayBuffer();
+    }
+    if (buf.byteLength !== expect) throw new Error('版本不符');
+    lib = parseLib(buf, meta.count, meta.champ);
     return true;
   } catch (e) {
-    $('#rgStatus').textContent = '⚠ 圖庫載入失敗（離線且尚未快取？）';
+    $('#rgStatus').textContent = '⚠ 圖庫載入失敗（' + e.message + '）：把 app 完全關閉重開再試。';
     return false;
   }
 }

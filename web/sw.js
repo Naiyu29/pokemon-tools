@@ -1,9 +1,13 @@
 // 離線快取：build 時以 BUILD_ID 換版，舊快取自動清除
 const CACHE = 'pct-__BUILD_ID__';
-const ASSETS = ['./', './index.html', './bundle.js', './manifest.webmanifest', './icon.svg', './sprite-index.bin'];
+const ASSETS = ['./', './index.html', './bundle.js', './manifest.webmanifest', './icon.svg', './sprite-index.bin?v=__BIN_V__'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  // no-cache：安裝時向伺服器重新驗證，避免把 HTTP 快取裡的舊檔（尤其 sprite-index.bin）
+  // 塞進新版快取造成「新名稱表×舊圖庫」錯位
+  e.waitUntil(caches.open(CACHE)
+    .then(c => c.addAll(ASSETS.map(u => new Request(u, { cache: 'no-cache' }))))
+    .then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(keys =>
@@ -28,8 +32,18 @@ self.addEventListener('fetch', e => {
     return;
   }
   if (e.request.method !== 'GET') return;
+  // 圖庫 bin：網址帶內容版本，比對不忽略 query（版本變了就必須走網路）；
+  // 頁面端偵測到長度不符會用 cache:'reload' 重抓，這裡放行到網路
+  const isBin = e.request.url.includes('sprite-index.bin');
+  if (isBin && e.request.cache === 'reload') {
+    e.respondWith(fetch(e.request).then(res => {
+      if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); }
+      return res;
+    }));
+    return;
+  }
   e.respondWith(
-    caches.match(e.request, { ignoreSearch: true }).then(hit =>
+    caches.match(e.request, { ignoreSearch: !isBin }).then(hit =>
       hit || fetch(e.request).then(res => {
         if (res.ok && new URL(e.request.url).origin === location.origin) {
           const copy = res.clone();
