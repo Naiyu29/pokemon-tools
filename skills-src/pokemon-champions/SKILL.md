@@ -29,6 +29,7 @@ description: Pokémon Champions（寶可夢冠軍）對戰分析工作流——�
 | 隊伍能力/狀態頁截圖 | 轉成 Showdown paste＋更新 `data/my-team.js` | `references/screenshot-to-paste.md` |
 | 選角畫面截圖（剪影＋屬性圖示） | 辨識對手6隻→回傳工具預填連結→跑計算→選4＋首發建議 | `references/battle-analysis.md` |
 | 對戰截圖（賽後覆盤/預研） | 辨識對手→回一條 `?foes=...` 預填連結，點開即完成輸入 | `references/battle-analysis.md` |
+| （使用者自己就能做）截圖→工具 | 手機分享截圖給 PWA→「截圖辨識」端上比對，零 token；認不出來再貼給 Claude | M4 功能，見 battle-analysis.md |
 | 「分析我的隊伍」「對點」「打得贏嗎」 | 跑 `src/analyze.js` 產對點報告 | `references/battle-analysis.md` |
 | 「更新威脅庫」「新賽季」 | 搜尋當季 meta → 重建 `data/threats.js` → 重建網頁＋部署 | `references/season-update.md` |
 | 「做 M1/M2/M3/M4」 | 讀 `ROADMAP.md` 照清單推進，完成打勾並 commit | ROADMAP.md |

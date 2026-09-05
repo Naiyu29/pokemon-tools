@@ -4,6 +4,7 @@ import defaultTeam from '../data/my-team.js';
 import threats from '../data/threats.js';
 import { makeField, speedInfo, attackTable, incomingTable, getSpecies, toID } from './calc-core.js';
 import { recommend } from './recommend.js';
+import { initRecognize, openRecognize } from './recognize.js';
 
 const LS_TEAM = 'pct.team.v1';       // 舊版單隊格式（只用於遷移）
 const LS_TEAMS = 'pct.teams.v1';     // 隊伍庫：{ active, teams:[{id,name,specs}] }
@@ -166,6 +167,7 @@ function renderFoes() {
       <input type="search" id="q" placeholder="搜尋：中文／注音頭字（ㄌㄧㄌ）／英文" style="width:100%" autocomplete="off">
       <div class="results" id="results"></div>
       <p class="hint">實線框＝威脅庫已知配置（推估標註）；虛線框＝未知，以極限值區間估算。</p>
+      <div class="rowbtns" style="margin-top:6px"><button class="btn ghost" id="recogBtn">📷 截圖辨識（實驗）</button></div>
     </div>
     ${state.foes.length ? '<button class="btn" id="goReco" style="width:100%">看推薦 →</button>' : ''}
     <footer class="note">假設 Lv50、IV31；已知配置為賽季常見配置「推估」，非對手實際數值。</footer>
@@ -195,6 +197,7 @@ function renderFoes() {
   main.addEventListener('click', onRemoveFoe);
   const go = $('#goReco');
   if (go) go.addEventListener('click', () => { state.tab = 'reco'; render(); });
+  $('#recogBtn').onclick = () => openRecognize();
   q.focus();
 }
 function onRemoveFoe(ev) {
@@ -562,6 +565,33 @@ $('#teamUpdate').onclick = () => {
     $('#teamMsg').textContent = '覆蓋失敗：' + e.message;
   }
 };
+
+// ---- 截圖辨識（M4）----
+initRecognize({
+  zhOf: n => zhByName.get(n) || n,
+  onAdd: n => {
+    if (state.foes.length >= 6) return false;
+    const foe = makeFoe(n);
+    if (!foe || state.foes.some(f => f.name === foe.name && f.mega === foe.mega)) return false;
+    state.foes.push(foe);
+    save();
+    return true;
+  },
+  pickedHtml: () => foeChips(false),
+  onClose: () => { state.tab = 'foes'; render(); },
+});
+// PWA Share Target 進來的截圖（sw.js 存進 cache 後重導 ?shared=1）
+if (params.get('shared')) {
+  (async () => {
+    let blob = null;
+    try {
+      const c = await caches.open('pct-shared');
+      const hit = await c.match('./shared-screenshot');
+      if (hit) { blob = await hit.blob(); await c.delete('./shared-screenshot'); }
+    } catch (e) { /* 沒有就開空的辨識頁 */ }
+    openRecognize(blob);
+  })();
+}
 
 render();
 

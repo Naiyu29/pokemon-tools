@@ -64,9 +64,20 @@
 
 ## M4｜Android 即時辨識（選配、最後做）
 
-- [ ] 4.1 PWA Share Target：遊戲截圖 → 分享 → 直接進工具
-- [ ] 4.2 端上辨識：sprite 樣板比對（不用 AI、零成本、毫秒級）——可行性先做 POC
-- [ ] 4.3 懸浮視窗 overlay（需原生 app，工程量大，效益再評估）
+- [x] 4.1 PWA Share Target：遊戲截圖 → 分享 → 直接進工具
+      ※ manifest 加 `share_target`（POST multipart）、sw.js 收檔存快取後重導 `?shared=1`，
+      自動開「截圖辨識」頁；需已安裝 PWA（加入主畫面）才會出現在分享選單
+- [x] 4.2 端上辨識：sprite 樣板比對（不用 AI、零成本、毫秒級）——POC 完成、已整合進工具
+      ※ 描述子庫：`scripts/build-sprite-index.js` 抓 PokeAPI HOME 渲染圖 →
+      全圖鑑 1288 筆 16×16 色塊＋剪影遮罩（`data/sprite-index.bin`，約 1MB，離線快取）；
+      比對核心 `web/match-core.js`（背景估色→前景遮罩→letterbox 縮放→IoU＋色距評分）；
+      UI：對手頁「📷 截圖辨識」→ 點圖示位置 → top-5 候選一鍵加入。
+      合成測試（`scripts/test-recognizer.js`，n=300）：彩色 top1 98.3%／top5 100%，
+      剪影 top1 90%／top5 94%——**待真實遊戲截圖驗證**（圖示風格若與 HOME 渲染差很多，
+      準確率會掉；屆時把真截圖裁下來的圖示當樣板重建庫即可）
+- [ ] 4.3 懸浮視窗 overlay——**評估後擱置（2026-09-05）**：PWA 做不到 overlay，需原生
+      app（Android SYSTEM_ALERT_WINDOW）＋螢幕擷取權限，工程量大；分享截圖（4.1）＋
+      分割畫面已覆蓋大部分需求，等實際使用發現不夠再議
 
 ---
 

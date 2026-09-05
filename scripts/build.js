@@ -22,6 +22,7 @@ esbuild.buildSync({
 for (const f of ['index.html', 'manifest.webmanifest', 'icon.svg']) {
   fs.copyFileSync(path.join(root, 'web', f), path.join(docs, f));
 }
+fs.copyFileSync(path.join(root, 'data/sprite-index.bin'), path.join(docs, 'sprite-index.bin'));
 const sw = fs.readFileSync(path.join(root, 'web/sw.js'), 'utf8').replace('__BUILD_ID__', buildId);
 fs.writeFileSync(path.join(docs, 'sw.js'), sw);
 // index.html 加上 bundle 版本參數避免舊快取
