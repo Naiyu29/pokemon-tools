@@ -4,6 +4,7 @@ import defaultTeam from '../data/my-team.js';
 import threats from '../data/threats.js';
 import { makeField, speedInfo, attackTable, incomingTable, getSpecies, toID } from './calc-core.js';
 import { recommend } from './recommend.js';
+import { moveZh } from './zh-names.js';
 
 const LS_TEAM = 'pct.team.v1';
 const LS_STATE = 'pct.state.v1';
@@ -200,7 +201,7 @@ function renderReco() {
       ${r.reasons.length ? `<ul>${r.reasons.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
     </div>`).join('') + '</div>');
   main.append(...wrap.children);
-  main.appendChild(h(`<footer class="note">規則評分：確1 +3／亂1 +2／確2 +1；被確1 −3／被亂1 −2；速度快 +1；特性剋制另計。${state.doubles ? '首發取 2（Fake Out 優先）' : '首發取 1'}。</footer>`).firstElementChild);
+  main.appendChild(h(`<footer class="note">規則評分：確1 +3／亂1 +2／確2 +1；被確1 −3／被亂1 −2；速度快 +1；特性剋制另計。${state.doubles ? '首發取 2（擊掌奇襲優先）' : '首發取 1'}。</footer>`).firstElementChild);
 }
 
 function renderSpeed() {
@@ -263,7 +264,7 @@ function renderDmg() {
     if (!rows.length) continue;
     out += `<tr><td colspan="3" class="mine" style="font-weight:700">${esc(teamZh(m))}</td></tr>`;
     for (const r of rows) {
-      out += `<tr><td>${esc(r.move)}</td><td class="num" ${r.detail ? `title="${esc(r.detail)}"` : ''}>${r.minPct}–${r.maxPct}</td><td><span class="tag ${r.cls}">${esc(r.tag)}</span></td></tr>`;
+      out += `<tr><td>${esc(moveZh(r.move))}</td><td class="num" ${r.detail ? `title="${esc(r.detail)}"` : ''}>${r.minPct}–${r.maxPct}</td><td><span class="tag ${r.cls}">${esc(r.tag)}</span></td></tr>`;
     }
   }
   out += `</table>`;
@@ -274,7 +275,7 @@ function renderDmg() {
     const rows = incomingTable(foe, m, field);
     const w = rows[0];
     if (!w) { out += `<tr><td class="mine">${esc(teamZh(m))}</td><td colspan="3" class="hint">（無攻擊招）</td></tr>`; continue; }
-    out += `<tr><td class="mine">${esc(teamZh(m))}</td><td>${esc(w.move)}</td><td class="num">${w.minPct}–${w.maxPct}</td><td><span class="tag ${w.cls}">${esc(w.tag)}</span></td></tr>`;
+    out += `<tr><td class="mine">${esc(teamZh(m))}</td><td>${esc(moveZh(w.move))}</td><td class="num">${w.minPct}–${w.maxPct}</td><td><span class="tag ${w.cls}">${esc(w.tag)}</span></td></tr>`;
   }
   out += `</table>`;
 

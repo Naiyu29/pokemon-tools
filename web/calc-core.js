@@ -1,6 +1,7 @@
 // 瀏覽器端計算核心：包 @smogon/calc（Gen 9，含 Mega／各形態資料）
 // 全部在本地計算，零網路、零 token 成本
 import { calculate, Pokemon, Move, Field, Generations } from '@smogon/calc';
+import { abilityZh, typeZh } from './zh-names.js';
 
 export const gen = Generations.get(9);
 export const LEVEL = 50;
@@ -140,7 +141,7 @@ export function incomingTable(foe, mySpec, field) {
           const { minPct, maxPct } = calcOne(attSpec, defender, `${type} 100BP(${cat === 'Physical' ? '物' : '特'})`, field,
             { basePower: 100, type, category: cat });
           const t = koTag(minPct, maxPct);
-          rows.push({ move: `${type}系100威力(${cat === 'Physical' ? '物理' : '特殊'})推估`, minPct, maxPct, tag: t.tag, cls: t.cls, est: true });
+          rows.push({ move: `${typeZh(type)}系100威力(${cat === 'Physical' ? '物理' : '特殊'})推估`, minPct, maxPct, tag: t.tag, cls: t.cls, est: true });
         } catch (e) { /* skip */ }
       }
     }
@@ -182,7 +183,7 @@ export function speedInfo(spec, opts = {}) {
   if (spec.boosterSpe) { spe = Math.floor(spe * 1.5); mods.push('能量×1.5'); }
   const ab = spec.mega ? (spec.megaAbility || (sp.abilities && sp.abilities['0'])) : spec.ability;
   if (SPEED_ABILITY[ab] && opts.weather === SPEED_ABILITY[ab]) {
-    spe = spe * 2; mods.push(`${ab === 'Chlorophyll' ? '葉綠素' : ab}×2`);
+    spe = spe * 2; mods.push(`${abilityZh(ab)}×2`);
   }
   if (opts.tailwind) { spe = spe * 2; mods.push('順風×2'); }
   return { spe, mods, baseSpe: mon.rawStats.spe };

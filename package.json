@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "node src/build-search-index.js && node scripts/build.js",
+    "build:zh-names": "node src/build-zh-names.js",
     "analyze": "node src/analyze.js"
   },
   "repository": {
