@@ -18,6 +18,8 @@
 - 每隻含 `zh / name / rank / item / ability / nature / evs / moves`；
   Mega 型態加 `mega`，新 Mega 特性若 calc 資料庫是佔位值，用 `megaAbility` 覆寫。
 - 配置用該寶可夢的常見標準競技配置（訓練知識推估）。
+- `moves` 一律寫英文（calc 名）；網頁顯示的中文靠 `data/zh-names.json` 查表
+  （產生自 `src/build-zh-names.js`，來源 PokeAPI 繁中）。
 - 檔頭註解更新：來源、搜尋日期、賽季名。
 - 本季搜尋確認的標 rank 數字；常青候補沿用舊標記慣例（見現有檔案 rank 欄）。
 
@@ -29,6 +31,13 @@ node scripts/build.js      # web/ → docs/（bundle 含新 threats.js）
 ```
 
 兩個指令都要跑：威脅庫是打包進 `docs/bundle.js` 的，不重建網頁工具就吃不到新資料。
+
+若本季有「全新招式／特性」在網頁上顯示成英文（對照表查不到才會 fallback），
+補跑一次再重建（需網路，平常不用跑）：
+
+```bash
+npm run build:zh-names && node scripts/build.js
+```
 
 ### 4. Commit＋部署
 

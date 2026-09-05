@@ -49,6 +49,7 @@ description: Pokémon Champions（寶可夢冠軍）對戰分析工作流——�
 2. 重寫 `data/threats.js`（配置為訓練知識推估，檔頭註明來源與日期）。
 3. `node src/analyze.js` 重跑分析＋`node scripts/build.js` 重建網頁
    （威脅庫打包在 bundle 內，不重建吃不到新資料）。
+   新招式在網頁顯示成英文時，先 `npm run build:zh-names` 補中文對照再重建。
 4. commit＋push；merge 進 main 後 GitHub Pages（`/docs`）才會上線，PWA 自動換版。
 
 ## 注意事項
