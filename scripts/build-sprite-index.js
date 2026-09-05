@@ -55,7 +55,7 @@ const ALIAS = {
 };
 
 function toApiName(psName) {
-  let s = psName.toLowerCase()
+  let s = psName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
     .replace(/[’']/g, '').replace(/\./g, '').replace(/[:%]/g, '')
     .replace(/[\s_]+/g, '-').replace(/-+/g, '-').replace(/-$/, '');
   return ALIAS[s] || s;
@@ -95,7 +95,8 @@ function smogonId(psName) {
     const m = psName.match(/^(.*?)-(Mega(?:-[XY])?)$/);
     if (m) { base = m[1]; forme = m[2]; }
   }
-  const baseId = base.toLowerCase().replace(/[^a-z0-9]+/g, '');
+  const baseId = base.normalize('NFD').replace(/[\u0300-\u036f]/g, '') // é→e
+    .toLowerCase().replace(/[^a-z0-9]+/g, '');
   if (!forme) return baseId;
   const f = forme.toLowerCase().replace(/[’'.%]/g, '').replace(/[\s-]+/g, '_');
   return `${baseId}-o${f}`;

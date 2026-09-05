@@ -11,7 +11,14 @@ const path = require('path');
 const gen = Generations.get(9);
 
 // 英文名 → 圖鑑編號（用 pokemon 套件的 en 名對回去）
-const dexNoByEn = new Map(en.map((n, i) => [n, i + 1]));
+// 兩邊拼字有差：calc 用彎引號（Farfetch’d）、é 的 unicode 正規化不同，先 norm 再比
+const norm = s => s.normalize('NFC').replace(/’/g, "'");
+const dexNoByEn = new Map(en.map((n, i) => [norm(n), i + 1]));
+// calc 名 → pokemon 套件名的例外（Aegislash 在 calc 的 baseSpecies 是 Aegislash-Blade）
+const DEX_ALIAS = {
+  'Nidoran-F': 'Nidoran♀', 'Nidoran-M': 'Nidoran♂',
+  'Aegislash-Blade': 'Aegislash',
+};
 
 // pinyin 音節 → 注音第一個符號
 const INITIALS = {
@@ -69,7 +76,7 @@ const FORME_ZH = {
   'Unbound': '解放', 'Ash': '小智', 'Primal': '原始回歸',
   'Attack': '攻擊', 'Defense': '防禦', 'Speed': '速度',
   'Sensu': '扇之舞', 'Pom-Pom': '啦啦隊', "Pa'u": '呼拉', 'Baile': '熱辣熱辣',
-  'Blade': '刀劍', '10%': '10%', 'Complete': '完全體',
+  'Blade': '刀劍形態', 'Shield': '盾牌形態', '10%': '10%', 'Complete': '完全體',
 };
 
 // 譯名覆寫：pokemon 套件的 zh-hant 對伊布家族後期成員用舊香港譯名，
@@ -87,13 +94,15 @@ const out = [];
 const seen = new Set();
 for (const sp of gen.species) {
   if (EXCLUDE.test(sp.name)) continue;
+  if (sp.name === 'Aegislash-Both') continue; // calc 內部用的雙形態合併計算，不是實際形態
   const baseEn = sp.baseSpecies || sp.name;
-  const dexNo = dexNoByEn.get(baseEn);
-  if (!dexNo) continue; // 對不回圖鑑（理論上不會發生）
-  const baseZh = ZH_OVERRIDE[baseEn] || zhHant[dexNo - 1];
+  const baseAlias = DEX_ALIAS[baseEn] || baseEn;
+  const dexNo = dexNoByEn.get(norm(baseAlias));
+  if (!dexNo) continue; // 對不回圖鑑＝CAP 假寶可夢，正確排除
+  const baseZh = ZH_OVERRIDE[baseAlias] || zhHant[dexNo - 1];
   let zh = baseZh;
-  if (sp.baseSpecies && sp.name !== sp.baseSpecies) {
-    const suffix = sp.name.slice(sp.baseSpecies.length + 1);
+  if (sp.name !== baseAlias && sp.name.startsWith(baseAlias + '-')) {
+    const suffix = sp.name.slice(baseAlias.length + 1);
     zh = `${baseZh}(${FORME_ZH[suffix] || suffix})`;
   }
   if (seen.has(sp.name)) continue;

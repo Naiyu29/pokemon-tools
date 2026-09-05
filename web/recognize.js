@@ -198,7 +198,8 @@ function foeCandidates(card) {
     const name = meta.names[r.i];
     if (seen.has(name) || isMega(name)) continue;
     seen.add(name);
-    cands.push({ i: r.i, name, score: r.score });
+    // 縮圖固定用一般色那列（同名第一列；色違只在比對時參與，異色不是常態）
+    cands.push({ i: meta.names.indexOf(name), name, score: r.score });
     if (cands.length >= 5) break;
   }
   return { cands, sel: cands.length ? 0 : -1 };
@@ -326,7 +327,7 @@ async function runManual() {
     const name = meta.names[r.i];
     if (seen.has(name) || isMega(name)) continue;
     seen.add(name);
-    cands.push({ i: r.i, name, score: r.score });
+    cands.push({ i: meta.names.indexOf(name), name, score: r.score });
     if (cands.length >= 5) break;
   }
   wrap.innerHTML = (desc.silhouette ? '<p class="hint">偵測到剪影，只比形狀（信心較低）</p>' : '') +
