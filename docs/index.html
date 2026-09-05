@@ -91,6 +91,13 @@ dialog textarea{width:100%;min-height:180px;font:12.5px/1.4 ui-monospace,monospa
 .wl.L{background:#4a1d18;color:var(--foe)}
 .statrow{display:flex;gap:14px;font-size:14px;flex-wrap:wrap}
 .statrow b{font-size:17px}
+.teamrow{display:flex;gap:8px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--line)}
+.teamrow .info{display:flex;flex-direction:column;gap:2px;min-width:0}
+.teamrow .name{font-size:14.5px}
+.teamrow.sel .name{color:var(--acc);font-weight:700}
+.teamrow .name .badge{margin-left:6px}
+.teamrow .cnt{color:var(--tx2);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.teamrow .x{margin-left:auto;color:var(--tx2);font-weight:700;padding:0 6px;flex:none}
 footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
 </style>
 </head>
@@ -116,16 +123,19 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
 </nav>
 <dialog id="teamDlg">
   <h2>我的隊伍（存在手機 localStorage）</h2>
-  <p class="hint">貼 Showdown paste 後按「匯入」；「還原預設」回到內建隊伍 Meta。</p>
-  <textarea id="teamPaste" placeholder="Sylveon @ Fairy Feather&#10;Ability: Pixilate&#10;EVs: 252 HP / 252 SpA / 16 Spe&#10;Modest Nature&#10;- Hyper Voice&#10;..."></textarea>
+  <div id="teamList"></div>
+  <p class="hint">點隊名切換使用中的隊伍；✕ 刪除（內建 Meta 不可刪、不可覆蓋）。</p>
+  <h2 style="margin-top:12px">新增／更新隊伍</h2>
+  <input type="search" id="teamName" placeholder="隊伍名稱（例：雨天隊）" style="width:100%;margin:6px 0" autocomplete="off">
+  <textarea id="teamPaste" placeholder="貼 Showdown paste：&#10;Sylveon @ Fairy Feather&#10;Ability: Pixilate&#10;EVs: 252 HP / 252 SpA / 16 Spe&#10;Modest Nature&#10;- Hyper Voice&#10;..."></textarea>
   <div class="rowbtns">
-    <button class="btn" id="teamImport">匯入</button>
-    <button class="btn ghost" id="teamReset">還原預設</button>
-    <button class="btn ghost" id="teamShow">顯示目前隊伍 paste</button>
+    <button class="btn" id="teamImport">存成新隊伍</button>
+    <button class="btn ghost" id="teamUpdate">覆蓋目前隊伍</button>
+    <button class="btn ghost" id="teamShow">帶出目前隊伍</button>
     <button class="btn ghost" id="teamClose">關閉</button>
   </div>
   <p class="hint" id="teamMsg"></p>
 </dialog>
-<script src="bundle.js?v=202609050249"></script>
+<script src="bundle.js?v=202609050303"></script>
 </body>
 </html>
