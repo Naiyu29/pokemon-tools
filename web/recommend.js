@@ -1,6 +1,7 @@
 // 陣容推薦：規則評分（ROADMAP 1.4，2026-09-03 決策 Q1=A）
 // 分數構成：我方確1/亂1/確2 對面數 − 被確1/亂1 數 ＋ 速度優勢 ＋ 特性剋制規則
 import { attackTable, incomingTable, speedInfo, getSpecies, isStatusMove } from './calc-core.js';
+import { moveZh, abilityZh } from './zh-names.js';
 
 // 對面特性 → 對我方特定成員的規則
 const BOOST_ON_INTIMIDATE = new Set(['Defiant', 'Competitive', 'Guard Dog', 'Contrary']); // 不屈之心/不服輸/看門犬/唱反調
@@ -20,8 +21,8 @@ export function recommend(myTeam, foes, opts) {
       const atk = attackTable(me, foe, field);
       const best = atk[0];
       if (best) {
-        if (best.tag.includes('確1') && !best.tag.includes('~')) { score += 3; reasons.push(`確1 ${zh}（${best.move}）`); }
-        else if (best.tag.includes('亂1')) { score += 2; reasons.push(`亂1 ${zh}（${best.move}）`); }
+        if (best.tag.includes('確1') && !best.tag.includes('~')) { score += 3; reasons.push(`確1 ${zh}（${moveZh(best.move)}）`); }
+        else if (best.tag.includes('亂1')) { score += 2; reasons.push(`亂1 ${zh}（${moveZh(best.move)}）`); }
         else if (best.tag.includes('確2')) { score += 1; }
         else if (best.maxPct <= 20) { score -= 1; reasons.push(`打不動 ${zh}（最高 ${best.maxPct}%）`); }
       }
@@ -29,8 +30,8 @@ export function recommend(myTeam, foes, opts) {
       const inc = incomingTable(foe, me, field);
       const worst = inc[0];
       if (worst) {
-        if (worst.minPct >= 100) { score -= 3; reasons.push(`被 ${zh} 確1（${worst.move}）`); }
-        else if (worst.maxPct >= 100) { score -= 2; reasons.push(`被 ${zh} 亂1（${worst.move}）`); }
+        if (worst.minPct >= 100) { score -= 3; reasons.push(`被 ${zh} 確1（${moveZh(worst.move)}）`); }
+        else if (worst.maxPct >= 100) { score -= 2; reasons.push(`被 ${zh} 亂1（${moveZh(worst.move)}）`); }
         else if (worst.minPct >= 50) { score -= 1; }
       }
       // 速度
@@ -43,7 +44,7 @@ export function recommend(myTeam, foes, opts) {
       // 特性規則
       const foeAb = foe.unknown ? null : (foe.megaAbility || foe.ability);
       if (foeAb && BOOST_ON_INTIMIDATE.has(foeAb) && me.ability === 'Intimidate') {
-        score -= 2; reasons.push(`⚠ ${zh} 特性 ${foeAb}：威嚇反被加成`);
+        score -= 2; reasons.push(`⚠ ${zh} 特性 ${abilityZh(foeAb)}：威嚇反被加成`);
       }
       if (foeAb === 'Good as Gold') {
         const statusCnt = (me.moves || []).filter(isStatusMove).length;

@@ -4,6 +4,8 @@ import defaultTeam from '../data/my-team.js';
 import threats from '../data/threats.js';
 import { makeField, speedInfo, attackTable, incomingTable, getSpecies, toID, gen } from './calc-core.js';
 import { recommend } from './recommend.js';
+import { initRecognize, openRecognize } from './recognize.js';
+import { moveZh } from './zh-names.js';
 
 const LS_TEAM = 'pct.team.v1';       // 舊版單隊格式（只用於遷移）
 const LS_TEAMS = 'pct.teams.v1';     // 隊伍庫：{ active, teams:[{id,name,specs}] }
@@ -27,7 +29,7 @@ let state = {
   tab: 'foes',
   doubles: true,
   weather: '',
-  twMine: false, twFoe: false, trickRoom: false,
+  twMine: false, twFoe: false, trickRoom: false, speBench: true,
   foes: [], // [{name(calc名), zh, unknown?, ...threatSpec}]
 };
 try {
@@ -104,8 +106,8 @@ function foeFromEntry(entry) {
 }
 
 function save() {
-  const { tab, doubles, weather, twMine, twFoe, trickRoom, foes } = state;
-  localStorage.setItem(LS_STATE, JSON.stringify({ tab, doubles, weather, twMine, twFoe, trickRoom, foes }));
+  const { tab, doubles, weather, twMine, twFoe, trickRoom, speBench, foes } = state;
+  localStorage.setItem(LS_STATE, JSON.stringify({ tab, doubles, weather, twMine, twFoe, trickRoom, speBench, foes }));
 }
 
 // ---- 小工具 ----
@@ -179,6 +181,7 @@ function renderFoes() {
       <input type="search" id="q" placeholder="搜尋：中文／注音頭字（ㄌㄧㄌ）／英文" style="width:100%" autocomplete="off">
       <div class="results" id="results"></div>
       <p class="hint">實線框＝威脅庫已知配置（推估標註）；虛線框＝未知，以極限值區間估算。</p>
+      <div class="rowbtns" style="margin-top:6px"><button class="btn ghost" id="recogBtn">📷 截圖辨識（實驗）</button></div>
     </div>
     ${state.foes.length ? '<button class="btn" id="goReco" style="width:100%">看推薦 →</button>' : ''}
     <footer class="note">假設 Lv50、IV31；已知配置為賽季常見配置「推估」，非對手實際數值。</footer>
@@ -208,6 +211,7 @@ function renderFoes() {
   main.addEventListener('click', onRemoveFoe);
   const go = $('#goReco');
   if (go) go.addEventListener('click', () => { state.tab = 'reco'; render(); });
+  $('#recogBtn').onclick = () => openRecognize();
   q.focus();
 }
 function onRemoveFoe(ev) {
@@ -233,23 +237,27 @@ function renderReco() {
       ${r.reasons.length ? `<ul>${r.reasons.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
     </div>`).join('') + '</div>');
   main.append(...wrap.children);
-  main.appendChild(h(`<footer class="note">規則評分：確1 +3／亂1 +2／確2 +1；被確1 −3／被亂1 −2；速度快 +1；特性剋制另計。${state.doubles ? '首發取 2（Fake Out 優先）' : '首發取 1'}。</footer>`).firstElementChild);
+  main.appendChild(h(`<footer class="note">規則評分：確1 +3／亂1 +2／確2 +1；被確1 −3／被亂1 −2；速度快 +1；特性剋制另計。${state.doubles ? '首發取 2（擊掌奇襲優先）' : '首發取 1'}。</footer>`).firstElementChild);
 }
 
 function renderSpeed() {
+  const modeZh = state.doubles ? '雙打' : '單打';
   const card = h(`<div><div class="card">
     <div class="toggles">
       <button class="tgl ${state.twMine ? 'on' : ''}" id="twM">我方順風</button>
       <button class="tgl ${state.twFoe ? 'on' : ''}" id="twF">對方順風</button>
       <button class="tgl ${state.trickRoom ? 'on' : ''}" id="tr">戲法空間</button>
+      <button class="tgl ${state.speBench ? 'on' : ''}" id="bm">${modeZh}常見線</button>
     </div>
     <div id="spelist"></div>
-    <p class="hint">未知對手顯示「最慢~最快(+圍巾)」區間；${state.trickRoom ? '戲法空間中：由慢到快行動' : '由快到慢行動'}。天氣加成（葉綠素等）依上方天氣設定。</p>
+    <p class="hint">未知對手顯示「最慢~最快(+圍巾)」區間；${state.trickRoom ? '戲法空間中：由慢到快行動' : '由快到慢行動'}。天氣加成（葉綠素等）依上方天氣設定。
+    ⚠＝與我方同速。灰底「${state.doubles ? '雙' : '單'}／單雙」＝威脅庫${modeZh}常見配置參考線（含圍巾/天氣，不套順風），切換上方單雙打會跟著換。</p>
   </div></div>`);
   main.append(...card.children);
   $('#twM').onclick = () => { state.twMine = !state.twMine; render(); };
   $('#twF').onclick = () => { state.twFoe = !state.twFoe; render(); };
   $('#tr').onclick = () => { state.trickRoom = !state.trickRoom; render(); };
+  $('#bm').onclick = () => { state.speBench = !state.speBench; render(); };
 
   const rows = [];
   for (const m of team) {
@@ -267,18 +275,33 @@ function renderSpeed() {
       rows.push({ side: 'foe', zh: f.zh, spe: si.spe, sortKey: si.spe, mods: si.mods });
     }
   }
+  if (state.speBench) {
+    const mode = state.doubles ? 'doubles' : 'singles';
+    const foeIds = new Set(state.foes.map(f => toID(f.mega || f.name)));
+    for (const t of threats) {
+      if (!t.modes || !t.modes.includes(mode)) continue;
+      if (foeIds.has(toID(t.mega || t.name))) continue; // 已選成本場對手 → 用對手列就好
+      const si = speedInfo(t, { weather: state.weather || undefined });
+      if (!si || si.unknown) continue;
+      rows.push({ side: 'bench', zh: t.zh, spe: si.spe, sortKey: si.spe, mods: si.mods,
+        tag: t.modes.length > 1 ? '單雙' : (mode === 'doubles' ? '雙' : '單') });
+    }
+  }
   rows.sort((a, b) => state.trickRoom ? a.sortKey - b.sortKey : b.sortKey - a.sortKey);
-  const speCount = {};
-  rows.forEach(r => { if (!r.unknown) speCount[r.spe] = (speCount[r.spe] || 0) + 1; });
+  // 同速只標「我方 ↔ 對手/常見線」：對手之間或常見線之間同速與行動順序決策無關
+  const mineSpe = new Set(), otherSpe = new Set();
+  rows.forEach(r => { if (!r.unknown) (r.side === 'mine' ? mineSpe : otherSpe).add(r.spe); });
   $('#spelist').innerHTML = rows.map(r => {
-    const same = !r.unknown && speCount[r.spe] > 1;
-    const name = `<span class="${r.side === 'mine' ? 'mine' : 'foename'}">${esc(r.zh)}</span>`;
+    const same = !r.unknown && (r.side === 'mine' ? otherSpe.has(r.spe) : mineSpe.has(r.spe));
+    const name = r.side === 'bench'
+      ? `<span>${esc(r.zh)}</span><span class="sbadge b">${r.tag}</span>`
+      : `<span class="${r.side === 'mine' ? 'mine' : 'foename'}">${esc(r.zh)}</span><span class="sbadge ${r.side === 'mine' ? 'm' : 'f'}">${r.side === 'mine' ? '我方' : '對手'}</span>`;
     const mods = r.mods && r.mods.length ? `<span class="mod">${esc(r.mods.join(' '))}</span>` : '';
     const val = r.unknown
       ? `<span class="val">${r.min}~${r.max}<span class="mod">(巾${r.scarfMax})</span></span>`
       : `<span class="val">${r.spe}${same ? ' ⚠同速' : ''}</span>`;
-    return `<div class="spebar ${same ? 'same' : ''}">${name}${mods}${val}</div>`;
-  }).join('') || '<p class="hint">選擇對手後顯示完整速度線</p>';
+    return `<div class="spebar ${same ? 'same' : ''}${r.side === 'bench' ? ' bench' : ''}">${name}${mods}${val}</div>`;
+  }).join('') || '<p class="hint">選擇對手或開啟常見線後顯示速度線</p>';
 }
 
 function renderDmg() {
@@ -296,7 +319,7 @@ function renderDmg() {
     if (!rows.length) continue;
     out += `<tr><td colspan="3" class="mine" style="font-weight:700">${esc(teamZh(m))}</td></tr>`;
     for (const r of rows) {
-      out += `<tr><td>${esc(r.move)}</td><td class="num" ${r.detail ? `title="${esc(r.detail)}"` : ''}>${r.minPct}–${r.maxPct}</td><td><span class="tag ${r.cls}">${esc(r.tag)}</span></td></tr>`;
+      out += `<tr><td>${esc(moveZh(r.move))}</td><td class="num" ${r.detail ? `title="${esc(r.detail)}"` : ''}>${r.minPct}–${r.maxPct}</td><td><span class="tag ${r.cls}">${esc(r.tag)}</span></td></tr>`;
     }
   }
   out += `</table>`;
@@ -307,7 +330,7 @@ function renderDmg() {
     const rows = incomingTable(foe, m, field);
     const w = rows[0];
     if (!w) { out += `<tr><td class="mine">${esc(teamZh(m))}</td><td colspan="3" class="hint">（無攻擊招）</td></tr>`; continue; }
-    out += `<tr><td class="mine">${esc(teamZh(m))}</td><td>${esc(w.move)}</td><td class="num">${w.minPct}–${w.maxPct}</td><td><span class="tag ${w.cls}">${esc(w.tag)}</span></td></tr>`;
+    out += `<tr><td class="mine">${esc(teamZh(m))}</td><td>${esc(moveZh(w.move))}</td><td class="num">${w.minPct}–${w.maxPct}</td><td><span class="tag ${w.cls}">${esc(w.tag)}</span></td></tr>`;
   }
   out += `</table>`;
 
@@ -629,6 +652,33 @@ function showBanner(note) {
   b.innerHTML = `<span>${esc(note.msg)}</span><span class="x" id="bannerX">✕</span>`;
   b.hidden = false;
   $('#bannerX').onclick = () => { b.hidden = true; };
+}
+
+// ---- 截圖辨識（M4，端上 sprite 比對，辨識對手）----
+initRecognize({
+  zhOf: n => zhByName.get(n) || n,
+  onAdd: n => {
+    if (state.foes.length >= 6) return false;
+    const foe = makeFoe(n);
+    if (!foe || state.foes.some(f => f.name === foe.name && f.mega === foe.mega)) return false;
+    state.foes.push(foe);
+    save();
+    return true;
+  },
+  pickedHtml: () => foeChips(false),
+  onClose: () => { state.tab = 'foes'; render(); },
+});
+// PWA Share Target 進來的截圖（sw.js 存進 cache 後重導 ?shared=1）
+if (params.get('shared')) {
+  (async () => {
+    let blob = null;
+    try {
+      const c = await caches.open('pct-shared');
+      const hit = await c.match('./shared-screenshot');
+      if (hit) { blob = await hit.blob(); await c.delete('./shared-screenshot'); }
+    } catch (e) { /* 沒有就開空的辨識頁 */ }
+    openRecognize(blob);
+  })();
 }
 
 render();

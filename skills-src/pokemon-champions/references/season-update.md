@@ -15,9 +15,14 @@
 
 ### 2. 重寫 `data/threats.js`
 
-- 每隻含 `zh / name / rank / item / ability / nature / evs / moves`；
+- 每隻含 `zh / name / rank / modes / item / ability / nature / evs / moves`；
   Mega 型態加 `mega`，新 Mega 特性若 calc 資料庫是佔位值，用 `megaAbility` 覆寫。
+- `modes`：常見場合，`['singles']`／`['doubles']`／兩者並列——速度線分頁的
+  「單打常見/雙打常見」參考線靠它篩選，**每隻都要填**。rank 有明確單/雙字樣照 rank，
+  沒有的（Mega強勢/常青候補/新增）依該寶可夢慣用場合推估。
 - 配置用該寶可夢的常見標準競技配置（訓練知識推估）。
+- `moves` 一律寫英文（calc 名）；網頁顯示的中文靠 `data/zh-names.json` 查表
+  （產生自 `src/build-zh-names.js`，來源 PokeAPI 繁中）。
 - 檔頭註解更新：來源、搜尋日期、賽季名。
 - 本季搜尋確認的標 rank 數字；常青候補沿用舊標記慣例（見現有檔案 rank 欄）。
 
@@ -29,6 +34,13 @@ node scripts/build.js      # web/ → docs/（bundle 含新 threats.js）
 ```
 
 兩個指令都要跑：威脅庫是打包進 `docs/bundle.js` 的，不重建網頁工具就吃不到新資料。
+
+若本季有「全新招式／特性」在網頁上顯示成英文（對照表查不到才會 fallback），
+補跑一次再重建（需網路，平常不用跑）：
+
+```bash
+npm run build:zh-names && node scripts/build.js
+```
 
 ### 4. Commit＋部署
 
@@ -43,3 +55,9 @@ git add -A && git commit -m "Season update: <賽季/月份> threats DB" && git p
 
 - 回報：新增／移除了哪些威脅、我方隊伍對新 meta 的明顯弱點（1–3 條）。
 - 若隊伍需要調整，另開對話討論，不在更新流程裡展開。
+
+### （選用）sprite 辨識庫
+
+`data/sprite-index.bin`（截圖辨識用）平常**不用**跟賽季更新一起重跑；
+只有圖鑑加入新寶可夢/新形態時才 `npm run build:sprites`（需網路抓 PokeAPI），
+之後照常 `node scripts/build.js` 會把 bin 複製進 docs/。
