@@ -2,7 +2,7 @@
 import searchIndex from '../data/search-index.json';
 import defaultTeam from '../data/my-team.js';
 import threats from '../data/threats.js';
-import { makeField, speedInfo, attackTable, incomingTable, getSpecies, toID } from './calc-core.js';
+import { makeField, speedInfo, attackTable, incomingTable, getSpecies, toID, gen } from './calc-core.js';
 import { recommend } from './recommend.js';
 
 const LS_TEAM = 'pct.team.v1';       // 舊版單隊格式（只用於遷移）
@@ -10,6 +10,7 @@ const LS_TEAMS = 'pct.teams.v1';     // 隊伍庫：{ active, teams:[{id,name,sp
 const LS_STATE = 'pct.state.v1';
 const LS_REC = 'pct.records.v1';
 const BUILTIN_ID = 'builtin';
+const EV_ORDER = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 
 // 威脅庫：calc 名稱(toID) → spec（同種多套取第一套）
 const threatById = new Map();
@@ -70,6 +71,18 @@ if (params.get('foes')) {
   }
   state.foes = foes.slice(0, 6);
   state.tab = state.foes.length && !urlMisses.length ? 'reco' : 'foes';
+}
+// 我方隊伍預填（M3.5 截圖辨識）：?team=<隊名>&mons=<每隻以 ; 分隔>
+// 每隻：species,item,ability,nature,hp/atk/def/spa/spd/spe,move1,move2,move3,move4
+let teamImportNote = null;
+if (params.get('mons')) {
+  try {
+    const specs = parseMonsParam(params.get('mons'));
+    const name = (params.get('team') || '').trim() || `辨識隊伍 ${teamLib.teams.length + 1}`;
+    teamImportNote = importTeam(name, specs);
+  } catch (e) {
+    teamImportNote = { err: true, msg: '隊伍連結帶入失敗：' + e.message + '（其餘設定不受影響）' };
+  }
 }
 if (params.get('mode') === 'singles') state.doubles = false;
 if (params.get('mode') === 'doubles') state.doubles = true;
@@ -416,6 +429,80 @@ function renderRec() {
   });
 }
 
+// ---- 隊伍匯入（paste／辨識連結共用） ----
+
+// Mega 石自動掛上 mega 型態（查道具資料，不靠名稱規則）＋補中文名
+function finalizeSpec(spec) {
+  const it = spec.item ? gen.items.get(toID(spec.item)) : null;
+  const ms = it && it.megaStone;
+  if (ms) spec.mega = typeof ms === 'string' ? ms : (ms[spec.name] || Object.values(ms)[0]);
+  spec.zh = zhByName.get(spec.mega || spec.name) || zhByName.get(spec.name) || spec.name;
+  return spec;
+}
+
+// id → 引擎用的正式名稱（連結參數用小寫 id，計算需要正式名稱）
+function canon(kind, raw, what) {
+  const v = (raw || '').trim();
+  if (!v || v === '-') return undefined;
+  const e = gen[kind].get(toID(v));
+  if (!e) throw new Error(`看不懂的${what}：${v}`);
+  return e.name;
+}
+
+// ?mons= 參數 → spec 陣列
+function parseMonsParam(raw) {
+  const specs = [];
+  for (const block of raw.split(';').map(s => s.trim()).filter(Boolean)) {
+    const p = block.split(',').map(s => s.trim());
+    if (p.length < 5) throw new Error(`欄位不足（需 species,道具,特性,性格,EV,招式…）：${block}`);
+    const sp = getSpecies(p[0]);
+    if (!sp) throw new Error(`看不懂的寶可夢名：${p[0]}`);
+    const evs = {};
+    p[4].split('/').forEach((v, i) => {
+      const n = parseInt(v, 10);
+      if (n > 0 && EV_ORDER[i]) evs[EV_ORDER[i]] = n;
+    });
+    specs.push(finalizeSpec({
+      name: sp.name,
+      item: canon('items', p[1], '道具'),
+      ability: canon('abilities', p[2], '特性'),
+      nature: canon('natures', p[3], '性格'),
+      evs,
+      moves: p.slice(5).filter(Boolean).map(m => canon('moves', m, '招式')),
+    }));
+  }
+  if (!specs.length) throw new Error('沒有解析到任何寶可夢');
+  if (specs.length > 6) throw new Error(`超過 6 隻（${specs.length}）`);
+  return specs;
+}
+
+// 隊伍內容指紋：比對用，忽略欄位順序與招式順序
+function teamKey(specs) {
+  return JSON.stringify(specs.map(s => [
+    toID(s.mega || s.name), toID(s.item || ''), toID(s.ability || ''), toID(s.nature || ''),
+    EV_ORDER.map(k => (s.evs && s.evs[k]) || 0),
+    (s.moves || []).map(toID).sort(),
+  ]));
+}
+
+// 存進隊伍庫並切換過去；同名同內容＝重複點同一條連結，只切換不重複新增
+function importTeam(name, specs) {
+  const key = teamKey(specs);
+  const same = allTeams().find(t => t.name === name && teamKey(t.specs) === key);
+  if (same) {
+    teamLib.active = same.id;
+    saveTeams(); team = same.specs;
+    return { msg: `已切換到「${name}」（內容相同，未重複新增）` };
+  }
+  let finalName = name;
+  for (let i = 2; allTeams().some(t => t.name === finalName); i++) finalName = `${name} (${i})`;
+  const id = 't' + Date.now().toString(36);
+  teamLib.teams.push({ id, name: finalName, specs });
+  teamLib.active = id;
+  saveTeams(); team = specs;
+  return { msg: `已匯入隊伍「${finalName}」：${specs.map(teamZh).join('、')}` };
+}
+
 // ---- Showdown paste 解析 ----
 function parsePaste(text) {
   const blocks = text.replace(/\r/g, '').split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
@@ -444,12 +531,7 @@ function parsePaste(text) {
       else if ((m = l.match(/^-\s*(.+)$/))) spec.moves.push(m[1].trim());
     }
     if (!getSpecies(spec.name)) throw new Error(`看不懂的寶可夢名：${spec.name}`);
-    // Mega 石 → 自動掛 mega 型態
-    if (item && /ite Y$/.test(item)) spec.mega = `${spec.name}-Mega-Y`;
-    else if (item && /ite X$/.test(item)) spec.mega = `${spec.name}-Mega-X`;
-    else if (item && /ite$/.test(item) && item !== 'Eviolite' && getSpecies(`${spec.name}-Mega`)) spec.mega = `${spec.name}-Mega`;
-    spec.zh = zhByName.get(spec.mega || spec.name) || zhByName.get(spec.name) || spec.name;
-    specs.push(spec);
+    specs.push(finalizeSpec(spec));
   }
   if (!specs.length) throw new Error('沒有解析到任何寶可夢');
   return specs;
@@ -518,13 +600,9 @@ $('#teamShow').onclick = () => {
 $('#teamImport').onclick = () => {
   try {
     const specs = parsePaste($('#teamPaste').value);
-    const name = $('#teamName').value.trim() || `隊伍 ${teamLib.teams.length + 1}`;
-    const id = 't' + Date.now().toString(36);
-    teamLib.teams.push({ id, name, specs });
-    teamLib.active = id;
-    saveTeams(); team = specs;
+    const r = importTeam($('#teamName').value.trim() || `隊伍 ${teamLib.teams.length + 1}`, specs);
     $('#teamName').value = ''; $('#teamPaste').value = '';
-    renderTeamDlg(`已存成新隊伍並切換：${name}（${specs.length} 隻）`); render();
+    renderTeamDlg(r.msg); render();
   } catch (e) {
     $('#teamMsg').textContent = '匯入失敗：' + e.message;
   }
@@ -544,7 +622,17 @@ $('#teamUpdate').onclick = () => {
   }
 };
 
+// 辨識連結匯入結果橫幅（成功/失敗都要讓使用者看到，不要默默吃掉）
+function showBanner(note) {
+  const b = $('#banner');
+  b.className = 'banner' + (note.err ? ' err' : '');
+  b.innerHTML = `<span>${esc(note.msg)}</span><span class="x" id="bannerX">✕</span>`;
+  b.hidden = false;
+  $('#bannerX').onclick = () => { b.hidden = true; };
+}
+
 render();
+if (teamImportNote) showBanner(teamImportNote);
 
 // ---- PWA ----
 if ('serviceWorker' in navigator) {

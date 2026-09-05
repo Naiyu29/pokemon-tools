@@ -72,6 +72,14 @@ const FORME_ZH = {
   'Blade': '刀劍', '10%': '10%', 'Complete': '完全體',
 };
 
+// 譯名覆寫：pokemon 套件的 zh-hant 對伊布家族後期成員用舊香港譯名，
+// 與遊戲內官方繁中不同（2026-09-05 由使用者隊伍截圖確認「仙子伊布」）。
+// key = 英文名，value = 遊戲內顯示名。日後發現其他不符的照樣加在這裡。
+const ZH_OVERRIDE = {
+  Sylveon: '仙子伊布', Espeon: '太陽伊布', Umbreon: '月亮伊布',
+  Leafeon: '葉伊布', Glaceon: '冰伊布',
+};
+
 // 排除：對戰工具用不到的形態
 const EXCLUDE = /-(Gmax|Totem|Cosplay|Starter|World|Original|Hoenn|Sinnoh|Unova|Kalos|Partner|Belle|Libre|PhD|Pop-Star|Rock-Star|Cap|School|Meteor|Busted|Eternamax|Gulping|Gorging|Noice|Hangry|Sunshine|Sunny|Rainy|Snowy|Antique|Crest|Droopy|Stretchy|Green-Plumage|Blue-Plumage|Yellow-Plumage|White-Plumage|Family-of-Three|Roaming|Everdecay)/;
 
@@ -82,7 +90,7 @@ for (const sp of gen.species) {
   const baseEn = sp.baseSpecies || sp.name;
   const dexNo = dexNoByEn.get(baseEn);
   if (!dexNo) continue; // 對不回圖鑑（理論上不會發生）
-  const baseZh = zhHant[dexNo - 1];
+  const baseZh = ZH_OVERRIDE[baseEn] || zhHant[dexNo - 1];
   let zh = baseZh;
   if (sp.baseSpecies && sp.name !== sp.baseSpecies) {
     const suffix = sp.name.slice(sp.baseSpecies.length + 1);
