@@ -62,16 +62,22 @@ https://naiyu29.github.io/pokemon-tools/?foes=<id1>,<id2>,...&mode=doubles
 
 工具內建「📷 截圖辨識」（對手分頁），兩個入口：
 1. **分享**：Android 遊戲截圖 → 分享 → 選 Champions 工具（需已「加入主畫面」安裝 PWA）。
-2. **選圖**：工具內按「截圖辨識」→ 從相簿挑圖。
+2. **選圖**：工具內按「截圖辨識」→ 從相簿挑選角/準備畫面截圖。
 
-點截圖上的寶可夢圖示 → 端上樣板比對（16×16 色塊＋剪影 IoU，毫秒級、不連網）
-→ top-5 候選點一下加入對手。剪影圖示只比形狀、信心較低。
+載圖後**自動偵測右側 6 張對手卡**並列出每卡 top-3 候選（預選第 1 名），
+點候選改選、再點取消，按「加入勾選」一次完成；認不出的卡再點圖示位置手動框選。
+全部端上計算（毫秒級、不連網、零 token）。
+
+**實測成績**（2026-09-05，8 張真實截圖）：top1 約 85%、top3 約 95%。
+失誤集中在小隻 sprite＋卡上有煙霧特效/浮水印的卡，請使用者對照屬性圖示確認。
 
 **與 Claude 流程的分工**：使用者先自助辨識（零成本）；認不出、要配置推估、
 要選 4 建議時才貼截圖給 Claude（本檔上面的流程）。Claude 回預填連結的流程不變。
 
-**維護**：描述子庫 `data/sprite-index.bin` 由 `npm run build:sprites` 產生
-（抓 PokeAPI HOME 渲染圖，需網路），只在圖鑑加新形態時才需要重跑；
-跑完要 `npm run build` 把 bin 複製進 docs/。準確率驗證：`npm run test:recognizer`。
-若使用者回報真實遊戲截圖認不準（遊戲圖示風格與 HOME 渲染差太多），
-解法是把真截圖裁出的圖示存成樣板重建庫，不要改比對演算法。
+**維護**：描述子庫 `data/sprite-index.bin` 由 `npm run build:sprites` 產生（需網路），
+圖源優先序：smogon/sprites repo 的 `src/champions/`（遊戲內同款圖示，含色違）→
+`src/minisprites/pokemon/home/` → PokeAPI HOME 渲染圖。命名規則：`s<種名>-o<形態>.png`、
+Mega＝`-omega`。只在遊戲加新寶可夢/新形態時重跑，跑完 `npm run build` 複製進 docs/。
+準確率回歸：`npm run test:recognizer`（合成測試，偏嚴僅供參考）；
+真實驗證請用實際截圖跑工具。若認不準，優先檢查該隻在 champions 圖源有沒有圖、
+是不是色違，其次才動演算法（`web/match-core.js` 檔頭有設計說明）。
