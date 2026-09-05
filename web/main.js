@@ -156,19 +156,73 @@ function search(qRaw) {
 }
 
 // ---- 分頁渲染 ----
-const main = $('#main');
+// 手機：底部分頁列，一次一頁。
+// 電腦（≥1024px）：參考 Showdown damage calc 的作法，把「對手／推薦／速度／傷害」
+// 四個面板排在同一畫面，不用切頁；每個面板渲染進自己的容器。
+// main = 這一次要渲染進去的容器，面板內部一律用 $p() 在自己的容器裡找元素。
+const mainRoot = $('#main');
+let main = mainRoot;
+let inWorkspace = false;
+const $p = s => main.querySelector(s);
+const BATTLE_TABS = ['foes', 'reco', 'speed', 'dmg'];
+const PANES = { foes: renderFoes, reco: renderReco, speed: renderSpeed, dmg: renderDmg,
+  rec: renderRec, team: renderTeamTab };
+const desktop = window.matchMedia('(min-width:1024px)');
+desktop.addEventListener('change', () => render());
+function navGroup() { return BATTLE_TABS.includes(state.tab) ? 'battle' : state.tab; }
+let firstPaint = true;
+
 function render() {
+  const keepFocus = document.activeElement && document.activeElement.id === 'q';
+  const caret = keepFocus ? document.activeElement.selectionStart : 0;
   document.querySelectorAll('#tabbar button').forEach(b =>
     b.classList.toggle('on', b.dataset.tab === state.tab));
+  document.querySelectorAll('#sidenav button').forEach(b =>
+    b.classList.toggle('on', b.dataset.nav === navGroup()));
   document.querySelectorAll('#modeSeg button').forEach(b =>
     b.classList.toggle('on', (b.dataset.v === 'doubles') === state.doubles));
   $('#weatherSel').value = state.weather;
   const tn = activeTeam().name;
   $('#teamBtn').textContent = '隊伍：' + (tn.length > 7 ? tn.slice(0, 6) + '…' : tn);
-  main.innerHTML = '';
-  ({ foes: renderFoes, reco: renderReco, speed: renderSpeed, dmg: renderDmg,
-     rec: renderRec, team: renderTeamTab })[state.tab](main);
+  mainRoot.innerHTML = '';
+  main = mainRoot;
+  inWorkspace = desktop.matches && BATTLE_TABS.includes(state.tab);
+  if (inWorkspace) renderWorkspace(); else PANES[state.tab](mainRoot);
+  main = mainRoot;
   save();
+  // 搜尋框在重繪後要留住游標，不然電腦版每動一個開關就被打斷
+  const q = mainRoot.querySelector('#q');
+  // 手機（分頁模式）維持原本一進「對手」就聚焦；電腦工作區只在初次或本來就在打字時聚焦，
+  // 否則按天氣、順風等開關都會被搶走游標
+  if (q && (keepFocus || firstPaint || !inWorkspace)) {
+    q.focus();
+    try { q.setSelectionRange(caret, caret); } catch (e) { /* ignore */ }
+  }
+  firstPaint = false;
+}
+
+// 電腦版工作區：對手｜推薦｜速度（＋傷害矩陣），四個面板同畫面
+function renderWorkspace() {
+  mainRoot.innerHTML = `<div class="ws">
+    <section class="ws-col" id="wsFoes"></section>
+    <div class="ws-mid">
+      <section class="ws-col" id="wsReco"></section>
+      <section class="ws-col" id="wsDmg"></section>
+    </div>
+    <section class="ws-col" id="wsSpeed"></section>
+  </div>`;
+  const pane = (sel, title, extra, fn) => {
+    const el = mainRoot.querySelector(sel);
+    el.innerHTML = `<h2 class="ws-head">${title}${extra ? `<span class="n">${extra}</span>` : ''}</h2>`;
+    const body = document.createElement('div');
+    el.appendChild(body);
+    main = body;
+    fn(body);
+  };
+  pane('#wsFoes', '🎯 對手', `${state.foes.length}/6`, renderFoes);
+  pane('#wsReco', '🏆 陣容推薦', esc(activeTeam().name), renderReco);
+  pane('#wsSpeed', '⚡ 速度線', state.doubles ? '雙打' : '單打', renderSpeed);
+  pane('#wsDmg', '💥 傷害矩陣', '', renderDmg);
 }
 
 function foeChips(removable) {
@@ -178,6 +232,16 @@ function foeChips(removable) {
   ).join('') + '</div>';
 }
 
+let foeQ = '';
+function addFoeByName(name) {
+  if (state.foes.length >= 6) return false;
+  const foe = makeFoe(name);
+  if (!foe || state.foes.some(f => f.name === foe.name && f.mega === foe.mega)) return false;
+  state.foes.push(foe);
+  foeQ = '';
+  render();
+  return true;
+}
 function renderFoes() {
   const missNote = urlMisses.length
     ? `<p class="hint" style="color:var(--foe)">⚠ 連結帶入失敗（查無此名）：${esc(urlMisses.join('、'))}，請手動搜尋補上。</p>`
@@ -194,36 +258,42 @@ function renderFoes() {
       <p class="hint">實線框＝威脅庫已知配置（推估標註）；虛線框＝未知，以極限值區間估算。</p>
       <div class="rowbtns" style="margin-top:6px"><button class="btn ghost" id="recogBtn">📷 截圖辨識（實驗）</button></div>
     </div>
-    ${state.foes.length ? '<button class="btn" id="goReco" style="width:100%">看推薦 →</button>' : ''}
+    ${state.foes.length && !inWorkspace ? '<button class="btn" id="goReco" style="width:100%">看推薦 →</button>' : ''}
     <footer class="note">假設 Lv50、IV31；已知配置為賽季常見配置「推估」，非對手實際數值。</footer>
   </div>`);
   main.append(...card.children);
-  const q = $('#q'), results = $('#results');
-  q.addEventListener('input', () => {
-    const rs = search(q.value);
+  const q = $p('#q'), results = $p('#results');
+  const runSearch = () => {
+    foeQ = q.value;
+    const rs = search(foeQ);
     results.innerHTML = rs.map(e => {
       const known = threatById.has(toID(e.n));
       return `<div class="result" data-add="${esc(e.n)}">
         <span class="zh">${esc(e.zh)}</span><span class="en">${esc(e.n)} #${e.no}</span>
         <span class="badge ${known ? 'k' : 'u'}">${known ? '已知配置' : '未知→極限值'}</span></div>`;
-    }).join('') || (q.value.trim() ? '<p class="hint">找不到</p>' : '');
+    }).join('') || (foeQ.trim() ? '<p class="hint">找不到</p>' : '');
+  };
+  q.value = foeQ;
+  if (foeQ.trim()) runSearch();
+  q.addEventListener('input', runSearch);
+  // 鍵盤操作（電腦版）：Enter 直接收第一筆、Esc 清空
+  q.addEventListener('keydown', ev => {
+    if (ev.key === 'Enter') {
+      const first = results.querySelector('[data-add]');
+      if (first) { ev.preventDefault(); addFoeByName(first.dataset.add); }
+    } else if (ev.key === 'Escape') {
+      ev.preventDefault();
+      foeQ = ''; q.value = ''; results.innerHTML = '';
+    }
   });
   results.addEventListener('click', ev => {
     const el = ev.target.closest('[data-add]');
-    if (!el) return;
-    if (state.foes.length >= 6) return;
-    const foe = makeFoe(el.dataset.add);
-    if (foe && !state.foes.some(f => f.name === foe.name && f.mega === foe.mega)) {
-      state.foes.push(foe);
-      q.value = ''; results.innerHTML = '';
-      render();
-    }
+    if (el) addFoeByName(el.dataset.add);
   });
   main.addEventListener('click', onRemoveFoe);
-  const go = $('#goReco');
+  const go = $p('#goReco');
   if (go) go.addEventListener('click', () => { state.tab = 'reco'; render(); });
-  $('#recogBtn').onclick = () => openRecognize();
-  q.focus();
+  $p('#recogBtn').onclick = () => openRecognize();
 }
 function onRemoveFoe(ev) {
   const rm = ev.target.closest('[data-rm]');
@@ -239,13 +309,18 @@ function configWarn() {
 }
 
 function renderReco() {
-  if (!state.foes.length) { main.innerHTML = '<div class="empty">先到「對手」選擇對面陣容</div>'; return; }
+  if (!state.foes.length) {
+    main.innerHTML = `<div class="empty">先${inWorkspace ? '在左邊「對手」欄' : '到「對手」分頁'}選擇對面陣容</div>`;
+    return;
+  }
   const { ranked, picks, leads } = recommend(team, state.foes,
     { field: fieldNow(), weather: state.weather || undefined, doubles: state.doubles });
   const pickSet = new Set(picks.map(p => p.spec));
   const leadSet = new Set(leads.map(p => p.spec));
-  main.appendChild(h(`<div class="card"><h2>對面</h2>${foeChips(false)}${configWarn()}</div>`).firstElementChild);
-  const wrap = h('<div>' + ranked.map(r => `
+  if (!inWorkspace) main.appendChild(h(`<div class="card"><h2>對面</h2>${foeChips(false)}</div>`).firstElementChild);
+  const warn = configWarn();
+  if (warn) main.appendChild(h(`<div class="card">${warn}</div>`).firstElementChild);
+  const wrap = h('<div class="reco-grid">' + ranked.map(r => `
     <div class="card reco ${pickSet.has(r.spec) ? 'pick' : ''}">
       <div class="head">
         <b>${esc(teamZh(r.spec))}</b>
@@ -255,7 +330,7 @@ function renderReco() {
       </div>
       ${r.reasons.length ? `<ul>${r.reasons.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
     </div>`).join('') + '</div>');
-  main.append(...wrap.children);
+  main.append(...wrap.childNodes);
   main.appendChild(h(`<footer class="note">規則評分：確1 +3／亂1 +2／確2 +1；被確1 −3／被亂1 −2；速度快 +1；特性剋制另計。${state.doubles ? '首發取 2（擊掌奇襲優先）' : '首發取 1'}。</footer>`).firstElementChild);
 }
 
@@ -273,10 +348,10 @@ function renderSpeed() {
     ⚠＝與我方同速。灰底「${state.doubles ? '雙' : '單'}／單雙」＝威脅庫${modeZh}常見配置參考線（含圍巾/天氣，不套順風），切換上方單雙打會跟著換。</p>
   </div></div>`);
   main.append(...card.children);
-  $('#twM').onclick = () => { state.twMine = !state.twMine; render(); };
-  $('#twF').onclick = () => { state.twFoe = !state.twFoe; render(); };
-  $('#tr').onclick = () => { state.trickRoom = !state.trickRoom; render(); };
-  $('#bm').onclick = () => { state.speBench = !state.speBench; render(); };
+  $p('#twM').onclick = () => { state.twMine = !state.twMine; render(); };
+  $p('#twF').onclick = () => { state.twFoe = !state.twFoe; render(); };
+  $p('#tr').onclick = () => { state.trickRoom = !state.trickRoom; render(); };
+  $p('#bm').onclick = () => { state.speBench = !state.speBench; render(); };
 
   const rows = [];
   for (const m of team) {
@@ -310,7 +385,7 @@ function renderSpeed() {
   // 同速只標「我方 ↔ 對手/常見線」：對手之間或常見線之間同速與行動順序決策無關
   const mineSpe = new Set(), otherSpe = new Set();
   rows.forEach(r => { if (!r.unknown) (r.side === 'mine' ? mineSpe : otherSpe).add(r.spe); });
-  $('#spelist').innerHTML = rows.map(r => {
+  $p('#spelist').innerHTML = rows.map(r => {
     const same = !r.unknown && (r.side === 'mine' ? otherSpe.has(r.spe) : mineSpe.has(r.spe));
     const name = r.side === 'bench'
       ? `<span>${esc(r.zh)}</span><span class="sbadge b">${r.tag}</span>`
@@ -324,14 +399,17 @@ function renderSpeed() {
 }
 
 function renderDmg() {
-  if (!state.foes.length) { main.innerHTML = '<div class="empty">先到「對手」選擇對面陣容</div>'; return; }
+  if (!state.foes.length) {
+    main.innerHTML = `<div class="empty">先${inWorkspace ? '在左邊「對手」欄' : '到「對手」分頁'}選擇對面陣容</div>`;
+    return;
+  }
   if (state.dmgFoe == null || state.dmgFoe >= state.foes.length) state.dmgFoe = 0;
   const tabs = `<div class="foe-tabs">${state.foes.map((f, i) =>
     `<span class="chip ${i === state.dmgFoe ? 'sel' : ''}" data-df="${i}">${esc(f.zh)}</span>`).join('')}</div>`;
   const foe = state.foes[state.dmgFoe];
   const field = fieldNow();
 
-  let out = configWarn() + `<div class="group-title">我方 → <span class="foename">${esc(foe.zh)}</span>${foe.unknown ? '（極限值區間）' : ''}</div>`;
+  let out = `<div class="group-title">我方 → <span class="foename">${esc(foe.zh)}</span>${foe.unknown ? '（極限值區間）' : ''}</div>`;
   out += `<table><tr><th>我方／招式</th><th class="num">傷害%</th><th></th></tr>`;
   for (const m of team) {
     const rows = attackTable(m, foe, field);
@@ -343,17 +421,19 @@ function renderDmg() {
   }
   out += `</table>`;
 
-  out += `<div class="group-title" style="margin-top:14px"><span class="foename">${esc(foe.zh)}</span> → 我方${foe.unknown ? '（STAB 100威力極限推估）' : ''}</div>`;
-  out += `<table><tr><th>我方</th><th>最痛的招</th><th class="num">傷害%</th><th></th></tr>`;
+  let out2 = `<div class="group-title"><span class="foename">${esc(foe.zh)}</span> → 我方${foe.unknown ? '（STAB 100威力極限推估）' : ''}</div>`;
+  out2 += `<table><tr><th>我方</th><th>最痛的招</th><th class="num">傷害%</th><th></th></tr>`;
   for (const m of team) {
     const rows = incomingTable(foe, m, field);
     const w = rows[0];
-    if (!w) { out += `<tr><td class="mine">${esc(teamZh(m))}</td><td colspan="3" class="hint">（無攻擊招）</td></tr>`; continue; }
-    out += `<tr><td class="mine">${esc(teamZh(m))}</td><td>${esc(moveZh(w.move))}</td><td class="num">${w.minPct}–${w.maxPct}</td><td><span class="tag ${w.cls}">${esc(w.tag)}</span></td></tr>`;
+    if (!w) { out2 += `<tr><td class="mine">${esc(teamZh(m))}</td><td colspan="3" class="hint">（無攻擊招）</td></tr>`; continue; }
+    out2 += `<tr><td class="mine">${esc(teamZh(m))}</td><td>${esc(moveZh(w.move))}</td><td class="num">${w.minPct}–${w.maxPct}</td><td><span class="tag ${w.cls}">${esc(w.tag)}</span></td></tr>`;
   }
-  out += `</table>`;
+  out2 += `</table>`;
 
-  const wrap = h(`<div>${tabs}<div class="card">${out}</div>
+  const warn = configWarn();
+  const wrap = h(`<div>${tabs}${warn ? `<div class="card">${warn}</div>` : ''}
+    <div class="dmg-grid"><div class="card">${out}</div><div class="card">${out2}</div></div>
     <footer class="note">${state.doubles ? '雙打：範圍招已×0.75' : '單打：範圍招不打折'}；天氣：${state.weather ? { Sun: '晴', Rain: '雨', Sand: '沙', Snow: '雪' }[state.weather] : '無'}。點傷害數字可看未知區間細節。</footer></div>`);
   main.append(...wrap.children);
   main.querySelector('.foe-tabs').addEventListener('click', ev => {
@@ -423,6 +503,8 @@ function renderRec() {
   const sgl = recStats(records.filter(r => r.mode === '單打'));
   const foesTxt = state.foes.length ? state.foes.map(f => f.zh).join('、') : '';
   const wrap = h(`<div>
+    <div class="recwrap">
+    <div>
     <div class="card">
       <h2>登錄這場（${esc(activeTeam().name)}・${state.doubles ? '雙打' : '單打'}${state.weather ? '・' + ({ Sun: '晴', Rain: '雨', Sand: '沙', Snow: '雪' }[state.weather] || state.weather) : ''}）</h2>
       <p class="hint">${foesTxt ? '對手：' + esc(foesTxt) : '尚未選對手（也可以直接登錄，不記對手）'}</p>
@@ -440,6 +522,8 @@ function renderRec() {
         ${sgl.n ? `<span>單打 <b>${sgl.w}–${sgl.l}</b>（${sgl.rate}%）</span>` : ''}
       </div>
     </div>
+    </div>
+    <div>
     <div class="card">
       <h2>歷史（${records.length} 場）</h2>
       <div id="recList">${records.map((r, i) => `
@@ -455,14 +539,16 @@ function renderRec() {
         </div>`).join('') || '<p class="hint">還沒有紀錄，打完一場按上面的勝／敗登錄。</p>'}</div>
       ${records.length ? `<div class="rowbtns" style="margin-top:10px"><button class="btn ghost" id="recCsv">匯出 CSV</button></div>` : ''}
     </div>
+    </div>
+    </div>
     <footer class="note">紀錄存在這支手機的 localStorage；換手機或清瀏覽器資料前先匯出 CSV 備份。</footer>
   </div>`);
   main.append(...wrap.children);
-  $('#recW').onclick = () => addRecord('W');
-  $('#recL').onclick = () => addRecord('L');
-  const csvBtn = $('#recCsv');
+  $p('#recW').onclick = () => addRecord('W');
+  $p('#recL').onclick = () => addRecord('L');
+  const csvBtn = $p('#recCsv');
   if (csvBtn) csvBtn.onclick = exportCsv;
-  $('#recList').addEventListener('click', ev => {
+  $p('#recList').addEventListener('click', ev => {
     const el = ev.target.closest('[data-del]');
     if (!el) return;
     records.splice(+el.dataset.del, 1);
@@ -655,6 +741,24 @@ function toPaste(specs) {
 $('#tabbar').addEventListener('click', ev => {
   const b = ev.target.closest('button[data-tab]');
   if (b) { state.tab = b.dataset.tab; urlMisses = []; render(); }
+});
+// 電腦版側邊導覽：四個對戰面板同畫面，所以只留「對戰分析／隊伍／紀錄」三項
+$('#sidenav').addEventListener('click', ev => {
+  const b = ev.target.closest('button[data-nav]');
+  if (!b) return;
+  const nav = b.dataset.nav;
+  if (nav === 'battle') { if (!BATTLE_TABS.includes(state.tab)) state.tab = 'foes'; }
+  else state.tab = nav;
+  urlMisses = [];
+  render();
+});
+// 電腦版鍵盤：「/」跳到對手搜尋框
+document.addEventListener('keydown', ev => {
+  if (ev.key !== '/' || ev.metaKey || ev.ctrlKey || ev.altKey) return;
+  const t = ev.target;
+  if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+  const q = mainRoot.querySelector('#q');
+  if (q) { ev.preventDefault(); q.focus(); q.select(); }
 });
 $('#modeSeg').addEventListener('click', ev => {
   const b = ev.target.closest('button[data-v]');

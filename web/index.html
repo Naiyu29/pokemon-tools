@@ -73,6 +73,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 .reco ul{margin:6px 0 0 18px;color:var(--tx2);font-size:13px}
 .leadtag{background:var(--mine);color:#03140a;font-size:11px;font-weight:800;border-radius:6px;padding:1px 6px}
 .foe-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:8px}
+.foe-tabs .chip{flex:none;white-space:nowrap}
 .group-title{margin:10px 0 2px;font-size:14px;font-weight:700}
 .toggles{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .tgl{background:var(--panel2);border:1px solid var(--line);color:var(--tx2);border-radius:8px;padding:5px 10px;font-size:13px}
@@ -179,6 +180,92 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
 .autorow .cand.zh{width:104px}
 .autorow .cand.zh span:first-of-type{font-size:14px}
 #recogView .bar h2{font-size:15px;margin-right:6px}
+
+/* ================= 電腦版版面（參考 Showdown damage calc／teambuilder、Pikalytics 的作法） =================
+   手機：底部分頁列，一次一頁；電腦：左側導覽＋「對戰分析」四個面板同畫面並排，不用切頁。 */
+.sidenav{display:none}
+.ws{display:grid;gap:12px}
+.ws-head{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--tx2);margin:0 0 6px}
+.ws-head::before{content:"";width:3px;height:12px;border-radius:2px;background:var(--acc)}
+.ws-head .n{margin-left:auto;font-weight:500}
+.dmg-grid{display:grid;gap:10px;grid-template-columns:1fr}
+.dmg-grid .card{margin:0;overflow-x:auto}
+.reco-grid{display:grid;gap:10px;grid-template-columns:1fr}
+.reco-grid .card{margin:0}
+@media (hover:hover){
+  button,.result,.chip .x,.recrow .x{cursor:pointer}
+  .result:hover{background:var(--panel2)}
+  .btn:hover{filter:brightness(1.1)}
+  .tgl:hover,.seg button:hover,.fldbtn:hover{color:var(--tx);border-color:#42505d}
+  .chip .x:hover,.recrow .x:hover{color:var(--foe)}
+  .cand:hover{border-color:var(--acc)}
+  .tcard:hover,.slot:hover{border-color:#3d4a57}
+  tbody tr:hover{background:rgba(255,255,255,.035)}
+  .spebar:hover{background:rgba(255,255,255,.035)}
+  .sidenav button:hover{background:var(--panel2);color:var(--tx)}
+}
+@media (min-width:1024px){
+  body{padding-bottom:0}
+  header{padding:8px 18px;min-height:50px;flex-wrap:nowrap}
+  header h1{font-size:17px}
+  .tabbar{display:none}
+  .banner{max-width:none;margin:10px 18px 0}
+  .shell{display:grid;grid-template-columns:184px minmax(0,1fr);align-items:start;
+    max-width:1760px;margin:0 auto}
+  .sidenav{display:flex;flex-direction:column;gap:3px;padding:12px 10px;
+    position:sticky;top:50px;height:calc(100vh - 50px);border-right:1px solid var(--line)}
+  .sidenav button{display:flex;align-items:center;gap:9px;background:none;
+    border:1px solid transparent;border-radius:9px;color:var(--tx2);
+    padding:9px 10px;font-size:14px;text-align:left}
+  .sidenav button.on{background:var(--panel2);border-color:var(--acc);color:var(--acc);font-weight:700}
+  .sidenav .ic{font-size:16px;flex:none}
+  .sidenav .foot{margin-top:auto;color:var(--tx2);font-size:11.5px;line-height:1.9;padding:0 2px}
+  .sidenav kbd{background:var(--panel2);border:1px solid var(--line);border-radius:4px;
+    padding:0 4px;font:11px/1.6 ui-monospace,monospace}
+  main{max-width:none;margin:0;padding:14px 18px}
+  /* 對戰分析工作區：固定一個畫面高，每欄各自捲動（整頁不捲），
+     對手／速度線永遠留在畫面上不會被捲走 */
+  .ws{gap:12px;height:calc(100vh - 78px);
+    grid-template-columns:300px minmax(0,1fr) 320px}
+  .ws>*{min-height:0}
+  .ws-col{overflow-y:auto;overflow-x:hidden;padding-right:4px}
+  /* 中間欄上下各半：推薦與傷害矩陣都留在畫面上，各自捲動 */
+  .ws-mid{display:grid;gap:12px;overflow:hidden;min-height:0;
+    grid-template-rows:minmax(0,1fr) minmax(0,1fr)}
+  .ws-col>.ws-head{position:sticky;top:0;z-index:1;background:var(--bg);padding:2px 0 6px;margin:0}
+  .ws .card,.ws .reco{margin-bottom:10px}
+  .ws footer.note{padding-top:2px}
+  .picker .results{max-height:320px}
+  /* 隊伍分頁：清單兩欄（編輯頁維持單欄，欄位才不會被拉太寬） */
+  .tlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px}
+  .tlist .tcard{margin:0}
+  #tbEdit{max-width:760px}
+  /* 紀錄分頁：登錄／統計 與 歷史 並排 */
+  .recwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:12px;align-items:start}
+  /* 辨識視窗：左圖右候選 */
+  #recogView .inner{max-width:1280px;display:grid;gap:14px;
+    grid-template-columns:minmax(0,1fr) 400px;align-items:start}
+  #recogView .rgstat{grid-column:1/-1;margin:0}
+  #recogView .rgright{position:sticky;top:60px;max-height:calc(100vh - 76px);overflow:auto}
+  .autorow .cand{width:96px}
+  .autorow .cand.zh{width:118px}
+}
+@media (min-width:1024px) and (max-width:1279px){
+  /* 窄桌面（1024～1279，例如平板橫放）：導覽列與側欄一起縮，中間欄才夠寬 */
+  .shell{grid-template-columns:148px minmax(0,1fr)}
+  .sidenav{padding:10px 6px;top:50px;height:calc(100vh - 50px)}
+  .sidenav button{padding:8px;font-size:13px;gap:7px}
+  .sidenav .foot{display:none}
+  main{padding:12px}
+  .ws{gap:8px;height:calc(100vh - 74px);grid-template-columns:222px minmax(0,1fr) 246px}
+  .ws-mid{gap:8px}
+  .reco .head b,.tcard .head b{white-space:nowrap}
+}
+@media (min-width:1600px){
+  /* 夠寬就四欄全開：對手｜推薦｜傷害｜速度，各欄獨立捲動 */
+  .ws{grid-template-columns:320px minmax(0,1fr) 340px}
+  .ws-mid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+}
 </style>
 </head>
 <body>
@@ -194,7 +281,19 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
   <button class="tgl" id="teamBtn">隊伍</button>
 </header>
 <div id="banner" hidden></div>
-<main id="main"></main>
+<div class="shell">
+  <nav class="sidenav" id="sidenav">
+    <button data-nav="battle"><span class="ic">⚔️</span>對戰分析</button>
+    <button data-nav="team"><span class="ic">🧩</span>隊伍</button>
+    <button data-nav="rec"><span class="ic">📓</span>紀錄</button>
+    <div class="foot">
+      <div><kbd>/</kbd> 搜尋對手</div>
+      <div><kbd>Enter</kbd> 加入第一筆</div>
+      <div><kbd>Esc</kbd> 清空搜尋</div>
+    </div>
+  </nav>
+  <main id="main"></main>
+</div>
 <nav class="tabbar" id="tabbar">
   <button data-tab="foes"><span class="ic">🎯</span>對手</button>
   <button data-tab="reco"><span class="ic">🏆</span>推薦</button>
@@ -214,12 +313,16 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
     <button class="tgl" id="rgClose">✕</button>
   </div>
   <div class="inner">
-    <p class="hint" id="rgStatus"></p>
-    <canvas id="rgCanvas" width="0" height="0"></canvas>
-    <div class="sizerow">框大小 <input type="range" id="rgSize" min="6" max="40" value="14"></div>
+    <p class="hint rgstat" id="rgStatus"></p>
+    <div class="rgleft">
+      <canvas id="rgCanvas" width="0" height="0"></canvas>
+      <div class="sizerow">框大小 <input type="range" id="rgSize" min="6" max="40" value="14"></div>
+    </div>
+    <div class="rgright">
     <div id="rgCands"></div>
     <div class="card" style="margin-top:10px"><h2>已選對手</h2><div id="rgPicked"></div></div>
     <footer class="note">端上樣板比對（不連網、零成本）。從遊戲「分享截圖」直接進到這裡，或按「選圖」挑選角/準備畫面截圖：自動偵測右側 6 張對手卡（綠框）各列 5 個候選，點候選改選、再點取消、按 🔍 搜尋自選；「取代對手」會整批換掉目前對手清單，之後在「紀錄」登錄勝敗會自動帶這批對手。實測 top1 約 93%、top5 100%；也可點圖示位置手動框（藍框）。</footer>
+    </div>
   </div>
   <input type="file" id="rgFile" accept="image/*" hidden>
 </div>

@@ -97,7 +97,7 @@ function natureZh(n) {
 function renderList(el) {
   const teams = ctx.allTeams();
   const activeId = ctx.activeTeam().id;
-  el.innerHTML = teams.map(t => {
+  el.innerHTML = '<div class="tlist">' + teams.map(t => {
     const warn = t.specs.some(m => m.needsConfig);
     return `<div class="tcard ${t.id === activeId ? 'on' : ''}" data-team="${esc(t.id)}">
       <div class="head">
@@ -117,7 +117,7 @@ function renderList(el) {
         ${t.builtin ? '' : `<button class="btn ghost sm danger" data-del="${esc(t.id)}">刪除</button>`}
       </div>
     </div>`;
-  }).join('') + `
+  }).join('') + '</div>' + `
     <div class="rowbtns" style="margin-top:4px">
       <button class="btn" id="tbNew">＋ 新增隊伍</button>
       <button class="btn ghost" id="tbImport">📋 貼 paste 匯入</button>
@@ -184,7 +184,7 @@ function renderEdit(el) {
   const t = ctx.allTeams().find(x => x.id === ctx.view.id);
   if (!t || t.builtin) { ctx.view.mode = 'list'; return renderList(el); }
   const v = ctx.view;
-  el.innerHTML = `
+  el.innerHTML = `<div id="tbEdit">
     <div class="tbbar">
       <button class="btn ghost sm" id="tbBack">← 隊伍清單</button>
       <input type="text" id="tbName" value="${esc(t.name)}" aria-label="隊伍名稱">
@@ -203,7 +203,7 @@ function renderEdit(el) {
       <p class="hint" id="tbEditMsg"></p>
     </div>
     <footer class="note">改完立刻存檔。招式／特性／道具沒有依可學表過濾（計算引擎沒帶學習表），
-      請自行確認合法性；傷害計算一律 Lv50、IV31。</footer>`;
+      請自行確認合法性；傷害計算一律 Lv50、IV31。</footer></div>`;
 
   el.querySelector('#tbBack').onclick = () => { v.mode = 'list'; ctx.rerender(); };
   const useBtn = el.querySelector('#tbUse');
