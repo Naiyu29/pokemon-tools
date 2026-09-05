@@ -6,6 +6,7 @@ import { makeField, speedInfo, attackTable, incomingTable, getSpecies, toID, gen
 import { recommend } from './recommend.js';
 import { initRecognize, openRecognize } from './recognize.js';
 import { moveZh } from './zh-names.js';
+import { initTeamBuilder, renderTeamTab } from './teambuilder.js';
 
 const LS_TEAM = 'pct.team.v1';       // 舊版單隊格式（只用於遷移）
 const LS_TEAMS = 'pct.teams.v1';     // 隊伍庫：{ active, teams:[{id,name,specs}] }
@@ -39,6 +40,8 @@ let state = {
   twMine: false, twFoe: false, trickRoom: false, speBench: true,
   foes: [], // [{name(calc名), zh, unknown?, ...threatSpec}]
 };
+// 隊伍分頁的檢視狀態（清單／編輯；不進 localStorage，重開回清單）
+const teamView = { mode: 'list', id: null, open: -1, pick: null };
 try {
   const saved = JSON.parse(localStorage.getItem(LS_STATE) || 'null');
   if (saved) state = { ...state, ...saved };
@@ -163,7 +166,8 @@ function render() {
   const tn = activeTeam().name;
   $('#teamBtn').textContent = '隊伍：' + (tn.length > 7 ? tn.slice(0, 6) + '…' : tn);
   main.innerHTML = '';
-  ({ foes: renderFoes, reco: renderReco, speed: renderSpeed, dmg: renderDmg, rec: renderRec })[state.tab]();
+  ({ foes: renderFoes, reco: renderReco, speed: renderSpeed, dmg: renderDmg,
+     rec: renderRec, team: renderTeamTab })[state.tab](main);
   save();
 }
 
@@ -563,6 +567,46 @@ function importTeam(name, specs) {
   return { msg: `已匯入隊伍「${finalName}」：${specs.map(teamZh).join('、')}` };
 }
 
+// ---- 隊伍庫操作（隊伍分頁用） ----
+function setActiveTeam(id) {
+  if (!allTeams().some(t => t.id === id)) return;
+  teamLib.active = id; saveTeams(); team = activeTeam().specs;
+}
+function newTeamId() { return 't' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); }
+function uniqueName(base) {
+  let n = base;
+  for (let i = 2; allTeams().some(t => t.name === n); i++) n = `${base} (${i})`;
+  return n;
+}
+function createTeam(name, specs) {
+  const id = newTeamId();
+  teamLib.teams.push({ id, name: uniqueName(name), specs });
+  teamLib.active = id; saveTeams(); team = specs;
+  return id;
+}
+function duplicateTeam(t, name) {
+  return createTeam(name, JSON.parse(JSON.stringify(t.specs)));
+}
+function removeTeam(id) {
+  teamLib.teams = teamLib.teams.filter(t => t.id !== id);
+  if (teamLib.active === id) teamLib.active = BUILTIN_ID;
+  saveTeams(); team = activeTeam().specs;
+}
+
+initTeamBuilder({
+  gen, toID, getSpecies, zhByName, teamLib, view: teamView,
+  allTeams, activeTeam, parsePaste, toPaste, importTeam,
+  searchSpecies: q => search(q),
+  save: () => { saveTeams(); team = activeTeam().specs; },
+  setActive: setActiveTeam,
+  create: createTeam,
+  duplicate: duplicateTeam,
+  remove: removeTeam,
+  applyMega: finalizeSpec,
+  rerender: () => render(),
+  openRecognizeTeam: () => openRecognize(null, 'team'),
+});
+
 // ---- Showdown paste 解析 ----
 function parsePaste(text) {
   const blocks = text.replace(/\r/g, '').split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
@@ -618,68 +662,11 @@ $('#modeSeg').addEventListener('click', ev => {
 });
 $('#weatherSel').addEventListener('change', ev => { state.weather = ev.target.value; render(); });
 
-const dlg = $('#teamDlg');
-function renderTeamDlg(msg) {
-  const at = activeTeam();
-  $('#teamList').innerHTML = allTeams().map(t => `
-    <div class="teamrow ${t.id === at.id ? 'sel' : ''}" data-sel="${esc(t.id)}">
-      <div class="info">
-        <span class="name">${t.id === at.id ? '✓ ' : ''}${esc(t.name)}${t.builtin ? '<span class="badge u">內建</span>' : ''}</span>
-        <span class="cnt">${esc(t.specs.map(teamZh).join('、'))}</span>
-      </div>
-      ${t.builtin ? '' : `<span class="x" data-delteam="${esc(t.id)}">✕</span>`}
-    </div>`).join('');
-  $('#teamMsg').textContent = msg || '';
-}
-$('#teamBtn').onclick = () => { renderTeamDlg(); dlg.showModal(); };
-$('#teamClose').onclick = () => dlg.close();
-$('#teamList').addEventListener('click', ev => {
-  const del = ev.target.closest('[data-delteam]');
-  if (del) {
-    const t = teamLib.teams.find(x => x.id === del.dataset.delteam);
-    if (t && confirm(`刪除隊伍「${t.name}」？（不影響已登錄的戰績）`)) {
-      teamLib.teams = teamLib.teams.filter(x => x.id !== t.id);
-      if (teamLib.active === t.id) teamLib.active = BUILTIN_ID;
-      saveTeams(); team = activeTeam().specs;
-      renderTeamDlg(`已刪除「${t.name}」`); render();
-    }
-    return;
-  }
-  const sel = ev.target.closest('[data-sel]');
-  if (sel && sel.dataset.sel !== teamLib.active) {
-    teamLib.active = sel.dataset.sel;
-    saveTeams(); team = activeTeam().specs;
-    renderTeamDlg(`已切換：${activeTeam().name}`); render();
-  }
-});
-$('#teamShow').onclick = () => {
-  $('#teamName').value = activeTeam().name;
-  $('#teamPaste').value = toPaste(team);
-  $('#teamMsg').textContent = '已帶出目前隊伍，可修改後按「覆蓋目前隊伍」或「存成新隊伍」。';
-};
-$('#teamImport').onclick = () => {
-  try {
-    const specs = parsePaste($('#teamPaste').value);
-    const r = importTeam($('#teamName').value.trim() || `隊伍 ${teamLib.teams.length + 1}`, specs);
-    $('#teamName').value = ''; $('#teamPaste').value = '';
-    renderTeamDlg(r.msg); render();
-  } catch (e) {
-    $('#teamMsg').textContent = '匯入失敗：' + e.message;
-  }
-};
-$('#teamUpdate').onclick = () => {
-  const at = activeTeam();
-  if (at.builtin) { $('#teamMsg').textContent = '內建隊伍 Meta 不能覆蓋，請改用「存成新隊伍」。'; return; }
-  try {
-    const specs = parsePaste($('#teamPaste').value);
-    at.specs = specs;
-    const name = $('#teamName').value.trim();
-    if (name) at.name = name;
-    saveTeams(); team = specs;
-    renderTeamDlg(`已覆蓋：${at.name}（${specs.length} 隻）`); render();
-  } catch (e) {
-    $('#teamMsg').textContent = '覆蓋失敗：' + e.message;
-  }
+// header 的「隊伍」鈕＝跳到隊伍分頁（編輯功能已獨立成一頁，不再用對話框）
+$('#teamBtn').onclick = () => {
+  state.tab = 'team';
+  teamView.mode = 'list'; teamView.pick = null;
+  render();
 };
 
 // 辨識連結匯入結果橫幅（成功/失敗都要讓使用者看到，不要默默吃掉）

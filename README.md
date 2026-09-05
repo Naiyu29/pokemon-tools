@@ -11,8 +11,10 @@ Pokémon Champions 對戰分析工具（隊伍「Meta」）。
 - 威脅庫 Top 50：已知配置直接套用；庫外寶可夢以「極限值區間」推估（耐久最少~最多、STAB 100威力火力上限）
 - 推薦：規則評分（確1/亂1/確2、被確1、速度優勢、特性剋制：金身擋變化招／不屈之心·唱反調反制威嚇／天氣戰）
 - 單打／雙打、天氣、順風、戲法空間切換
-- 我的隊伍：多隊管理（貼 Showdown paste 存成新隊伍、命名／切換／覆蓋／刪除，存 localStorage）；
-  戰績紀錄自動記下當場使用的隊伍，CSV 匯出含「隊伍」欄
+- **隊伍分頁**（Showdown teambuilder 風格）：隊伍清單 ↔ 單隊編輯；每隻可改
+  寶可夢／道具／特性／性格／EV／招式（全中文搜尋），EV 以遊戲的 SP 點數顯示；
+  可貼 paste 匯入、複製隊伍、匯出 paste、截圖辨識入口。存 localStorage
+- 戰績紀錄自動記下當場使用的隊伍，CSV 匯出含「隊伍」欄
 - 網址參數預填（M3 用）：
   - 對手：`?foes=garchomp,primarina&mode=singles&weather=Sun`
   - 我方隊伍（截圖辨識用）：`?team=隊名&mons=species,道具,特性,性格,hp/atk/def/spa/spd/spe,招式…;下一隻…`
@@ -35,6 +37,7 @@ npm run build   # 重建搜尋索引 + 打包到 docs/
 - `web/`：網頁工具原始碼（calc-core／recommend／main／index.html／sw）
   - `match-core.js`：端上 sprite 樣板比對＋卡片偵測（對手選角畫面／我方隊伍畫面）
   - `text-core.js`：我方隊伍畫面「認字」（切字→筆畫密度→與裝置字體畫出的候選名比對）
+  - `teambuilder.js`：隊伍分頁（清單／編輯，Showdown teambuilder 兩層結構）
 - `docs/`：建置產物（GitHub Pages 服務目錄）
 - `data/my-team.js`：我的隊伍（內建預設；網頁端可用 paste 匯入覆蓋）
 - `data/threats.js`：當季威脅 Top 50 與常見配置（推估，含來源註記）

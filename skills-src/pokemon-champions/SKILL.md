@@ -22,7 +22,8 @@ description: Pokémon Champions（寶可夢冠軍）對戰分析工作流——�
 - 網頁工具（GitHub Pages，PWA）：<https://naiyu29.github.io/pokemon-tools/>，
   支援 `?foes=id1,id2&mode=doubles&weather=Sun`（對手，見 battle-analysis.md）
   與 `?team=隊名&mons=...`（我方隊伍，見 screenshot-to-paste.md）預填。
-  我方隊伍可存多隊（命名/切換/覆蓋/刪除），戰績紀錄會記下當場用哪一隊。
+  我方隊伍在獨立的「🧩隊伍」分頁管理（清單↔編輯，可改道具/特性/性格/EV/招式，
+  EV 以遊戲 SP 點數顯示），戰績紀錄會記下當場用哪一隊。
 
 ## 工作流選擇
 
