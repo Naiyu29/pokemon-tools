@@ -23,7 +23,10 @@ for (const f of ['index.html', 'manifest.webmanifest', 'icon.svg']) {
   fs.copyFileSync(path.join(root, 'web', f), path.join(docs, f));
 }
 fs.copyFileSync(path.join(root, 'data/sprite-index.bin'), path.join(docs, 'sprite-index.bin'));
-const sw = fs.readFileSync(path.join(root, 'web/sw.js'), 'utf8').replace('__BUILD_ID__', buildId);
+const spriteMeta = JSON.parse(fs.readFileSync(path.join(root, 'data/sprite-meta.json'), 'utf8'));
+const sw = fs.readFileSync(path.join(root, 'web/sw.js'), 'utf8')
+  .replace('__BUILD_ID__', buildId)
+  .replace('__BIN_V__', spriteMeta.hash || String(spriteMeta.count));
 fs.writeFileSync(path.join(docs, 'sw.js'), sw);
 // index.html 加上 bundle 版本參數避免舊快取
 const idx = fs.readFileSync(path.join(docs, 'index.html'), 'utf8')
