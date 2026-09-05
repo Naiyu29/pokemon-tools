@@ -6,7 +6,9 @@ import { makeField, speedInfo, attackTable, incomingTable, getSpecies, toID, gen
 import { recommend } from './recommend.js';
 import { initRecognize, openRecognize } from './recognize.js';
 import { moveZh } from './zh-names.js';
-import { initTeamBuilder, renderTeamTab } from './teambuilder.js';
+import { initTeamBuilder, renderTeamTab, NATURES } from './teambuilder.js';
+import { initTeamRecog, openTeamRecog } from './team-recog.js';
+import { abilityZh, itemZh } from './zh-names.js';
 
 const LS_TEAM = 'pct.team.v1';       // 舊版單隊格式（只用於遷移）
 const LS_TEAMS = 'pct.teams.v1';     // 隊伍庫：{ active, teams:[{id,name,specs}] }
@@ -690,7 +692,52 @@ initTeamBuilder({
   remove: removeTeam,
   applyMega: finalizeSpec,
   rerender: () => render(),
-  openRecognizeTeam: () => openRecognize(null, 'team'),
+  openRecognizeTeam: () => openTeamRecog(),
+});
+
+// ---- 我方隊伍截圖辨識（獨立流程，讀狀態頁＋能力頁兩張圖）----
+// 中文名 → 候選清單（依字數分組），認字比對用
+function byLenOf(pairs) {
+  const m = new Map();
+  for (const [name, zh] of pairs) {
+    if (!zh) continue;
+    const k = zh.length;
+    if (!m.has(k)) m.set(k, []);
+    m.get(k).push({ zh, n: name });
+  }
+  return m;
+}
+function listOf(iter, zhOf) {
+  const out = [];
+  for (const e of iter) {
+    if (!e || !e.name) continue;
+    const zh = zhOf(e.name);
+    if (zh && zh !== e.name) out.push([e.name, zh]); // 沒有中文對照的略過（比不到）
+  }
+  return out;
+}
+const natureList = [];
+for (const n of gen.natures) natureList.push(n);
+
+initTeamRecog({
+  namesByLen,
+  abilityByLen: byLenOf(listOf(gen.abilities, abilityZh)),
+  itemByLen: byLenOf(listOf(gen.items, itemZh)),
+  moveByLen: byLenOf(listOf(gen.moves, moveZh)),
+  natures: natureList,
+  toID, getSpecies,
+  zhOf: n => zhByName.get(n) || n,
+  moveType: n => { const m = gen.moves.get(toID(n)); return m ? m.type : null; },
+  megaStoneOf: n => { const it = gen.items.get(toID(n)); return it ? it.megaStone : null; },
+  moveZh, abilityZh, itemZh,
+  natureZh: n => { const e = NATURES.find(x => x[0] === n); return e ? e[1] : n; },
+  onCreate: (name, specs) => {
+    const list = specs.map(sp => finalizeSpec({ ...sp }));
+    const id = createTeam(name, list);
+    teamView.mode = 'edit'; teamView.id = id; teamView.open = 0;
+    state.tab = 'team';
+    render();
+  },
 });
 
 // ---- Showdown paste 解析 ----

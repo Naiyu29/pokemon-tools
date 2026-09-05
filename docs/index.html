@@ -177,6 +177,26 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
 #rgCands>.cand .pct{margin-left:auto}
 .sizerow{display:flex;align-items:center;gap:10px;margin-top:8px;color:var(--tx2);font-size:13px}
 .sizerow input{flex:1}
+#teamRecogView{position:fixed;inset:0;z-index:50;background:var(--bg);overflow-y:auto;padding-bottom:20px}
+#teamRecogView .bar{position:sticky;top:0;z-index:2;background:var(--panel);border-bottom:1px solid var(--line);
+  display:flex;gap:8px;align-items:center;padding:8px 12px}
+#teamRecogView .bar h2{font-size:15px;margin-right:auto}
+#teamRecogView .inner{padding:10px 12px;max-width:720px;margin:0 auto}
+.trslot{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);
+  border-left:4px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.trslot.ok{border-left-color:var(--mine)}
+.trslot .t{display:flex;flex-direction:column;min-width:0}
+.trslot .t b{font-size:14.5px}
+.trslot .s{margin-left:auto;font-size:12.5px;white-space:nowrap}
+.trslot .s .ok{color:var(--mine)}
+.trslot .s .err{color:var(--foe);white-space:normal}
+.trrow{border-top:1px solid var(--line);padding:8px 2px;font-size:13px}
+.trrow:first-of-type{border-top:none}
+.trrow.warn{background:rgba(255,210,77,.06)}
+.trrow .n{display:flex;gap:8px;align-items:baseline}
+.trrow .n b{font-size:15px}
+.trrow .d{color:var(--tx2);margin-top:2px}
+.trrow .w{color:var(--ko2);margin-top:3px;font-size:12.5px}
 .autorow .cand.zh{width:104px}
 .autorow .cand.zh span:first-of-type{font-size:14px}
 #recogView .bar h2{font-size:15px;margin-right:6px}
@@ -302,12 +322,24 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
   <button data-tab="team"><span class="ic">🧩</span>隊伍</button>
   <button data-tab="rec"><span class="ic">📓</span>紀錄</button>
 </nav>
+<div id="teamRecogView" hidden>
+  <div class="bar">
+    <h2>📷 我方隊伍辨識</h2>
+    <button class="tgl" id="trClose">✕</button>
+  </div>
+  <div class="inner">
+    <p class="hint">在遊戲的「隊伍」畫面各截一張：<b>狀態</b>頁（六維＋點數）與<b>能力</b>頁（特性／道具／招式）。</p>
+    <div id="trBody"></div>
+    <p class="hint" id="trStatus"></p>
+    <div class="rowbtns" style="margin-top:8px">
+      <button class="btn" id="trCreate" disabled>先選一張截圖</button>
+      <button class="btn ghost" id="trCancel">取消</button>
+    </div>
+  </div>
+</div>
 <div id="recogView" hidden>
   <div class="bar">
-    <h2>📷 辨識</h2>
-    <div class="seg" id="rgMode">
-      <button data-m="foe">對手</button><button data-m="team">我方隊伍</button>
-    </div>
+    <h2>📷 對手辨識</h2>
     <button class="tgl" id="rgPick">選圖</button>
     <button class="btn" id="rgDone">完成</button>
     <button class="tgl" id="rgClose">✕</button>
@@ -326,6 +358,6 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
   </div>
   <input type="file" id="rgFile" accept="image/*" hidden>
 </div>
-<script src="bundle.js?v=202609050728"></script>
+<script src="bundle.js?v=202609051319"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 // 離線快取：build 時以 BUILD_ID 換版，舊快取自動清除
-const CACHE = 'pct-202609050728';
+const CACHE = 'pct-202609051319';
 const ASSETS = ['./', './index.html', './bundle.js', './manifest.webmanifest', './icon.svg', './sprite-index.bin?v=c0266a5734'];
 
 self.addEventListener('install', e => {
