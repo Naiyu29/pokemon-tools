@@ -34,6 +34,7 @@ npm run build   # 重建搜尋索引 + 打包到 docs/
 - `data/my-team.js`：我的隊伍（內建預設；網頁端可用 paste 匯入覆蓋）
 - `data/threats.js`：當季威脅 Top 50 與常見配置（推估，含來源註記）
 - `data/search-index.json`：搜尋索引（產生自 `src/build-search-index.js`）
+- `data/zh-names.json`：招式／特性中文名對照（產生自 `src/build-zh-names.js`，來源 PokeAPI CSV；`npm run build:zh-names` 重建，需網路，新招式出現時才需要跑）
 - `src/analyze.js`：Node 端傷害分析（輸出 `out/analysis.json`）
 - `out/report.html`：手機版賽季報告（自包含 HTML）
 
