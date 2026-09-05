@@ -14,6 +14,8 @@ Pokémon Champions 對戰分析工具（隊伍「Meta」）。
 - **隊伍分頁**（Showdown teambuilder 風格）：隊伍清單 ↔ 單隊編輯；每隻可改
   寶可夢／道具／特性／性格／EV／招式（全中文搜尋），EV 以遊戲的 SP 點數顯示；
   可貼 paste 匯入、複製隊伍、匯出 paste、截圖辨識入口。存 localStorage
+- 截圖辨識（端上、零成本）：**對手**選角畫面走圖示比對；**我方隊伍**走認字，
+  讀「狀態頁＋能力頁」兩張圖 → EV／性格／特性／道具／四招，建完直接進編輯頁確認
 - 戰績紀錄自動記下當場使用的隊伍，CSV 匯出含「隊伍」欄
 - 網址參數預填（M3 用）：
   - 對手：`?foes=garchomp,primarina&mode=singles&weather=Sun`
@@ -38,6 +40,7 @@ npm run build   # 重建搜尋索引 + 打包到 docs/
   - `match-core.js`：端上 sprite 樣板比對＋卡片偵測（對手選角畫面／我方隊伍畫面）
   - `text-core.js`：我方隊伍畫面「認字」（切字→筆畫密度→與裝置字體畫出的候選名比對）
   - `teambuilder.js`：隊伍分頁（清單／編輯，Showdown teambuilder 兩層結構）
+  - `team-ocr.js`／`team-recog.js`：我方隊伍兩張截圖判讀（狀態頁→EV/性格、能力頁→特性/道具/招式）
 - `docs/`：建置產物（GitHub Pages 服務目錄）
 - `data/my-team.js`：我的隊伍（內建預設；網頁端可用 paste 匯入覆蓋）
 - `data/threats.js`：當季威脅 Top 50 與常見配置（推估，含來源註記）

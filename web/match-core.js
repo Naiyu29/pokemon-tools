@@ -333,12 +333,19 @@ export function detectTeamCards(img) {
     }
   }
   const colMax = Math.max(...cols);
-  let cb = bandsOf(cols, colMax * 0.35, Math.round((w / step) * 0.06), 1);
+  // 間隙容忍要放寬：能力頁的招式文字與卡號浮水印會讓中間幾行的紫色像素變少，
+  // 只容忍 1 格的話整欄會被切成兩段，卡片寬度就縮水了
+  let cb = bandsOf(cols, colMax * 0.3, Math.round((w / step) * 0.06), 4);
   if (cb.length > 2) cb = cb.sort((a, b) => (b[1] - b[0]) - (a[1] - a[0])).slice(0, 2).sort((a, b) => a[0] - b[0]);
   if (!cb.length) return [];
+  // 六張卡尺寸一致：寬高各取最大值套用到全部，某一張被內容切短時才不會歪掉
+  // （卡內判讀是用「相對卡片寬高的比例」定位，尺寸抓錯就整組讀錯位置）
+  const cw = Math.max(...cb.map(b => (b[1] - b[0] + 1) * step));
+  const ch = Math.max(...rb.map(b => (b[1] - b[0] + 1) * step));
   const boxes = [];
-  for (const [r0, r1] of rb) for (const [c0, c1] of cb) {
-    boxes.push({ x: c0 * step, y: r0 * step, w: (c1 - c0 + 1) * step, h: (r1 - r0 + 1) * step });
+  for (const [r0] of rb) for (const [c0] of cb) {
+    const x = c0 * step, y = r0 * step;
+    boxes.push({ x, y, w: Math.min(cw, w - x), h: Math.min(ch, h - y) });
   }
   return boxes;
 }
