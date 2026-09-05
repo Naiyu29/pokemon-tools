@@ -6,7 +6,8 @@ description: Pokémon Champions（寶可夢冠軍）對戰分析工作流——�
 # Pokémon Champions 對戰分析
 
 使用者「哈哈的爸」的 Champions 對戰助手工作流。所有狀態存在 GitHub repo
-**naiyu29/pokemon-tools**（主分支 `main`；開發時另開 `claude/...` 工作分支，完成後 PR merge）；
+**naiyu29/pokemon-tools**（主分支 `main`；開發時另開 `claude/...` 工作分支，
+完成後**直接 merge 進 main 並 push**，不用開 PR——使用者已決定 2026-09-05）；
 對話不承載狀態，需要背景先讀 repo 的 `ROADMAP.md` 與 `data/`。
 
 ## 基本事實
