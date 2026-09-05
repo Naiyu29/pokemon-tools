@@ -5,9 +5,11 @@ import threats from '../data/threats.js';
 import { makeField, speedInfo, attackTable, incomingTable, getSpecies, toID } from './calc-core.js';
 import { recommend } from './recommend.js';
 
-const LS_TEAM = 'pct.team.v1';
+const LS_TEAM = 'pct.team.v1';       // 舊版單隊格式（只用於遷移）
+const LS_TEAMS = 'pct.teams.v1';     // 隊伍庫：{ active, teams:[{id,name,specs}] }
 const LS_STATE = 'pct.state.v1';
 const LS_REC = 'pct.records.v1';
+const BUILTIN_ID = 'builtin';
 
 // 威脅庫：calc 名稱(toID) → spec（同種多套取第一套）
 const threatById = new Map();
@@ -32,11 +34,27 @@ try {
   if (saved) state = { ...state, ...saved };
 } catch (e) { /* ignore */ }
 
-let team = defaultTeam;
+// ---- 隊伍庫（多隊：命名/切換/覆蓋/刪除；內建 Meta 永遠在第一位） ----
+let teamLib = { active: BUILTIN_ID, teams: [] };
 try {
-  const t = JSON.parse(localStorage.getItem(LS_TEAM) || 'null');
-  if (Array.isArray(t) && t.length) team = t;
+  const t = JSON.parse(localStorage.getItem(LS_TEAMS) || 'null');
+  if (t && Array.isArray(t.teams)) {
+    teamLib = { active: t.active || BUILTIN_ID, teams: t.teams };
+  } else {
+    // 舊版單隊格式遷移成隊伍庫
+    const old = JSON.parse(localStorage.getItem(LS_TEAM) || 'null');
+    if (Array.isArray(old) && old.length) {
+      teamLib = { active: 'migrated', teams: [{ id: 'migrated', name: '匯入的隊伍', specs: old }] };
+      saveTeams();
+    }
+  }
 } catch (e) { /* ignore */ }
+function saveTeams() { localStorage.setItem(LS_TEAMS, JSON.stringify(teamLib)); }
+function allTeams() {
+  return [{ id: BUILTIN_ID, name: 'Meta', specs: defaultTeam, builtin: true }, ...teamLib.teams];
+}
+function activeTeam() { return allTeams().find(t => t.id === teamLib.active) || allTeams()[0]; }
+let team = activeTeam().specs;
 
 // URL 參數（M3）：?foes=garchomp,primarina&mode=singles&weather=Sun
 // 截圖貼給 Claude 辨識後回傳的預填連結，點開直接跳推薦頁
@@ -120,6 +138,8 @@ function render() {
   document.querySelectorAll('#modeSeg button').forEach(b =>
     b.classList.toggle('on', (b.dataset.v === 'doubles') === state.doubles));
   $('#weatherSel').value = state.weather;
+  const tn = activeTeam().name;
+  $('#teamBtn').textContent = '隊伍：' + (tn.length > 7 ? tn.slice(0, 6) + '…' : tn);
   main.innerHTML = '';
   ({ foes: renderFoes, reco: renderReco, speed: renderSpeed, dmg: renderDmg, rec: renderRec })[state.tab]();
   save();
@@ -300,6 +320,7 @@ function addRecord(result) {
     ts: Date.now(),
     mode: state.doubles ? '雙打' : '單打',
     weather: state.weather || '',
+    team: activeTeam().name,
     result, // 'W' | 'L'
     foes: state.foes.map(f => f.zh),
     note: ($('#recNote') ? $('#recNote').value.trim() : ''),
@@ -318,11 +339,11 @@ function csvCell(s) {
   return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
 }
 function exportCsv() {
-  const head = ['時間', '模式', '天氣', '結果', '對手1', '對手2', '對手3', '對手4', '對手5', '對手6', '備註'];
+  const head = ['時間', '模式', '天氣', '隊伍', '結果', '對手1', '對手2', '對手3', '對手4', '對手5', '對手6', '備註'];
   const lines = records.map(r => {
     const foes = (r.foes || []).slice(0, 6);
     while (foes.length < 6) foes.push('');
-    return [fmtTime(r.ts), r.mode, r.weather, r.result === 'W' ? '勝' : '敗', ...foes, r.note || ''].map(csvCell).join(',');
+    return [fmtTime(r.ts), r.mode, r.weather, r.team || '', r.result === 'W' ? '勝' : '敗', ...foes, r.note || ''].map(csvCell).join(',');
   });
   // BOM 讓 Excel 正確辨識 UTF-8 中文
   const blob = new Blob(['\ufeff' + [head.join(','), ...lines].join('\r\n')], { type: 'text/csv;charset=utf-8' });
@@ -348,7 +369,7 @@ function renderRec() {
   const foesTxt = state.foes.length ? state.foes.map(f => f.zh).join('、') : '';
   const wrap = h(`<div>
     <div class="card">
-      <h2>登錄這場（${state.doubles ? '雙打' : '單打'}${state.weather ? '・' + ({ Sun: '晴', Rain: '雨', Sand: '沙', Snow: '雪' }[state.weather] || state.weather) : ''}）</h2>
+      <h2>登錄這場（${esc(activeTeam().name)}・${state.doubles ? '雙打' : '單打'}${state.weather ? '・' + ({ Sun: '晴', Rain: '雨', Sand: '沙', Snow: '雪' }[state.weather] || state.weather) : ''}）</h2>
       <p class="hint">${foesTxt ? '對手：' + esc(foesTxt) : '尚未選對手（也可以直接登錄，不記對手）'}</p>
       <input type="search" id="recNote" placeholder="備註（選填，例：被戲法空間翻盤）" style="width:100%;margin:6px 0" autocomplete="off">
       <div class="rowbtns">
@@ -370,7 +391,7 @@ function renderRec() {
         <div class="recrow">
           <div class="top">
             <span class="wl ${r.result}">${r.result === 'W' ? '勝' : '敗'}</span>
-            <span>${esc(r.mode)}${r.weather ? '・' + ({ Sun: '晴', Rain: '雨', Sand: '沙', Snow: '雪' }[r.weather] || esc(r.weather)) : ''}</span>
+            <span>${r.team ? esc(r.team) + '・' : ''}${esc(r.mode)}${r.weather ? '・' + ({ Sun: '晴', Rain: '雨', Sand: '沙', Snow: '雪' }[r.weather] || esc(r.weather)) : ''}</span>
             <span class="time">${fmtTime(r.ts)}</span>
             <span class="x" data-del="${i}">✕</span>
           </div>
@@ -456,22 +477,70 @@ $('#modeSeg').addEventListener('click', ev => {
 $('#weatherSel').addEventListener('change', ev => { state.weather = ev.target.value; render(); });
 
 const dlg = $('#teamDlg');
-$('#teamBtn').onclick = () => { $('#teamMsg').textContent = `目前隊伍：${team.map(teamZh).join('、')}`; dlg.showModal(); };
+function renderTeamDlg(msg) {
+  const at = activeTeam();
+  $('#teamList').innerHTML = allTeams().map(t => `
+    <div class="teamrow ${t.id === at.id ? 'sel' : ''}" data-sel="${esc(t.id)}">
+      <div class="info">
+        <span class="name">${t.id === at.id ? '✓ ' : ''}${esc(t.name)}${t.builtin ? '<span class="badge u">內建</span>' : ''}</span>
+        <span class="cnt">${esc(t.specs.map(teamZh).join('、'))}</span>
+      </div>
+      ${t.builtin ? '' : `<span class="x" data-delteam="${esc(t.id)}">✕</span>`}
+    </div>`).join('');
+  $('#teamMsg').textContent = msg || '';
+}
+$('#teamBtn').onclick = () => { renderTeamDlg(); dlg.showModal(); };
 $('#teamClose').onclick = () => dlg.close();
-$('#teamShow').onclick = () => { $('#teamPaste').value = toPaste(team); };
-$('#teamReset').onclick = () => {
-  localStorage.removeItem(LS_TEAM); team = defaultTeam;
-  $('#teamMsg').textContent = '已還原內建隊伍'; render();
+$('#teamList').addEventListener('click', ev => {
+  const del = ev.target.closest('[data-delteam]');
+  if (del) {
+    const t = teamLib.teams.find(x => x.id === del.dataset.delteam);
+    if (t && confirm(`刪除隊伍「${t.name}」？（不影響已登錄的戰績）`)) {
+      teamLib.teams = teamLib.teams.filter(x => x.id !== t.id);
+      if (teamLib.active === t.id) teamLib.active = BUILTIN_ID;
+      saveTeams(); team = activeTeam().specs;
+      renderTeamDlg(`已刪除「${t.name}」`); render();
+    }
+    return;
+  }
+  const sel = ev.target.closest('[data-sel]');
+  if (sel && sel.dataset.sel !== teamLib.active) {
+    teamLib.active = sel.dataset.sel;
+    saveTeams(); team = activeTeam().specs;
+    renderTeamDlg(`已切換：${activeTeam().name}`); render();
+  }
+});
+$('#teamShow').onclick = () => {
+  $('#teamName').value = activeTeam().name;
+  $('#teamPaste').value = toPaste(team);
+  $('#teamMsg').textContent = '已帶出目前隊伍，可修改後按「覆蓋目前隊伍」或「存成新隊伍」。';
 };
 $('#teamImport').onclick = () => {
   try {
     const specs = parsePaste($('#teamPaste').value);
-    team = specs;
-    localStorage.setItem(LS_TEAM, JSON.stringify(specs));
-    $('#teamMsg').textContent = `已匯入 ${specs.length} 隻：${specs.map(teamZh).join('、')}`;
-    render();
+    const name = $('#teamName').value.trim() || `隊伍 ${teamLib.teams.length + 1}`;
+    const id = 't' + Date.now().toString(36);
+    teamLib.teams.push({ id, name, specs });
+    teamLib.active = id;
+    saveTeams(); team = specs;
+    $('#teamName').value = ''; $('#teamPaste').value = '';
+    renderTeamDlg(`已存成新隊伍並切換：${name}（${specs.length} 隻）`); render();
   } catch (e) {
     $('#teamMsg').textContent = '匯入失敗：' + e.message;
+  }
+};
+$('#teamUpdate').onclick = () => {
+  const at = activeTeam();
+  if (at.builtin) { $('#teamMsg').textContent = '內建隊伍 Meta 不能覆蓋，請改用「存成新隊伍」。'; return; }
+  try {
+    const specs = parsePaste($('#teamPaste').value);
+    at.specs = specs;
+    const name = $('#teamName').value.trim();
+    if (name) at.name = name;
+    saveTeams(); team = specs;
+    renderTeamDlg(`已覆蓋：${at.name}（${specs.length} 隻）`); render();
+  } catch (e) {
+    $('#teamMsg').textContent = '覆蓋失敗：' + e.message;
   }
 };
 
