@@ -91,7 +91,7 @@ for (const t of threats) {
   if (seenThreat.has(key)) continue;
   seenThreat.add(key);
   const s = speedOf(t);
-  const entry = { zh: t.zh, name: t.name, side: 'theirs', spe: s, mods: [] };
+  const entry = { zh: t.zh, name: t.name, side: 'theirs', modes: t.modes, spe: s, mods: [] };
   if (t.scarf || t.item === 'Choice Scarf') entry.mods.push({ label: '圍巾×1.5', value: Math.floor(s * 1.5) });
   speeds.push(entry);
 }
