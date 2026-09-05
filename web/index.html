@@ -100,13 +100,58 @@ dialog textarea{width:100%;min-height:180px;font:12.5px/1.4 ui-monospace,monospa
   display:flex;gap:8px;align-items:center;background:#123a5e;color:#cfe6ff;border:1px solid var(--acc)}
 .banner.err{background:#4a1d18;color:#ffd9d4;border-color:var(--foe)}
 .banner .x{margin-left:auto;font-weight:700;padding:0 4px}
-.teamrow{display:flex;gap:8px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--line)}
-.teamrow .info{display:flex;flex-direction:column;gap:2px;min-width:0}
-.teamrow .name{font-size:14.5px}
-.teamrow.sel .name{color:var(--acc);font-weight:700}
-.teamrow .name .badge{margin-left:6px}
-.teamrow .cnt{color:var(--tx2);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.teamrow .x{margin-left:auto;color:var(--tx2);font-weight:700;padding:0 6px;flex:none}
+/* ---- 隊伍分頁（清單 ↔ 編輯，參考 Showdown teambuilder 的兩層結構）---- */
+.badge.w{background:#4a3a12;color:#ffd24d}
+.btn.sm{padding:5px 10px;font-size:13px;font-weight:600}
+.btn.danger{color:var(--foe);border-color:#5b2b26}
+.tcard{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--line);
+  border-radius:12px;padding:10px 12px;margin:0 0 10px}
+.tcard.on{border-left-color:var(--mine)}
+.tcard .head{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.tcard .head b{font-size:15px}
+.tcard .head .badge{margin-left:0}
+.tcard .cnt{margin-left:auto;color:var(--tx2);font-size:12px}
+.tcard .mons{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.tcard .mon{display:inline-flex;align-items:center;gap:4px;background:var(--panel2);
+  border:1px solid var(--line);border-radius:8px;padding:3px 7px;font-size:13px}
+.tchip{font-size:10px;font-weight:700;color:#0b0f13;border-radius:4px;padding:0 4px}
+.tcard .acts{display:flex;gap:6px;flex-wrap:wrap}
+.tbbar{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.tbbar input{flex:1;min-width:0;background:var(--panel2);color:var(--tx);border:1px solid var(--line);
+  border-radius:8px;padding:7px 10px;font-size:15px;font-weight:700}
+.slot{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:0 0 8px}
+.slot.open{border-color:var(--acc)}
+.slot .shead{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.slot .shead b{font-size:15px}
+.slot .idx{width:20px;height:20px;flex:none;display:grid;place-items:center;background:var(--panel2);
+  border-radius:6px;color:var(--tx2);font-size:11px;font-weight:700}
+.slot .chev{margin-left:auto;color:var(--tx2)}
+.slot .sline{color:var(--tx);font-size:12.5px;margin-top:3px;padding-left:26px}
+.slot .sline.dim{color:var(--tx2)}
+.slot .sbody{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.fld{display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:relative}
+.fld>span{width:60px;flex:none;color:var(--tx2);font-size:12.5px}
+.fld select{flex:1;min-width:0}
+.fldbtn{flex:1;min-width:0;text-align:left;background:var(--panel2);color:var(--tx);
+  border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:14px}
+.fldbtn.on{border-color:var(--acc);color:var(--acc)}
+.picker{flex-basis:100%;background:var(--panel2);border:1px solid var(--acc);border-radius:10px;padding:8px}
+.picker input{width:100%}
+.picker .results{max-height:230px;overflow-y:auto}
+.evbox{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.evhead{color:var(--tx2);font-size:12.5px;margin-bottom:4px}
+.evhead b{color:var(--mine);font-size:14px}
+.evhead b.over{color:var(--foe)}
+.evrow{display:flex;align-items:center;gap:8px;margin:3px 0}
+.evname{width:42px;flex:none;color:var(--tx2);font-size:12.5px}
+.evrow input[type=range]{flex:1;min-width:0;accent-color:var(--acc)}
+.evrow input[type=number]{width:64px;flex:none;background:var(--panel);color:var(--tx);
+  border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-size:13px;text-align:right}
+.evsp{width:34px;flex:none;color:var(--tx2);font-size:11.5px;text-align:right}
+.evhead .over{color:var(--foe)}
+.result.none .zh{color:var(--tx2);font-size:13px}
+.mvbox{display:flex;flex-direction:column;gap:8px}
+#tbOut{width:100%;min-height:150px;font:12.5px/1.4 ui-monospace,monospace;margin:6px 0}
 footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
 #recogView{position:fixed;inset:0;z-index:50;background:var(--bg);overflow-y:auto;padding-bottom:20px}
 #recogView .bar{position:sticky;top:0;z-index:2;background:var(--panel);border-bottom:1px solid var(--line);
@@ -155,23 +200,9 @@ footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
   <button data-tab="reco"><span class="ic">🏆</span>推薦</button>
   <button data-tab="speed"><span class="ic">⚡</span>速度</button>
   <button data-tab="dmg"><span class="ic">💥</span>傷害</button>
+  <button data-tab="team"><span class="ic">🧩</span>隊伍</button>
   <button data-tab="rec"><span class="ic">📓</span>紀錄</button>
 </nav>
-<dialog id="teamDlg">
-  <h2>我的隊伍（存在手機 localStorage）</h2>
-  <div id="teamList"></div>
-  <p class="hint">點隊名切換使用中的隊伍；✕ 刪除（內建 Meta 不可刪、不可覆蓋）。</p>
-  <h2 style="margin-top:12px">新增／更新隊伍</h2>
-  <input type="search" id="teamName" placeholder="隊伍名稱（例：雨天隊）" style="width:100%;margin:6px 0" autocomplete="off">
-  <textarea id="teamPaste" placeholder="貼 Showdown paste：&#10;Sylveon @ Fairy Feather&#10;Ability: Pixilate&#10;EVs: 252 HP / 252 SpA / 16 Spe&#10;Modest Nature&#10;- Hyper Voice&#10;..."></textarea>
-  <div class="rowbtns">
-    <button class="btn" id="teamImport">存成新隊伍</button>
-    <button class="btn ghost" id="teamUpdate">覆蓋目前隊伍</button>
-    <button class="btn ghost" id="teamShow">帶出目前隊伍</button>
-    <button class="btn ghost" id="teamClose">關閉</button>
-  </div>
-  <p class="hint" id="teamMsg"></p>
-</dialog>
 <div id="recogView" hidden>
   <div class="bar">
     <h2>📷 辨識</h2>

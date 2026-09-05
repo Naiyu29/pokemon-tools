@@ -10,6 +10,9 @@ export function moveZh(name) {
 export function abilityZh(name) {
   return zhNames.abilities[toID(name)] || name;
 }
+export function itemZh(name) {
+  return name ? (zhNames.items[toID(name)] || name) : '';
+}
 
 export const TYPE_ZH = {
   Normal: '一般', Fire: '火', Water: '水', Electric: '電', Grass: '草', Ice: '冰',
