@@ -681,6 +681,8 @@ function showBanner(note) {
 // ---- 截圖辨識（M4，端上 sprite 比對，辨識對手）----
 initRecognize({
   zhOf: n => zhByName.get(n) || n,
+  // 對手候選的名單保險：威脅庫（賽季更新時自動擴充辨識名單）
+  threatNames: threats.flatMap(t => [t.name, t.mega].filter(Boolean)),
   search: q => search(q),
   onAdd: n => {
     if (state.foes.length >= 6) return false;

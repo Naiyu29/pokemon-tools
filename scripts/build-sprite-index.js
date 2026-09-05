@@ -95,8 +95,11 @@ function smogonId(psName) {
     const m = psName.match(/^(.*?)-(Mega(?:-[XY])?)$/);
     if (m) { base = m[1]; forme = m[2]; }
   }
-  const baseId = base.normalize('NFD').replace(/[\u0300-\u036f]/g, '') // é→e
-    .toLowerCase().replace(/[^a-z0-9]+/g, '');
+  // 檔名規則（實測）：撇號/點/冒號刪除、連字號與空格→底線（kommo_o、mr_mime、
+  // tapu_koko、porygon_z、type_null…）；重音字母去音標（flabebe）
+  const baseId = base.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/[’'.:]/g, '').replace(/[\s-]+/g, '_')
+    .replace(/[^a-z0-9_]/g, '');
   if (!forme) return baseId;
   const f = forme.toLowerCase().replace(/[’'.%]/g, '').replace(/[\s-]+/g, '_');
   return `${baseId}-o${f}`;
