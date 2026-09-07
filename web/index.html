@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101418">
+<title>Champions 對戰工具</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+:root{
+  --bg:#101418; --panel:#1a2027; --panel2:#222a33; --line:#2e3843;
+  --tx:#e8edf2; --tx2:#9aa7b5; --acc:#4da3ff; --mine:#57d18a; --foe:#ff7a6e;
+  --ko1:#ff5c4d; --ko1r:#ff9d4d; --ko2:#ffd24d; --ko2r:#c9e05a; --ko3:#7fd0ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Noto Sans TC",sans-serif}
+body{padding-bottom:64px}
+header{position:sticky;top:0;z-index:10;background:var(--panel);border-bottom:1px solid var(--line);
+  padding:8px 12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+header h1{font-size:16px;margin-right:auto}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{background:none;border:none;color:var(--tx2);padding:5px 10px;font-size:13px}
+.seg button.on{background:var(--acc);color:#03121f;font-weight:700}
+select,input[type=search],textarea{background:var(--panel2);color:var(--tx);border:1px solid var(--line);
+  border-radius:8px;padding:6px 10px;font-size:14px}
+main{padding:10px 12px;max-width:720px;margin:0 auto}
+.tabbar{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--panel);
+  border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabbar button{flex:1;background:none;border:none;color:var(--tx2);padding:10px 0 8px;font-size:13px}
+.tabbar button.on{color:var(--acc);font-weight:700}
+.tabbar button .ic{display:block;font-size:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 10px}
+.card h2{font-size:14px;color:var(--tx2);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);
+  border-radius:16px;padding:4px 10px;font-size:14px}
+.chip.known{border-color:var(--acc)}
+.chip.unknown{border-color:#888;border-style:dashed}
+.chip .x{color:var(--tx2);font-weight:700;padding:0 2px}
+.chip.sel{background:var(--acc);color:#03121f;font-weight:700}
+.hint{color:var(--tx2);font-size:12.5px;margin:4px 0}
+.results{margin-top:6px}
+.result{display:flex;align-items:center;gap:8px;padding:8px 6px;border-bottom:1px solid var(--line)}
+.result:active{background:var(--panel2)}
+.result .zh{font-size:15px}
+.result .en{color:var(--tx2);font-size:12.5px}
+.badge{font-size:11px;border-radius:6px;padding:1px 6px;margin-left:auto}
+.badge.k{background:#123a5e;color:var(--acc)}
+.badge.u{background:#333;color:var(--tx2)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{padding:5px 6px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--tx2);font-weight:500;font-size:12px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tag{font-size:11.5px;font-weight:700;border-radius:5px;padding:1px 6px;color:#03121f;display:inline-block}
+.tag.ko1{background:var(--ko1);color:#fff}.tag.ko1r{background:var(--ko1r)}
+.tag.ko2{background:var(--ko2)}.tag.ko2r{background:var(--ko2r)}
+.tag.ko3{background:var(--ko3)}.tag.ko0{background:#3a4653;color:var(--tx2)}
+.mine{color:var(--mine)}.foename{color:var(--foe)}
+.spebar{display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid var(--line);font-size:14px}
+.spebar .val{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:700}
+.spebar .mod{color:var(--tx2);font-size:11.5px}
+.same{background:#3a2d10}
+.reco{border-left:4px solid var(--line)}
+.reco.pick{border-left-color:var(--mine)}
+.reco .head{display:flex;align-items:center;gap:8px}
+.reco .score{margin-left:auto;font-weight:800;font-size:17px}
+.reco ul{margin:6px 0 0 18px;color:var(--tx2);font-size:13px}
+.leadtag{background:var(--mine);color:#03140a;font-size:11px;font-weight:800;border-radius:6px;padding:1px 6px}
+.foe-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:8px}
+.group-title{margin:10px 0 2px;font-size:14px;font-weight:700}
+.toggles{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tgl{background:var(--panel2);border:1px solid var(--line);color:var(--tx2);border-radius:8px;padding:5px 10px;font-size:13px}
+.tgl.on{border-color:var(--acc);color:var(--acc);font-weight:700}
+dialog{background:var(--panel);color:var(--tx);border:1px solid var(--line);border-radius:12px;
+  width:min(94vw,560px);padding:14px}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+dialog textarea{width:100%;min-height:180px;font:12.5px/1.4 ui-monospace,monospace;margin:8px 0}
+.btn{background:var(--acc);color:#03121f;border:none;border-radius:8px;padding:8px 14px;font-size:14px;font-weight:700}
+.btn.ghost{background:var(--panel2);color:var(--tx);border:1px solid var(--line)}
+.rowbtns{display:flex;gap:8px;flex-wrap:wrap}
+.empty{color:var(--tx2);text-align:center;padding:30px 0}
+footer.note{color:var(--tx2);font-size:11.5px;padding:8px 2px}
+</style>
+</head>
+<body>
+<header>
+  <h1>⚔️ Champions</h1>
+  <div class="seg" id="modeSeg">
+    <button data-v="doubles">雙打</button><button data-v="singles">單打</button>
+  </div>
+  <select id="weatherSel" title="天氣">
+    <option value="">無天氣</option><option value="Sun">晴天</option>
+    <option value="Rain">雨天</option><option value="Sand">沙暴</option><option value="Snow">雪天</option>
+  </select>
+  <button class="tgl" id="teamBtn">隊伍</button>
+</header>
+<main id="main"></main>
+<nav class="tabbar" id="tabbar">
+  <button data-tab="foes"><span class="ic">🎯</span>對手</button>
+  <button data-tab="reco"><span class="ic">🏆</span>推薦</button>
+  <button data-tab="speed"><span class="ic">⚡</span>速度</button>
+  <button data-tab="dmg"><span class="ic">💥</span>傷害</button>
+</nav>
+<dialog id="teamDlg">
+  <h2>我的隊伍（存在手機 localStorage）</h2>
+  <p class="hint">貼 Showdown paste 後按「匯入」；「還原預設」回到內建隊伍 Meta。</p>
+  <textarea id="teamPaste" placeholder="Sylveon @ Fairy Feather&#10;Ability: Pixilate&#10;EVs: 252 HP / 252 SpA / 16 Spe&#10;Modest Nature&#10;- Hyper Voice&#10;..."></textarea>
+  <div class="rowbtns">
+    <button class="btn" id="teamImport">匯入</button>
+    <button class="btn ghost" id="teamReset">還原預設</button>
+    <button class="btn ghost" id="teamShow">顯示目前隊伍 paste</button>
+    <button class="btn ghost" id="teamClose">關閉</button>
+  </div>
+  <p class="hint" id="teamMsg"></p>
+</dialog>
+<script src="bundle.js"></script>
+</body>
+</html>
