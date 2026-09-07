@@ -54,6 +54,7 @@ npm run build   # 重建搜尋索引 + 打包到 docs/
 - `data/zh-names.json`：招式／特性中文名對照（產生自 `src/build-zh-names.js`，來源 PokeAPI CSV；`npm run build:zh-names` 重建，需網路，新招式出現時才需要跑）
 - `src/analyze.js`：Node 端傷害分析（輸出 `out/analysis.json`）
 - `out/report.html`：手機版賽季報告（自包含 HTML）
+- `reports/weekly/`：對戰環境週報（每週搜尋當週 meta／賽事／新版本預告，比對威脅庫並給隊伍建議）
 
 ## 賽季更新（M2 SOP）
 
