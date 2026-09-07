@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Champions 環境週報 W36</title>
+<meta name="description" content="Pokémon Champions 對戰環境週報 2026-W36：M-B 收尾、M-C 預告與隊伍 Meta 的建議">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&display=swap">
+<style>
+:root{
+  --bg:#eef2f6; --panel:#ffffff; --panel2:#f4f7fa; --line:#d5dde6;
+  --tx:#14202b; --tx2:#5b6b7b; --acc:#1f6fd0; --acc-ink:#ffffff;
+  --mine:#1f9d5a; --foe:#d94f3f; --warn:#b8791a; --warn-bg:#fff4e0;
+  --mine-bg:#e6f6ec; --foe-bg:#fdeae7; --acc-bg:#e8f1fc;
+  --t-dragon:#6f35fc; --t-ice:#96d9d6; --t-fly:#a98ff3; --t-steel:#b7b7ce; --t-bug:#a6b91a;
+  --t-dark:#705746; --t-ghost:#735797; --t-fight:#c22e28; --t-grass:#7ac74c; --t-ground:#e2bf65;
+  --t-fire:#ee8130; --t-fairy:#d685ad; --t-water:#6390f0; --t-poison:#a33ea1;
+  --shadow:0 1px 2px rgba(20,32,43,.06),0 6px 20px rgba(20,32,43,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101418; --panel:#1a2027; --panel2:#222a33; --line:#2e3843;
+    --tx:#e8edf2; --tx2:#9aa7b5; --acc:#4da3ff; --acc-ink:#03121f;
+    --mine:#57d18a; --foe:#ff7a6e; --warn:#ffc65c; --warn-bg:#3a2d12;
+    --mine-bg:#173226; --foe-bg:#3b2320; --acc-bg:#16293d;
+    --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101418; --panel:#1a2027; --panel2:#222a33; --line:#2e3843;
+  --tx:#e8edf2; --tx2:#9aa7b5; --acc:#4da3ff; --acc-ink:#03121f;
+  --mine:#57d18a; --foe:#ff7a6e; --warn:#ffc65c; --warn-bg:#3a2d12;
+  --mine-bg:#173226; --foe-bg:#3b2320; --acc-bg:#16293d;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--tx);margin:0;
+  font:15px/1.65 "Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+  -webkit-font-smoothing:antialiased}
+main{max-width:720px;margin:0 auto;padding:0 14px 56px}
+h1,h2,h3{font-family:"Noto Serif TC","Noto Sans TC",serif;text-wrap:balance;margin:0}
+h1{font-size:28px;font-weight:900;line-height:1.25;letter-spacing:-.01em}
+h2{font-size:19px;font-weight:700;margin:0 0 12px}
+h3{font-size:15px;font-weight:700;color:var(--tx2);margin:0 0 8px}
+p{margin:0 0 10px}
+a{color:var(--acc)}
+strong{font-weight:700}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx2);font-weight:500}
+.masthead{padding:26px 0 18px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.masthead .meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--tx2)}
+.masthead .meta b{color:var(--tx);font-weight:500}
+.notice{margin:14px 0 0;padding:10px 12px;border-left:3px solid var(--warn);background:var(--warn-bg);
+  border-radius:0 8px 8px 0;font-size:13.5px;color:var(--tx)}
+section{padding:22px 0 6px;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:none}
+.lede{display:flex;flex-direction:column;gap:10px;counter-reset:pt}
+.lede li{list-style:none;position:relative;padding-left:34px}
+.lede li::before{counter-increment:pt;content:counter(pt);position:absolute;left:0;top:2px;
+  width:24px;height:24px;border-radius:50%;background:var(--acc);color:var(--acc-ink);
+  font-weight:700;font-size:13px;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.lede li.hot::before{background:var(--foe);color:#fff}
+.tablewrap{overflow-x:auto;margin:0 0 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:420px}
+th,td{padding:8px 10px;text-align:left;vertical-align:top;border-top:1px solid var(--line)}
+thead th{border-top:none;background:var(--panel2);color:var(--tx2);font-weight:500;font-size:12px;letter-spacing:.04em;white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr:first-child td{border-top:none}
+.chip{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11.5px;font-weight:500;line-height:1.6;white-space:nowrap;border:1px solid transparent}
+.chip.ok{background:var(--mine-bg);color:var(--mine)}
+.chip.diff{background:var(--foe-bg);color:var(--foe)}
+.chip.tbd{background:var(--warn-bg);color:var(--warn)}
+.chip.acc{background:var(--acc-bg);color:var(--acc)}
+.type{display:inline-block;padding:0 7px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;line-height:1.7;
+  text-shadow:0 0 2px rgba(0,0,0,.35);margin-right:2px;vertical-align:1px}
+.type.ice,.type.steel,.type.ground{color:#1a1a1a;text-shadow:none}
+.dragon{background:var(--t-dragon)}.ice{background:var(--t-ice)}.fly{background:var(--t-fly)}.steel{background:var(--t-steel)}
+.bug{background:var(--t-bug)}.dark{background:var(--t-dark)}.ghost{background:var(--t-ghost)}.fight{background:var(--t-fight)}
+.grass{background:var(--t-grass)}.ground{background:var(--t-ground)}.fire{background:var(--t-fire)}.fairy{background:var(--t-fairy)}
+.water{background:var(--t-water)}.poison{background:var(--t-poison)}
+.cards{display:grid;gap:10px;margin:0 0 14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;box-shadow:var(--shadow)}
+.card h4{margin:0 0 6px;font-size:14.5px;font-weight:700;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.card .row{display:grid;grid-template-columns:44px 1fr;gap:8px;font-size:13.5px;margin-top:4px}
+.card .row .k{font-size:11.5px;color:var(--tx2);letter-spacing:.06em;padding-top:2px}
+.card .row.foe .k{color:var(--foe)}
+.card .row.mine .k{color:var(--mine)}
+.speed{margin:6px 0 16px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 12px 8px;box-shadow:var(--shadow)}
+.speed .axis{position:relative;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--line),var(--acc));margin:34px 8px 42px}
+.speed .tick{position:absolute;top:-4px;width:2px;height:14px;background:var(--tx2);transform:translateX(-50%)}
+.speed .tick.mine{background:var(--mine)}
+.speed .tick.foe{background:var(--foe)}
+.speed .tick span{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11.5px;line-height:1.2;text-align:center}
+.speed .tick span b{display:block;font-variant-numeric:tabular-nums;font-size:13px;color:var(--tx)}
+.speed .tick.up span{bottom:18px}
+.speed .tick.dn span{top:18px}
+.speed .tick.l span{left:auto;right:4px;transform:none;text-align:right}
+.speed .tick.r span{left:4px;transform:none;text-align:left}
+.speed .tick.mine span{color:var(--mine)}
+.speed .tick.foe span{color:var(--foe)}
+.speed .cap{font-size:12px;color:var(--tx2);margin:0}
+.todo{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-direction:column;gap:8px}
+.todo li{display:grid;grid-template-columns:20px 1fr;gap:8px;font-size:14px}
+.todo li::before{content:"";width:16px;height:16px;margin-top:4px;border:1.5px solid var(--tx2);border-radius:4px}
+.todo li.bug::before{border-color:var(--foe)}
+.tips{display:flex;flex-direction:column;gap:8px;padding-left:0;margin:0 0 14px;list-style:none}
+.tips li{padding:9px 12px;border-radius:8px;background:var(--acc-bg);font-size:14px}
+.sources{font-size:12.5px;color:var(--tx2);padding-left:18px;margin:0;line-height:1.6}
+.sources li{margin-bottom:4px;word-break:break-all}
+.small{font-size:12.5px;color:var(--tx2)}
+@media (min-width:600px){ .cards{grid-template-columns:1fr 1fr} }
+@media (prefers-reduced-motion: no-preference){ a{transition:color .15s} }
+a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2px}
+</style>
+</head>
+<body>
+<main>
+<header class="masthead">
+  <div class="eyebrow">Pokémon Champions · 對戰環境週報 · 試作第 1 期</div>
+  <h1>M-B 收尾週，M-C 明天開跑</h1>
+  <div class="meta">
+    <span>期間 <b>2026-09-01 ～ 09-07</b></span>
+    <span>賽季 <b>Regulation M-B · Season 5</b></span>
+    <span>我方隊伍 <b>Meta（晴天核心）</b></span>
+  </div>
+  <div class="notice">資料來自 WebSearch 摘要（Pokémon Zone、Pikalytics、Game8、Bulbagarden、rotomlabs、pokemon.com）。統計站原頁在雲端環境被擋，未逐頁核對；標「未確認」者以遊戲內 Roster Info 為準。對手配置一律為推估。</div>
+</header>
+
+<section>
+  <h2>結論</h2>
+  <ol class="lede">
+    <li class="hot"><strong>本週是 Regulation M-B 最後一週。</strong>M-C 於美國時間 9/8 19:00 PDT 開跑（台灣 <strong>9/9 10:00</strong>），到 12/1 止。</li>
+    <li>M-C 新增 <strong>24 隻寶可夢＋6 個 Mega</strong>，含 3 個「Z Mega」（阿勃梭魯 Z、路卡利歐 Z、烈咬陸鯊 Z）。確認新進的關鍵角色：<strong>轟擂金剛猩、戟脊龍、Mega 暴飛龍、Mega 具甲武者</strong>。</li>
+    <li>現行威脅庫（09-03 版）<strong>9/9 起會過時</strong>。建議 <strong>9/16 前後</strong>再跑賽季更新 SOP，等第一批統計出來再改，不憑預測改。</li>
+    <li>隊伍「Meta」的晴天骨架在 M-C 仍可用，兩個壓力點：<strong>地震被削</strong>（金剛猩青草場地減半、陸鯊 Z 漂浮免疫）與<strong>冰系覆蓋</strong>（戟脊龍打陸鯊 4 倍）。<strong>仙子伊布的重要性上升</strong>，第一週先不換人。</li>
+  </ol>
+</section>
+
+<section>
+  <h2>一、本週 M-B 環境</h2>
+  <h3>單打（Pokémon Zone，09-07 更新）</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th class="num">#</th><th>寶可夢</th><th>與威脅庫比對</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>烈咬陸鯊 <span class="small">Garchomp</span></td><td><span class="chip ok">一致</span></td></tr>
+      <tr><td class="num">2</td><td>西獅海壬 <span class="small">Primarina</span></td><td><span class="chip diff">配置有差</span> 統計為 Leftovers／Mystic Water＋Calm Mind 43%；威脅庫寫 Assault Vest＋Haze</td></tr>
+      <tr><td class="num">3</td><td>魔幻假面喵 <span class="small">Meowscarada</span></td><td><span class="chip ok">一致</span></td></tr>
+      <tr><td class="num">4</td><td>鋁鋼橋龍 <span class="small">Archaludon</span></td><td><span class="chip ok">一致</span></td></tr>
+      <tr><td class="num">5</td><td>謎擬Ｑ <span class="small">Mimikyu</span></td><td><span class="chip ok">一致</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Primarina 的 Protect 使用率 91%，樣本疑為雙打；Pikalytics 頁面未標明格式。</p>
+
+  <h3>雙打（Pokémon Zone，09-04 更新）</h3>
+  <p>使用率最上層：Garchomp、Sinistcha、Basculegion、Whimsicott、Kingambit，與威脅庫一致。8 月底某賽事 Kingambit 出現在 40% 隊伍。</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>核心</th><th class="num">佔樣本</th><th>對我方的意義</th></tr></thead>
+    <tbody>
+      <tr><td>Charizard-Mega-Y＋Garchomp</td><td class="num">16.3%（2155 隊）</td><td>與我方同型核心，<strong>鏡像對局仍是最常見對局</strong></td></tr>
+      <tr><td>Charizard-Mega-Y＋Garchomp＋Kingambit</td><td class="num">最多的三人核心</td><td>仆斬將軍收尾，注意威嚇會觸發不屈之心</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>賽事：2026 世界賽（8/28～30 舊金山，Champions 規則）</h3>
+  <div class="cards">
+    <div class="card">
+      <h4>冠軍 Takuma Yamazaki</h4>
+      <p>Mega 花葉蒂（永恆之花）／<strong>Mega 快龍</strong>／仆斬將軍／大狃拉／幽尾玄魚／烈咬陸鯊。「Big Six」改版，Mega 快龍是他的 meta call。</p>
+    </div>
+    <div class="card">
+      <h4>亞軍 Hiroshi Onishi</h4>
+      <p>標準 Big Six：仆斬將軍／幽尾玄魚／烈咬陸鯊／Mega 花葉蒂／Mega 噴火龍 Y／大狃拉（或風妖精）。</p>
+    </div>
+  </div>
+  <p>Big Six 的打法是「噴火龍＋陸鯊前排範圍爆發，殘局幽尾玄魚 Last Respects 收割」。我方對這套的關鍵：<strong>超壞星 Wide Guard 擋 Heat Wave／Earthquake／Rock Slide</strong>，並且不要把幽尾玄魚留到最後。威脅庫目前<strong>沒有 Mega 快龍</strong>。</p>
+</section>
+
+<section>
+  <h2>二、M-C 預告（9/9 台灣 10:00 上線）</h2>
+  <h3>六個新 Mega</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Mega</th><th>屬性</th><th>特性</th><th>狀態</th></tr></thead>
+    <tbody>
+      <tr><td>暴飛龍 Mega</td><td><span class="type dragon">龍</span><span class="type fly">飛行</span></td><td>Aerilate（推定）</td><td><span class="chip tbd">特性未見官方明講</span></td></tr>
+      <tr><td>具甲武者 Mega</td><td><span class="type bug">蟲</span><span class="type steel">鋼</span></td><td>未公布（傳聞 Shell Armor）</td><td><span class="chip tbd">未確認</span></td></tr>
+      <tr><td>戟脊龍 Mega</td><td><span class="type dragon">龍</span><span class="type ice">冰</span></td><td>未公布</td><td><span class="chip tbd">未確認</span></td></tr>
+      <tr><td>阿勃梭魯 Z</td><td><span class="type dark">惡</span><span class="type ghost">幽靈</span></td><td>Sharpness（切割招 ×1.5）</td><td><span class="chip ok">rotomlabs</span></td></tr>
+      <tr><td>路卡利歐 Z</td><td><span class="type fight">格鬥</span><span class="type steel">鋼</span></td><td>Aura Guard（接觸招傷害減半）；速 151、特攻 164</td><td><span class="chip ok">rotomlabs</span></td></tr>
+      <tr><td>烈咬陸鯊 Z</td><td><span class="type dragon">龍</span><span class="type ground">地面</span></td><td>Levitate</td><td><span class="chip ok">rotomlabs</span> <span class="chip tbd">dex 寫純龍，待確認</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>速度線：三個 Z Mega 共同點是基礎速度 151</h3>
+  <div class="speed">
+    <div class="axis">
+      <div class="tick mine up l" style="left:100%"><span><b>253</b>圍巾陸鯊</span></div>
+      <div class="tick mine dn" style="left:96%"><span><b>246</b>晴天妙蛙花</span></div>
+      <div class="tick foe up l" style="left:82%"><span><b>223</b>Z Mega 極限速</span></div>
+      <div class="tick mine dn" style="left:40%"><span><b>152</b>噴火龍 Y</span></div>
+      <div class="tick mine up r" style="left:0%"><span><b>82</b>仙子伊布</span></div>
+    </div>
+    <p class="cap">Lv50、IV31、+性格 252 努力值計。Z Mega 比噴火龍、熾焰、仙子伊布、超壞星都快，只輸圍巾陸鯊與晴天下的葉綠素妙蛙花。</p>
+  </div>
+
+  <p class="small">24 隻新寶可夢的完整名單這次沒抓到（來源網站被擋，搜尋摘要只確認 Rillaboom、Baxcalibur、Salamence、Golisopod）。遊戲內路徑：Recruit → Recruit Pokémon → Roster Info → Pokémon Featured in This Roster。另有一篇寫 26 隻，以官方 24 為準。</p>
+
+  <h3>對隊伍「Meta」的影響</h3>
+  <div class="cards">
+    <div class="card">
+      <h4>轟擂金剛猩 <span class="type grass">草</span><span class="chip acc">Grassy Surge</span></h4>
+      <div class="row foe"><span class="k">壓力</span><span>青草場地把<strong>地震傷害減半</strong>；Grassy Glide 先制</span></div>
+      <div class="row mine"><span class="k">解法</span><span>噴火龍／妙蛙花／熾焰全抗草。陸鯊改用 Dragon Claw／Stomping Tantrum 出手</span></div>
+    </div>
+    <div class="card">
+      <h4>戟脊龍 <span class="type dragon">龍</span><span class="type ice">冰</span></h4>
+      <div class="row foe"><span class="k">壓力</span><span>冰招打<strong>陸鯊 4 倍、妙蛙花 2 倍</strong>；Glaive Rush 高威力</span></div>
+      <div class="row mine"><span class="k">解法</span><span><strong>仙子伊布 Hyper Voice 2 倍</strong>；熾焰威嚇＋Fake Out；超壞星 Baneful Bunker 換血</span></div>
+    </div>
+    <div class="card">
+      <h4>Mega 暴飛龍 <span class="type dragon">龍</span><span class="type fly">飛行</span></h4>
+      <div class="row foe"><span class="k">壓力</span><span>飛行本系打妙蛙花 2 倍；速 120 壓過噴火龍</span></div>
+      <div class="row mine"><span class="k">解法</span><span>仙子伊布 2 倍；超壞星硬受；圍巾陸鯊 Rock Slide</span></div>
+    </div>
+    <div class="card">
+      <h4>烈咬陸鯊 Z <span class="type dragon">龍</span><span class="type ground">地面</span><span class="chip acc">Levitate</span></h4>
+      <div class="row foe"><span class="k">壓力</span><span><strong>我方地震對它無效</strong>；速 223 壓過噴火龍</span></div>
+      <div class="row mine"><span class="k">解法</span><span>仙子伊布 2 倍；噴火龍改 Heat Wave 中性打，Ancient Power 效率差</span></div>
+    </div>
+    <div class="card">
+      <h4>路卡利歐 Z <span class="type fight">格鬥</span><span class="type steel">鋼</span><span class="chip acc">Aura Guard</span></h4>
+      <div class="row foe"><span class="k">壓力</span><span>鋼招打仙子伊布 2 倍、格鬥打熾焰 2 倍；速 223</span></div>
+      <div class="row mine"><span class="k">解法</span><span><strong>圍巾陸鯊地震 2 倍</strong>，非接觸招不吃 Aura Guard 減半；晴天 Heat Wave 2 倍</span></div>
+    </div>
+    <div class="card">
+      <h4>阿勃梭魯 Z <span class="type dark">惡</span><span class="type ghost">幽靈</span><span class="chip acc">Sharpness</span></h4>
+      <div class="row foe"><span class="k">壓力</span><span><strong>免疫 Fake Out</strong>，熾焰的開場節奏失效</span></div>
+      <div class="row mine"><span class="k">解法</span><span>仙子伊布 2 倍；Darkest Lariat 中性</span></div>
+    </div>
+    <div class="card">
+      <h4>Mega 具甲武者 <span class="type bug">蟲</span><span class="type steel">鋼</span></h4>
+      <div class="row foe"><span class="k">壓力</span><span>First Impression 先制</span></div>
+      <div class="row mine"><span class="k">解法</span><span>晴天 Heat Wave <strong>4 倍</strong>，直接處理</span></div>
+    </div>
+  </div>
+
+  <h3>第一週建議：不改人，改習慣</h3>
+  <ul class="tips">
+    <li>選 4 時<strong>仙子伊布優先度提高</strong>：對面有戟脊龍／暴飛龍／陸鯊 Z 任一隻就帶。</li>
+    <li>對面有轟擂金剛猩時，陸鯊當作「沒有地震」來盤算，圍巾主要換速度線用。</li>
+    <li>對面有阿勃梭魯 Z，熾焰開場不押 Fake Out，改 Parting Shot 或直接 Flare Blitz。</li>
+    <li>每場用工具「📓紀錄」記勝負與對手，9/16 回頭看要不要換人。候選：把超壞星換成能打冰系的鋼／鬥系。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>三、工具與資料待辦</h2>
+  <p class="small">給下次「更新威脅庫」用，SOP 在 skills-src/pokemon-champions/references/season-update.md。</p>
+  <ul class="todo">
+    <li>9/16 前後跑賽季更新 SOP：M-C 第一批統計出來後再改。</li>
+    <li>新增：Rillaboom、Baxcalibur（含 Mega）、Golisopod-Mega、Absol-Mega-Z、Lucario-Mega-Z、Garchomp-Mega-Z、Dragonite-Mega（世界賽冠軍用）。</li>
+    <li>megaAbility 覆寫：Garchomp-Mega-Z→Levitate、Lucario-Mega-Z→Aura Guard、Absol-Mega-Z→Sharpness（dex 內為佔位值）。Aura Guard、Sharpness 在 @smogon/calc 0.11.0 未必有實作，傷害矩陣要另外處理。</li>
+    <li class="bug">資料錯誤：威脅庫已有「暴飛龍(Mega)」列為 Mega 強勢，但 Mega 暴飛龍是 M-C 才加入，M-B 期間應不合法。確認來源後修 rank 註記。</li>
+    <li>Primarina 配置改 Leftovers＋Calm Mind 型。</li>
+    <li>補新招式／特性中文：npm run build:zh-names，再重建網頁。</li>
+    <li>若 24 隻名單有新形態，npm run build:sprites 補截圖辨識庫。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>來源</h2>
+  <ol class="sources">
+    <li>Pokémon Zone Season 5 單打統計（09-07）<br><a href="https://www.pokemon-zone.com/champions/ranked-seasons/singles/">pokemon-zone.com/champions/ranked-seasons/singles/</a></li>
+    <li>Pokémon Zone Season 5 雙打統計（09-04）<br><a href="https://www.pokemon-zone.com/champions/ranked-seasons/doubles/">pokemon-zone.com/champions/ranked-seasons/doubles/</a></li>
+    <li>Pikalytics Primarina<br><a href="https://www.pikalytics.com/pokedex/gen9championsvgc2026regma/Primarina">pikalytics.com/pokedex/gen9championsvgc2026regma/Primarina</a></li>
+    <li>pokemon.com M-C 公告<br><a href="https://www.pokemon.com/us/news/get-ready-for-regulation-set-m-c-in-pokemon-champions">pokemon.com/us/news/get-ready-for-regulation-set-m-c-in-pokemon-champions</a></li>
+    <li>Serebii（X）M-C 24 隻＋6 Mega<br><a href="https://x.com/SerebiiNet/status/2095182431133274553">x.com/SerebiiNet/status/2095182431133274553</a></li>
+    <li>rotomlabs Z Mega 特性<br><a href="https://rotomlabs.net/article/abilities-revealed-for-mega-absol-z-mega-lucario-z-and-mega-garchomp-z">rotomlabs.net/article/abilities-revealed-for-mega-absol-z-…</a></li>
+    <li>rotomlabs Mega 戟脊龍／具甲武者／暴飛龍<br><a href="https://rotomlabs.net/article/baxcalibur-golisopod-salamence-megas-champions-m-c">rotomlabs.net/article/baxcalibur-golisopod-salamence-megas-champions-m-c</a></li>
+    <li>Bulbagarden 2026 世界賽結果與隊伍<br><a href="https://bulbagarden.net/threads/2026-pokemon-vgc-world-championships-results-and-teams-takuma-yamazaki-is-your-2026-world-champion.311448/">bulbagarden.net/threads/…311448/</a></li>
+    <li>Pokémon Zone Big Six 核心<br><a href="https://www.pokemon-zone.com/champions/teams/basculegion+garchomp+kingambit+sneasler/">pokemon-zone.com/champions/teams/basculegion+garchomp+kingambit+sneasler/</a></li>
+  </ol>
+</section>
+</main>
+</body>
+</html>
