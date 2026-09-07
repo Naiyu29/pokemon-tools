@@ -103,6 +103,25 @@ tbody tr:first-child td{border-top:none}
 .sources{font-size:12.5px;color:var(--tx2);padding-left:18px;margin:0;line-height:1.6}
 .sources li{margin-bottom:4px;word-break:break-all}
 .small{font-size:12.5px;color:var(--tx2)}
+.en{font-size:11.5px;color:var(--tx2);font-weight:400}
+.team{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;margin:0 0 14px;box-shadow:var(--shadow)}
+.team .head{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;margin-bottom:8px}
+.team .head h4{margin:0;font-size:16px;font-family:"Noto Serif TC","Noto Sans TC",serif}
+.roster{display:grid;gap:6px;margin:0 0 10px}
+.mon{display:grid;grid-template-columns:1fr;gap:2px;padding:8px 10px;border-radius:8px;background:var(--panel2);font-size:13.5px}
+.mon .n{font-weight:700;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.mon .n .en{font-weight:400}
+.mon .s{color:var(--tx2);font-size:12.5px}
+.mon .m{display:flex;flex-wrap:wrap;gap:4px}
+.mon .m span{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:0 6px;font-size:12px;line-height:1.7}
+.btn{display:inline-block;background:var(--acc);color:var(--acc-ink);font-weight:700;text-decoration:none;padding:8px 14px;border-radius:8px;font-size:14px}
+.btn:focus-visible{outline:2px solid var(--tx);outline-offset:2px}
+.kv{display:grid;grid-template-columns:52px 1fr;gap:6px 8px;font-size:13.5px;margin:10px 0 0}
+.kv .k{font-size:11.5px;color:var(--tx2);letter-spacing:.06em;padding-top:2px}
+details{margin-top:10px}
+summary{cursor:pointer;font-size:13px;color:var(--acc)}
+pre{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:12px;line-height:1.5;overflow-x:auto;margin:8px 0 0}
+@media (min-width:600px){ .roster{grid-template-columns:1fr 1fr} }
 @media (min-width:600px){ .cards{grid-template-columns:1fr 1fr} }
 @media (prefers-reduced-motion: no-preference){ a{transition:color .15s} }
 a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2px}
@@ -110,7 +129,7 @@ a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2p
 
 <main>
 <header class="masthead">
-  <div class="eyebrow">Pokémon Champions · 對戰環境週報 · 試作第 1 期</div>
+  <div class="eyebrow">Pokémon Champions · 對戰環境週報 · 試作第 1 期 · 修訂版</div>
   <h1>M-B 收尾週，M-C 明天開跑</h1>
   <div class="meta">
     <span>期間 <b>2026-09-01 ～ 09-07</b></span>
@@ -124,7 +143,7 @@ a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2p
   <h2>結論</h2>
   <ol class="lede">
     <li class="hot"><strong>本週是 Regulation M-B 最後一週。</strong>M-C 於美國時間 9/8 19:00 PDT 開跑（台灣 <strong>9/9 10:00</strong>），到 12/1 止。</li>
-    <li>M-C 新增 <strong>24 隻寶可夢＋6 個 Mega</strong>，含 3 個「Z Mega」（阿勃梭魯 Z、路卡利歐 Z、烈咬陸鯊 Z）。確認新進的關鍵角色：<strong>轟擂金剛猩、戟脊龍、Mega 暴飛龍、Mega 具甲武者</strong>。</li>
+    <li>M-C 新增 <strong>24 隻寶可夢＋6 個 Mega</strong>，含 3 個「Z Mega」（阿勃梭魯 Z、路卡利歐 Z、烈咬陸鯊 Z）。確認新進的關鍵角色：<strong>轟擂金剛猩、戟脊龍、Mega 暴飛龍、Mega 具甲武者</strong>。本期另附<strong>單打、雙打各一隊新隊伍推薦</strong>（第四節），可一鍵匯入工具。</li>
     <li>現行威脅庫（09-03 版）<strong>9/9 起會過時</strong>。建議 <strong>9/16 前後</strong>再跑賽季更新 SOP，等第一批統計出來再改，不憑預測改。</li>
     <li>隊伍「Meta」的晴天骨架在 M-C 仍可用，兩個壓力點：<strong>地震被削</strong>（金剛猩青草場地減半、陸鯊 Z 漂浮免疫）與<strong>冰系覆蓋</strong>（戟脊龍打陸鯊 4 倍）。<strong>仙子伊布的重要性上升</strong>，第一週先不換人。</li>
   </ol>
@@ -137,21 +156,21 @@ a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2p
     <thead><tr><th class="num">#</th><th>寶可夢</th><th>與威脅庫比對</th></tr></thead>
     <tbody>
       <tr><td class="num">1</td><td>烈咬陸鯊 <span class="small">Garchomp</span></td><td><span class="chip ok">一致</span></td></tr>
-      <tr><td class="num">2</td><td>西獅海壬 <span class="small">Primarina</span></td><td><span class="chip diff">配置有差</span> 統計為 Leftovers／Mystic Water＋Calm Mind 43%；威脅庫寫 Assault Vest＋Haze</td></tr>
+      <tr><td class="num">2</td><td>西獅海壬 <span class="small">Primarina</span></td><td><span class="chip diff">配置有差</span> 統計為吃剩的東西／神秘水滴＋冥想 43%；威脅庫寫突擊背心＋黑霧</td></tr>
       <tr><td class="num">3</td><td>魔幻假面喵 <span class="small">Meowscarada</span></td><td><span class="chip ok">一致</span></td></tr>
       <tr><td class="num">4</td><td>鋁鋼橋龍 <span class="small">Archaludon</span></td><td><span class="chip ok">一致</span></td></tr>
       <tr><td class="num">5</td><td>謎擬Ｑ <span class="small">Mimikyu</span></td><td><span class="chip ok">一致</span></td></tr>
     </tbody>
   </table></div>
-  <p class="small">Primarina 的 Protect 使用率 91%，樣本疑為雙打；Pikalytics 頁面未標明格式。</p>
+  <p class="small">西獅海壬的守住使用率 91%，樣本疑為雙打；Pikalytics 頁面未標明格式。</p>
 
   <h3>雙打（Pokémon Zone，09-04 更新）</h3>
-  <p>使用率最上層：Garchomp、Sinistcha、Basculegion、Whimsicott、Kingambit，與威脅庫一致。8 月底某賽事 Kingambit 出現在 40% 隊伍。</p>
+  <p>使用率最上層：烈咬陸鯊、來悲粗茶、幽尾玄魚、風妖精、仆斬將軍，與威脅庫一致。8 月底某賽事仆斬將軍出現在 40% 隊伍。</p>
   <div class="tablewrap"><table>
     <thead><tr><th>核心</th><th class="num">佔樣本</th><th>對我方的意義</th></tr></thead>
     <tbody>
-      <tr><td>Charizard-Mega-Y＋Garchomp</td><td class="num">16.3%（2155 隊）</td><td>與我方同型核心，<strong>鏡像對局仍是最常見對局</strong></td></tr>
-      <tr><td>Charizard-Mega-Y＋Garchomp＋Kingambit</td><td class="num">最多的三人核心</td><td>仆斬將軍收尾，注意威嚇會觸發不屈之心</td></tr>
+      <tr><td>Mega 噴火龍 Y＋烈咬陸鯊</td><td class="num">16.3%（2155 隊）</td><td>與我方同型核心，<strong>鏡像對局仍是最常見對局</strong></td></tr>
+      <tr><td>Mega 噴火龍 Y＋烈咬陸鯊＋仆斬將軍</td><td class="num">最多的三人核心</td><td>仆斬將軍收尾，注意威嚇會觸發不屈之心</td></tr>
     </tbody>
   </table></div>
 
@@ -159,14 +178,14 @@ a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2p
   <div class="cards">
     <div class="card">
       <h4>冠軍 Takuma Yamazaki</h4>
-      <p>Mega 花葉蒂（永恆之花）／<strong>Mega 快龍</strong>／仆斬將軍／大狃拉／幽尾玄魚／烈咬陸鯊。「Big Six」改版，Mega 快龍是他的 meta call。</p>
+      <p>Mega 花葉蒂（永恆之花）／<strong>Mega 快龍</strong>／仆斬將軍／大狃拉／幽尾玄魚／烈咬陸鯊。「六大天王」（Big Six）改版，Mega 快龍是他的 meta call。</p>
     </div>
     <div class="card">
       <h4>亞軍 Hiroshi Onishi</h4>
-      <p>標準 Big Six：仆斬將軍／幽尾玄魚／烈咬陸鯊／Mega 花葉蒂／Mega 噴火龍 Y／大狃拉（或風妖精）。</p>
+      <p>標準六大天王：仆斬將軍／幽尾玄魚／烈咬陸鯊／Mega 花葉蒂／Mega 噴火龍 Y／大狃拉（或風妖精）。</p>
     </div>
   </div>
-  <p>Big Six 的打法是「噴火龍＋陸鯊前排範圍爆發，殘局幽尾玄魚 Last Respects 收割」。我方對這套的關鍵：<strong>超壞星 Wide Guard 擋 Heat Wave／Earthquake／Rock Slide</strong>，並且不要把幽尾玄魚留到最後。威脅庫目前<strong>沒有 Mega 快龍</strong>。</p>
+  <p>六大天王的打法是「噴火龍＋陸鯊前排範圍爆發，殘局幽尾玄魚掃墓收割」。我方對這套的關鍵：<strong>超壞星廣域防守擋熱風／地震／岩崩</strong>，並且不要把幽尾玄魚留到最後。威脅庫目前<strong>沒有 Mega 快龍</strong>。</p>
 </section>
 
 <section>
@@ -175,12 +194,12 @@ a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2p
   <div class="tablewrap"><table>
     <thead><tr><th>Mega</th><th>屬性</th><th>特性</th><th>狀態</th></tr></thead>
     <tbody>
-      <tr><td>暴飛龍 Mega</td><td><span class="type dragon">龍</span><span class="type fly">飛行</span></td><td>Aerilate（推定）</td><td><span class="chip tbd">特性未見官方明講</span></td></tr>
-      <tr><td>具甲武者 Mega</td><td><span class="type bug">蟲</span><span class="type steel">鋼</span></td><td>未公布（傳聞 Shell Armor）</td><td><span class="chip tbd">未確認</span></td></tr>
+      <tr><td>暴飛龍 Mega</td><td><span class="type dragon">龍</span><span class="type fly">飛行</span></td><td>飛行皮膚 <span class="en">Aerilate</span>（推定）</td><td><span class="chip tbd">特性未見官方明講</span></td></tr>
+      <tr><td>具甲武者 Mega</td><td><span class="type bug">蟲</span><span class="type steel">鋼</span></td><td>未公布（傳聞硬殼盔甲）</td><td><span class="chip tbd">未確認</span></td></tr>
       <tr><td>戟脊龍 Mega</td><td><span class="type dragon">龍</span><span class="type ice">冰</span></td><td>未公布</td><td><span class="chip tbd">未確認</span></td></tr>
-      <tr><td>阿勃梭魯 Z</td><td><span class="type dark">惡</span><span class="type ghost">幽靈</span></td><td>Sharpness（切割招 ×1.5）</td><td><span class="chip ok">rotomlabs</span></td></tr>
-      <tr><td>路卡利歐 Z</td><td><span class="type fight">格鬥</span><span class="type steel">鋼</span></td><td>Aura Guard（接觸招傷害減半）；速 151、特攻 164</td><td><span class="chip ok">rotomlabs</span></td></tr>
-      <tr><td>烈咬陸鯊 Z</td><td><span class="type dragon">龍</span><span class="type ground">地面</span></td><td>Levitate</td><td><span class="chip ok">rotomlabs</span> <span class="chip tbd">dex 寫純龍，待確認</span></td></tr>
+      <tr><td>阿勃梭魯 Z</td><td><span class="type dark">惡</span><span class="type ghost">幽靈</span></td><td>鋒銳 <span class="en">Sharpness</span>（切割招 ×1.5）</td><td><span class="chip ok">rotomlabs</span></td></tr>
+      <tr><td>路卡利歐 Z</td><td><span class="type fight">格鬥</span><span class="type steel">鋼</span></td><td>波導守護 <span class="en">Aura Guard</span>（接觸招傷害減半，中文名為暫譯）；速 151、特攻 164</td><td><span class="chip ok">rotomlabs</span></td></tr>
+      <tr><td>烈咬陸鯊 Z</td><td><span class="type dragon">龍</span><span class="type ground">地面</span></td><td>飄浮 <span class="en">Levitate</span></td><td><span class="chip ok">rotomlabs</span> <span class="chip tbd">dex 寫純龍，待確認</span></td></tr>
     </tbody>
   </table></div>
 
@@ -196,44 +215,44 @@ a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2p
     <p class="cap">Lv50、IV31、+性格 252 努力值計。Z Mega 比噴火龍、熾焰、仙子伊布、超壞星都快，只輸圍巾陸鯊與晴天下的葉綠素妙蛙花。</p>
   </div>
 
-  <p class="small">24 隻新寶可夢的完整名單這次沒抓到（來源網站被擋，搜尋摘要只確認 Rillaboom、Baxcalibur、Salamence、Golisopod）。遊戲內路徑：Recruit → Recruit Pokémon → Roster Info → Pokémon Featured in This Roster。另有一篇寫 26 隻，以官方 24 為準。</p>
+  <p class="small">24 隻新寶可夢的完整名單這次沒抓到（來源網站被擋，搜尋摘要只確認轟擂金剛猩、戟脊龍、暴飛龍、具甲武者）。遊戲內路徑：Recruit → Recruit Pokémon → Roster Info → Pokémon Featured in This Roster。另有一篇寫 26 隻，以官方 24 為準。</p>
 
   <h3>對隊伍「Meta」的影響</h3>
   <div class="cards">
     <div class="card">
-      <h4>轟擂金剛猩 <span class="type grass">草</span><span class="chip acc">Grassy Surge</span></h4>
-      <div class="row foe"><span class="k">壓力</span><span>青草場地把<strong>地震傷害減半</strong>；Grassy Glide 先制</span></div>
-      <div class="row mine"><span class="k">解法</span><span>噴火龍／妙蛙花／熾焰全抗草。陸鯊改用 Dragon Claw／Stomping Tantrum 出手</span></div>
+      <h4>轟擂金剛猩 <span class="type grass">草</span><span class="chip acc">青草製造者</span></h4>
+      <div class="row foe"><span class="k">壓力</span><span>青草場地把<strong>地震傷害減半</strong>；青草滑梯先制</span></div>
+      <div class="row mine"><span class="k">解法</span><span>噴火龍／妙蛙花／熾焰全抗草。陸鯊改用龍爪／跺腳出手</span></div>
     </div>
     <div class="card">
       <h4>戟脊龍 <span class="type dragon">龍</span><span class="type ice">冰</span></h4>
-      <div class="row foe"><span class="k">壓力</span><span>冰招打<strong>陸鯊 4 倍、妙蛙花 2 倍</strong>；Glaive Rush 高威力</span></div>
-      <div class="row mine"><span class="k">解法</span><span><strong>仙子伊布 Hyper Voice 2 倍</strong>；熾焰威嚇＋Fake Out；超壞星 Baneful Bunker 換血</span></div>
+      <div class="row foe"><span class="k">壓力</span><span>冰招打<strong>陸鯊 4 倍、妙蛙花 2 倍</strong>；巨劍突擊高威力</span></div>
+      <div class="row mine"><span class="k">解法</span><span><strong>仙子伊布巨聲 2 倍</strong>；熾焰威嚇＋擊掌奇襲；超壞星碉堡換血</span></div>
     </div>
     <div class="card">
       <h4>Mega 暴飛龍 <span class="type dragon">龍</span><span class="type fly">飛行</span></h4>
       <div class="row foe"><span class="k">壓力</span><span>飛行本系打妙蛙花 2 倍；速 120 壓過噴火龍</span></div>
-      <div class="row mine"><span class="k">解法</span><span>仙子伊布 2 倍；超壞星硬受；圍巾陸鯊 Rock Slide</span></div>
+      <div class="row mine"><span class="k">解法</span><span>仙子伊布 2 倍；超壞星硬受；圍巾陸鯊岩崩</span></div>
     </div>
     <div class="card">
-      <h4>烈咬陸鯊 Z <span class="type dragon">龍</span><span class="type ground">地面</span><span class="chip acc">Levitate</span></h4>
+      <h4>烈咬陸鯊 Z <span class="type dragon">龍</span><span class="type ground">地面</span><span class="chip acc">飄浮</span></h4>
       <div class="row foe"><span class="k">壓力</span><span><strong>我方地震對它無效</strong>；速 223 壓過噴火龍</span></div>
-      <div class="row mine"><span class="k">解法</span><span>仙子伊布 2 倍；噴火龍改 Heat Wave 中性打，Ancient Power 效率差</span></div>
+      <div class="row mine"><span class="k">解法</span><span>仙子伊布 2 倍；噴火龍改熱風中性打，原始之力效率差</span></div>
     </div>
     <div class="card">
-      <h4>路卡利歐 Z <span class="type fight">格鬥</span><span class="type steel">鋼</span><span class="chip acc">Aura Guard</span></h4>
+      <h4>路卡利歐 Z <span class="type fight">格鬥</span><span class="type steel">鋼</span><span class="chip acc">波導守護（暫譯）</span></h4>
       <div class="row foe"><span class="k">壓力</span><span>鋼招打仙子伊布 2 倍、格鬥打熾焰 2 倍；速 223</span></div>
-      <div class="row mine"><span class="k">解法</span><span><strong>圍巾陸鯊地震 2 倍</strong>，非接觸招不吃 Aura Guard 減半；晴天 Heat Wave 2 倍</span></div>
+      <div class="row mine"><span class="k">解法</span><span><strong>圍巾陸鯊地震 2 倍</strong>，非接觸招不吃波導守護減半；晴天熱風 2 倍</span></div>
     </div>
     <div class="card">
-      <h4>阿勃梭魯 Z <span class="type dark">惡</span><span class="type ghost">幽靈</span><span class="chip acc">Sharpness</span></h4>
-      <div class="row foe"><span class="k">壓力</span><span><strong>免疫 Fake Out</strong>，熾焰的開場節奏失效</span></div>
-      <div class="row mine"><span class="k">解法</span><span>仙子伊布 2 倍；Darkest Lariat 中性</span></div>
+      <h4>阿勃梭魯 Z <span class="type dark">惡</span><span class="type ghost">幽靈</span><span class="chip acc">鋒銳</span></h4>
+      <div class="row foe"><span class="k">壓力</span><span><strong>免疫擊掌奇襲</strong>，熾焰的開場節奏失效</span></div>
+      <div class="row mine"><span class="k">解法</span><span>仙子伊布 2 倍；ＤＤ金勾臂中性</span></div>
     </div>
     <div class="card">
       <h4>Mega 具甲武者 <span class="type bug">蟲</span><span class="type steel">鋼</span></h4>
-      <div class="row foe"><span class="k">壓力</span><span>First Impression 先制</span></div>
-      <div class="row mine"><span class="k">解法</span><span>晴天 Heat Wave <strong>4 倍</strong>，直接處理</span></div>
+      <div class="row foe"><span class="k">壓力</span><span>迎頭一擊先制</span></div>
+      <div class="row mine"><span class="k">解法</span><span>晴天熱風 <strong>4 倍</strong>，直接處理</span></div>
     </div>
   </div>
 
@@ -241,21 +260,171 @@ a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2p
   <ul class="tips">
     <li>選 4 時<strong>仙子伊布優先度提高</strong>：對面有戟脊龍／暴飛龍／陸鯊 Z 任一隻就帶。</li>
     <li>對面有轟擂金剛猩時，陸鯊當作「沒有地震」來盤算，圍巾主要換速度線用。</li>
-    <li>對面有阿勃梭魯 Z，熾焰開場不押 Fake Out，改 Parting Shot 或直接 Flare Blitz。</li>
+    <li>對面有阿勃梭魯 Z，熾焰開場不押擊掌奇襲，改拋下狠話或直接閃焰衝鋒。</li>
     <li>每場用工具「📓紀錄」記勝負與對手，9/16 回頭看要不要換人。候選：把超壞星換成能打冰系的鋼／鬥系。</li>
   </ul>
 </section>
 
 <section>
-  <h2>三、工具與資料待辦</h2>
+  <h2>四、新隊伍推薦：單打、雙打各一隊</h2>
+  <p class="small">配置為常見標準款推估，非官方統計；努力值以 252／4 標示（遊戲內 32 點≈252）。點「匯入工具」會直接存進隊伍庫並切換，之後可在「隊伍」分頁微調。</p>
+
+  <div class="team">
+    <div class="head"><h4>雙打：六大天王・Mega 快龍型</h4><span class="chip ok">2026 世界賽冠軍隊改版</span></div>
+    <div class="roster">
+      <div class="mon"><div class="n">花葉蒂（永恆之花）<span class="en">Floette-Eternal</span><span class="type fairy">妖精</span></div><div class="s">@ 花葉蒂進化石 ｜ 花幕→Mega 妖精氣場 ｜ 內斂 ｜ HP252／特攻252／特防4</div><div class="m"><span>月亮之力</span><span>魔法閃耀</span><span>冥想</span><span>守住</span></div></div>
+      <div class="mon"><div class="n">快龍<span class="en">Dragonite</span><span class="type dragon">龍</span><span class="type fly">飛行</span></div><div class="s">@ 快龍進化石 ｜ 多重鱗片 ｜ 膽小 ｜ 特攻252／速度252／HP4</div><div class="m"><span>龍之波動</span><span>熱風</span><span>神速</span><span>守住</span></div></div>
+      <div class="mon"><div class="n">仆斬將軍<span class="en">Kingambit</span><span class="type dark">惡</span><span class="type steel">鋼</span></div><div class="s">@ 蓮蒲果 ｜ 大將 ｜ 固執 ｜ HP252／攻擊252／特防4</div><div class="m"><span>仆斬</span><span>突襲</span><span>鐵頭</span><span>踢倒</span></div></div>
+      <div class="mon"><div class="n">大狃拉<span class="en">Sneasler</span><span class="type fight">格鬥</span><span class="type poison">毒</span></div><div class="s">@ 氣勢披帶 ｜ 毒手 ｜ 爽朗 ｜ 攻擊252／速度252／HP4</div><div class="m"><span>近身戰</span><span>剋命爪</span><span>擊掌奇襲</span><span>佯攻</span></div></div>
+      <div class="mon"><div class="n">幽尾玄魚<span class="en">Basculegion</span><span class="type water">水</span><span class="type ghost">幽靈</span></div><div class="s">@ 生命寶珠 ｜ 適應力 ｜ 固執 ｜ 攻擊252／速度252／HP4</div><div class="m"><span>波動衝</span><span>掃墓</span><span>水流噴射</span><span>守住</span></div></div>
+      <div class="mon"><div class="n">烈咬陸鯊<span class="en">Garchomp</span><span class="type dragon">龍</span><span class="type ground">地面</span></div><div class="s">@ 講究圍巾 ｜ 粗糙皮膚 ｜ 爽朗 ｜ 攻擊252／速度252／特防4</div><div class="m"><span>地震</span><span>岩崩</span><span>龍爪</span><span>跺腳</span></div></div>
+    </div>
+    <a class="btn" href="https://naiyu29.github.io/pokemon-tools/?team=%E5%85%AD%E5%A4%A7%E5%A4%A9%E7%8E%8B%E3%83%BBMega%E5%BF%AB%E9%BE%8D&amp;mode=doubles&amp;mons=floetteeternal,floettite,flowerveil,modest,252/0/0/252/4/0,moonblast,dazzlinggleam,calmmind,protect;dragonite,dragoninite,multiscale,timid,4/0/0/252/0/252,dragonpulse,heatwave,extremespeed,protect;kingambit,chopleberry,supremeoverlord,adamant,252/252/0/0/4/0,kowtowcleave,suckerpunch,ironhead,lowkick;sneasler,focussash,poisontouch,jolly,4/252/0/0/0/252,closecombat,direclaw,fakeout,feint;basculegion,lifeorb,adaptability,adamant,4/252/0/0/0/252,wavecrash,lastrespects,aquajet,protect;garchomp,choicescarf,roughskin,jolly,0/252/0/0/4/252,earthquake,rockslide,dragonclaw,stompingtantrum">匯入工具（雙打）</a>
+    <div class="kv">
+      <span class="k">為什麼</span><span>Yamazaki 在世界賽 8/28～30 用它奪冠，是本季驗證度最高的結構。跟你的晴天隊完全不同路線：<strong>不靠天氣</strong>，所以不怕雨隊、沙暴隊改天氣，也不會陷入 Mega 噴火龍 Y 鏡像。</span>
+      <span class="k">打法</span><span>前排大狃拉擊掌奇襲＋圍巾陸鯊地震／岩崩壓場，Mega 快龍熱風＋龍之波動補刀；後排仆斬將軍隊友倒越多越痛，殘局幽尾玄魚掃墓收割。兩顆 Mega 石帶著，<strong>每場只 Mega 一隻</strong>：對面多龍就 Mega 花葉蒂，對面偏鋼／草就 Mega 快龍。</span>
+      <span class="k">對 M-C</span><span>轟擂金剛猩青草場地會削陸鯊地震，改靠快龍熱風與大狃拉；戟脊龍冰招對陸鯊、快龍都 4 倍，選角時<strong>花葉蒂必帶</strong>。路卡利歐 Z 靠陸鯊地震（非接觸）處理；阿勃梭魯 Z 免疫擊掌奇襲，大狃拉改剋命爪直接打。</span>
+      <span class="k">弱點</span><span>妖精系（西獅海壬、風妖精、仙子伊布）同時壓龍與大狃拉，仆斬將軍鐵頭是唯一解。沒有威嚇也沒有廣域防守，吃對面範圍招要靠守住讀招。上手門檻比晴天隊高。</span>
+    </div>
+    <details><summary>Showdown paste（複製到計算機用）</summary><pre>Floette-Eternal @ Floettite
+Ability: Flower Veil
+EVs: 252 HP / 252 SpA / 4 SpD
+Modest Nature
+- Moonblast
+- Dazzling Gleam
+- Calm Mind
+- Protect
+
+Dragonite @ Dragoninite
+Ability: Multiscale
+EVs: 4 HP / 252 SpA / 252 Spe
+Timid Nature
+- Dragon Pulse
+- Heat Wave
+- Extreme Speed
+- Protect
+
+Kingambit @ Chople Berry
+Ability: Supreme Overlord
+EVs: 252 HP / 252 Atk / 4 SpD
+Adamant Nature
+- Kowtow Cleave
+- Sucker Punch
+- Iron Head
+- Low Kick
+
+Sneasler @ Focus Sash
+Ability: Poison Touch
+EVs: 4 HP / 252 Atk / 252 Spe
+Jolly Nature
+- Close Combat
+- Dire Claw
+- Fake Out
+- Feint
+
+Basculegion @ Life Orb
+Ability: Adaptability
+EVs: 4 HP / 252 Atk / 252 Spe
+Adamant Nature
+- Wave Crash
+- Last Respects
+- Aqua Jet
+- Protect
+
+Garchomp @ Choice Scarf
+Ability: Rough Skin
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Earthquake
+- Rock Slide
+- Dragon Claw
+- Stomping Tantrum</pre></details>
+  </div>
+
+  <div class="team">
+    <div class="head"><h4>單打：攻守六選三</h4><span class="chip ok">本季單打 Top 5 ＋ M-C 新戰力</span></div>
+    <div class="roster">
+      <div class="mon"><div class="n">烈咬陸鯊<span class="en">Garchomp</span><span class="type dragon">龍</span><span class="type ground">地面</span></div><div class="s">@ 講究圍巾 ｜ 粗糙皮膚 ｜ 爽朗 ｜ 攻擊252／速度252／特防4</div><div class="m"><span>地震</span><span>尖石攻擊</span><span>龍爪</span><span>跺腳</span></div></div>
+      <div class="mon"><div class="n">西獅海壬<span class="en">Primarina</span><span class="type water">水</span><span class="type fairy">妖精</span></div><div class="s">@ 吃剩的東西 ｜ 濕潤之聲 ｜ 內斂 ｜ HP252／特攻252／特防4</div><div class="m"><span>冥想</span><span>巨聲</span><span>月亮之力</span><span>守住</span></div></div>
+      <div class="mon"><div class="n">鋁鋼橋龍<span class="en">Archaludon</span><span class="type steel">鋼</span><span class="type dragon">龍</span></div><div class="s">@ 突擊背心 ｜ 持久力 ｜ 內斂 ｜ HP252／特攻252／防禦4</div><div class="m"><span>電光束</span><span>流星群</span><span>加農光炮</span><span>撲擊</span></div></div>
+      <div class="mon"><div class="n">鋼鎧鴉<span class="en">Corviknight</span><span class="type fly">飛行</span><span class="type steel">鋼</span></div><div class="s">@ 凸凸頭盔 ｜ 鏡甲 ｜ 淘氣 ｜ HP252／防禦252／特防4</div><div class="m"><span>勇鳥猛攻</span><span>撲擊</span><span>鐵壁</span><span>羽棲</span></div></div>
+      <div class="mon"><div class="n">謎擬Ｑ<span class="en">Mimikyu</span><span class="type ghost">幽靈</span><span class="type fairy">妖精</span></div><div class="s">@ 生命寶珠 ｜ 畫皮 ｜ 爽朗 ｜ 攻擊252／速度252／特防4</div><div class="m"><span>劍舞</span><span>嬉鬧</span><span>影子偷襲</span><span>暗影爪</span></div></div>
+      <div class="mon"><div class="n">戟脊龍<span class="en">Baxcalibur</span><span class="type dragon">龍</span><span class="type ice">冰</span><span class="chip tbd">M-C 新增</span></div><div class="s">@ 清淨墜飾 ｜ 熱交換 ｜ 固執 ｜ 攻擊252／速度252／HP4</div><div class="m"><span>龍之舞</span><span>巨劍突擊</span><span>冰柱墜擊</span><span>地震</span></div></div>
+    </div>
+    <a class="btn" href="https://naiyu29.github.io/pokemon-tools/?team=%E5%96%AE%E6%89%93%E6%94%BB%E5%AE%88%E5%85%AD%E9%81%B8%E4%B8%89&amp;mode=singles&amp;mons=garchomp,choicescarf,roughskin,jolly,0/252/0/0/4/252,earthquake,stoneedge,dragonclaw,stompingtantrum;primarina,leftovers,liquidvoice,modest,252/0/0/252/4/0,calmmind,hypervoice,moonblast,protect;archaludon,assaultvest,stamina,modest,252/0/4/252/0/0,electroshot,dracometeor,flashcannon,bodypress;corviknight,rockyhelmet,mirrorarmor,impish,252/0/252/0/4/0,bravebird,bodypress,irondefense,roost;mimikyu,lifeorb,disguise,jolly,0/252/0/0/4/252,swordsdance,playrough,shadowsneak,shadowclaw;baxcalibur,clearamulet,thermalexchange,adamant,4/252/0/0/0/252,dragondance,glaiverush,iciclecrash,earthquake">匯入工具（單打）</a>
+    <div class="kv">
+      <span class="k">為什麼</span><span>單打是 6 選 3。前五隻就是本季單打使用率前五，彼此互補：兩隻大砲（陸鯊、謎擬Ｑ）、兩隻厚特攻（西獅海壬、鋁鋼橋龍）、一隻物理牆（鋼鎧鴉）。第六隻放 M-C 新進的戟脊龍，龍之舞一次就能收場。</span>
+      <span class="k">選角</span><span>先看對面速度線：對面快就帶圍巾陸鯊；對面多物攻就帶鋼鎧鴉鐵壁撲擊；對面多龍就帶西獅海壬。首發常用鋁鋼橋龍（少弱點、突擊背心吃得住），謎擬Ｑ留後手靠畫皮起劍舞。</span>
+      <span class="k">對 M-C</span><span>路卡利歐 Z 速 223 只輸圍巾陸鯊，帶陸鯊地震處理。阿勃梭魯 Z 惡／幽靈，西獅海壬月亮之力 2 倍、謎擬Ｑ嬉鬧 2 倍。Mega 暴飛龍飛行皮膚捨身衝撞很痛，鋼鎧鴉撲擊硬扛。轟擂金剛猩對這隊威脅不大（鋼鎧鴉、鋁鋼橋龍都抗草）。</span>
+      <span class="k">弱點</span><span>整隊<strong>怕冰與地面</strong>：戟脊龍鏡像對局要靠西獅海壬；對面有鋁鋼橋龍時陸鯊地震是唯一速解。沒有先制控速手，遇到戲法空間隊會很難打，選角時保留鋼鎧鴉撐時間。</span>
+    </div>
+    <details><summary>Showdown paste（複製到計算機用）</summary><pre>Garchomp @ Choice Scarf
+Ability: Rough Skin
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Earthquake
+- Stone Edge
+- Dragon Claw
+- Stomping Tantrum
+
+Primarina @ Leftovers
+Ability: Liquid Voice
+EVs: 252 HP / 252 SpA / 4 SpD
+Modest Nature
+- Calm Mind
+- Hyper Voice
+- Moonblast
+- Protect
+
+Archaludon @ Assault Vest
+Ability: Stamina
+EVs: 252 HP / 4 Def / 252 SpA
+Modest Nature
+- Electro Shot
+- Draco Meteor
+- Flash Cannon
+- Body Press
+
+Corviknight @ Rocky Helmet
+Ability: Mirror Armor
+EVs: 252 HP / 252 Def / 4 SpD
+Impish Nature
+- Brave Bird
+- Body Press
+- Iron Defense
+- Roost
+
+Mimikyu @ Life Orb
+Ability: Disguise
+EVs: 252 Atk / 4 SpD / 252 Spe
+Jolly Nature
+- Swords Dance
+- Play Rough
+- Shadow Sneak
+- Shadow Claw
+
+Baxcalibur @ Clear Amulet
+Ability: Thermal Exchange
+EVs: 4 HP / 252 Atk / 252 Spe
+Adamant Nature
+- Dragon Dance
+- Glaive Rush
+- Icicle Crash
+- Earthquake</pre></details>
+  </div>
+  <p class="small">兩隊道具都遵守「同隊不重複道具」規則。特性名「波導守護」為暫譯，官方繁中名待遊戲內確認。</p>
+</section>
+
+<section>
+  <h2>五、工具與資料待辦</h2>
   <p class="small">給下次「更新威脅庫」用，SOP 在 skills-src/pokemon-champions/references/season-update.md。</p>
   <ul class="todo">
     <li>9/16 前後跑賽季更新 SOP：M-C 第一批統計出來後再改。</li>
-    <li>新增：Rillaboom、Baxcalibur（含 Mega）、Golisopod-Mega、Absol-Mega-Z、Lucario-Mega-Z、Garchomp-Mega-Z、Dragonite-Mega（世界賽冠軍用）。</li>
-    <li>megaAbility 覆寫：Garchomp-Mega-Z→Levitate、Lucario-Mega-Z→Aura Guard、Absol-Mega-Z→Sharpness（dex 內為佔位值）。Aura Guard、Sharpness 在 @smogon/calc 0.11.0 未必有實作，傷害矩陣要另外處理。</li>
+    <li>新增：轟擂金剛猩、戟脊龍（含 Mega）、Mega 具甲武者、阿勃梭魯 Z、路卡利歐 Z、烈咬陸鯊 Z、Mega 快龍（世界賽冠軍用）。</li>
+    <li>megaAbility 覆寫：烈咬陸鯊 Z→飄浮、路卡利歐 Z→波導守護、阿勃梭魯 Z→鋒銳（dex 內為佔位值）。新特性在 @smogon/calc 0.11.0 未必有實作，傷害矩陣要另外處理。</li>
     <li class="bug">資料錯誤：威脅庫已有「暴飛龍(Mega)」列為 Mega 強勢，但 Mega 暴飛龍是 M-C 才加入，M-B 期間應不合法。確認來源後修 rank 註記。</li>
-    <li>Primarina 配置改 Leftovers＋Calm Mind 型。</li>
-    <li>補新招式／特性中文：npm run build:zh-names，再重建網頁。</li>
+    <li>西獅海壬配置改吃剩的東西＋冥想型。</li>
+    <li>補新招式／特性中文（波導守護等）：npm run build:zh-names，再重建網頁。</li>
     <li>若 24 隻名單有新形態，npm run build:sprites 補截圖辨識庫。</li>
   </ul>
 </section>
@@ -271,7 +440,9 @@ a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2p
     <li>rotomlabs Z Mega 特性<br><a href="https://rotomlabs.net/article/abilities-revealed-for-mega-absol-z-mega-lucario-z-and-mega-garchomp-z">rotomlabs.net/article/abilities-revealed-for-mega-absol-z-…</a></li>
     <li>rotomlabs Mega 戟脊龍／具甲武者／暴飛龍<br><a href="https://rotomlabs.net/article/baxcalibur-golisopod-salamence-megas-champions-m-c">rotomlabs.net/article/baxcalibur-golisopod-salamence-megas-champions-m-c</a></li>
     <li>Bulbagarden 2026 世界賽結果與隊伍<br><a href="https://bulbagarden.net/threads/2026-pokemon-vgc-world-championships-results-and-teams-takuma-yamazaki-is-your-2026-world-champion.311448/">bulbagarden.net/threads/…311448/</a></li>
-    <li>Pokémon Zone Big Six 核心<br><a href="https://www.pokemon-zone.com/champions/teams/basculegion+garchomp+kingambit+sneasler/">pokemon-zone.com/champions/teams/basculegion+garchomp+kingambit+sneasler/</a></li>
+    <li>Deltia’s Gaming：Yamazaki 冠軍隊配置<br><a href="https://deltiasgaming.com/takuma-yamazakis-2026-pokemon-vgc-world-championships-winning-team-guide/">deltiasgaming.com/takuma-yamazakis-2026-pokemon-vgc-world-championships-winning-team-guide/</a></li>
+    <li>Deltia’s Gaming：單打 6 選 3 規則<br><a href="https://deltiasgaming.com/pokemon-champions-singles-combat-explained/">deltiasgaming.com/pokemon-champions-singles-combat-explained/</a></li>
+    <li>Pokémon Zone 六大天王核心<br><a href="https://www.pokemon-zone.com/champions/teams/basculegion+garchomp+kingambit+sneasler/">pokemon-zone.com/champions/teams/basculegion+garchomp+kingambit+sneasler/</a></li>
   </ol>
 </section>
 </main>
